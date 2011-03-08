@@ -5,7 +5,7 @@
 
 #define FLASH_END 0x15800
 
-#define PRIO_USB 5
+#define PRIO_USB 4
 
 #define PRODUCT_ID 8
 
@@ -41,6 +41,9 @@ struct _vmVariables {
 	sint16 buttons[5];
 	
 	sint16 buttons_state[5];
+
+	sint16 buttons_mean[5];
+	sint16 buttons_noise[5];
 	
 	sint16 prox[7];
 	sint16 ground_ambiant[2];

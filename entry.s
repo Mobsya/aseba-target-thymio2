@@ -15,8 +15,7 @@ __resetALT:
 	.weak    __user_init, __has_user_init
 
 ; Reset the stack
-
-;;	goto 0x14800 			;; DEBUG GO TO BOOTLOADER, to be replaced by a nop in non-debug mode
+	goto 0x14800 			;; DEBUG GO TO BOOTLOADER, to be replaced by a nop in non-debug mode
 	
 	
 
@@ -175,12 +174,12 @@ do_init:
 	;w7 return value
 	; w8 min address of the hole
 	; w9 max address of the hole
-/*
+
 	cpsgt w2, w8 ; skip if w2 >= 0x1000
 	bra _do_init_ok
 	cpsgt w2, w9 ; skip if w2 >= end address
 	bra _do_init_nok
-*/
+
 _do_init_ok:
 	setm w7
 	return

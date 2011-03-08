@@ -28,8 +28,8 @@ void sound_init(void) {
 	for(i = 0; i < SOUND_OBUFSZ*2; i ++)
 		output_buf[i] = 128;
 	
-	// disable the amplifier
-	leds_set(SOUND_ON, 0);
+	// Enable the amplifier the amplifier
+	leds_set(SOUND_ON, 32);
 	
 	// OC6 is used ...
 	// Init OC6 to have maximum PWM speed 8 bit resolution
@@ -68,7 +68,6 @@ void sound_playback_enable(sound_cb cb) {
 
 void sound_playback_disable(void) {
 	callback = NULL;
-	leds_set(SOUND_ON, 0);
 	barrier();
 	OC6R = 127;
 }

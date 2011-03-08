@@ -122,6 +122,10 @@ void motor_new_analog(unsigned int l, unsigned int r) {
 			
 			pid_motor_tick(vind_filtered);
 			
+				
+			/* HAAAAAAAAACK */
+			_TRISB12 = 0;
+			
 			pwm_motor_unlock_left();
 			pwm_motor_unlock_right();
 			
@@ -167,6 +171,7 @@ void motor_new_analog(unsigned int l, unsigned int r) {
 			
 			pwm_motor_lock_vbat_left();
 			pwm_motor_lock_vbat_right();
+	
 			break;
 			
 		case STATE_PWM:
@@ -175,6 +180,9 @@ void motor_new_analog(unsigned int l, unsigned int r) {
 				counter = 0;
 				pwm_motor_lock_off_left();
 				pwm_motor_lock_off_right();
+				
+				/* HAAAAAAAAAAACK */
+				_TRISB12 = 1;
 			}
 			break;
 	}

@@ -11,7 +11,10 @@ const AsebaVMDescription vmDescription = {
 		
 		{5, "buttons._raw"},
 		{5, "buttons.binary"},
-
+		
+		{5, "buttons._mean"},
+		{5, "buttons._noise"},
+		
 		{7, "prox.horizontal"},
 		{2, "prox.ground.ambiant"},
 		{2, "prox.ground.reflected"},

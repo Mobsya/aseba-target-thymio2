@@ -17,23 +17,23 @@ struct music {
 
 static const struct music m_poweron[] = 
 	{
-		{C5,6},
-		{Eb5,3},
-		{E5,10},
+		{C5,4},
+		{E5,3},
+		{G5,4},
 		{0,0},
 	};
 static const struct music m_poweroff[] = 
 	{
-		{E5,6},
-		{Eb5,3},
-		{C5,10},
+		{E5,4},
+		{G5,3},
+		{C5,5},
 		{0,0},
 	};
 
 static const struct music m_button[] =
 	{
-		{E5,6},
-		{Eb5,3},
+		{E5,4},
+		{Bb4,3},
 		{0,0},
 	};
 
@@ -43,13 +43,15 @@ static int playback_buffer(unsigned char * b) {
 		if(m) {
 			m++;
 			if(m->duration) {
-				time = m->duration;
+				time = m->duration*6;
 				tone_setup(m->freq);
 			} else {
+				time = 0;
 				m = 0;
 				return 0;
 			}
 		} else {
+			time = 0;
 			return 0;
 		}
 	}
@@ -95,17 +97,17 @@ void play_sound(int number) {
 		break;
 	case SOUND_POWERON:
 		if(!sd_play_file("poweron.raw")) {
-			play_music(&m_poweron);
+			play_music(m_poweron);
 		}
 		break;
 	case SOUND_POWEROFF:
 		if(!sd_play_file("poweroff.raw")) {
-			play_music(&m_poweroff);
+			play_music(m_poweroff);
 		}
 		break;
 	case SOUND_BUTTON:
 		if(!sd_play_file("button.raw")) {
-			play_music(&m_button);
+			play_music(m_button);
 		}
 		break;
 	}
@@ -114,7 +116,8 @@ void play_sound(int number) {
 
 void play_sound_block(int number) {
 	play_sound(number);
-	
-	while(time != 0xFFFF) barrier();
+	if(number == SOUND_DISABLE)
+		return;
+	while(!(time == 0xFFFF || time == 0x0000)) barrier();
 }
 

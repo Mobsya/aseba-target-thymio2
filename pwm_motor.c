@@ -78,6 +78,8 @@ void pwm_motor_poweroff(void) {
 	OC3CON1 = 0;
 	OC4CON1 = 0;
 	OC5CON1 = 0;
+	
+	_TRISB12 = 1;
 }
 
 static void _fast_pwm_left(int duty) {

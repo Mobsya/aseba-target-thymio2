@@ -12,21 +12,40 @@
 #define adc_enable()  do { _ADON = 1; Nop(); Nop(); Nop(); Nop(); Nop(); } while(0)
 
 
+// 1 adc clock: 250ns: 4Cycles. So wait 5.. 
+#define WAIT_ONE_ADC_CLOCK() do { Nop(); Nop(); Nop(); Nop(); Nop(); } while(0)
+
 static int analog_state; // 0-4, depending on which button is scanned ... 
 static int timer;
 
 void new_sensors_value(unsigned int * val, int button); // callback
 
+void __attribute((interrupt,no_auto_psv)) _ADC1Interrupt(void) {
+	_ADON = 0;
+	_AD1IF = 0;
+}
 
 static void timer_cb(int timer_id) {
+	unsigned int sensors[6];
+	int a_state = analog_state;
+	
 	// Switch off ADC
-	_ADON = 0;
+//	_ADON = 0;
 	AD1CON1bits.ASAM = 0;
+	
+	sensors[0] = ADC1BUF0;
+	sensors[1] = ADC1BUF1;
+	sensors[2] = ADC1BUF2;
+	sensors[3] = ADC1BUF3;
+	sensors[4] = ADC1BUF4;
+	sensors[5] = ADC1BUF5;
 		
-	new_sensors_value((unsigned int *) &ADC1BUF0, analog_state);
+
+	(void) ADC1BUF6;
+	(void) ADC1BUF7;
 	
 	// Ground source
-	CTMUCON = 0x8F34; // Reset CTMU 
+	CTMUCON = 0x8634; // Reset CTMU 
 	
 	// change sampling sequence
 	
@@ -80,20 +99,29 @@ static void timer_cb(int timer_id) {
 	// FIXME: Between here and the OC start, we should disable all interrupt to get a better mesurment
 	adc_enable();
 	AD1CON1bits.ASAM = 1;
-	
-	Nop();
-	Nop();
-
-	// Unground it
-	_IDISSEN = 0;
-	// start OC (current pulse)
+	WAIT_ONE_ADC_CLOCK();
+//	_ADON = 1;	
+		// start OC (current pulse)
+	_EDGEN = 1;
+	WAIT_ONE_ADC_CLOCK();
 	OC1CON1bits.OCM = 4;
+	
+	// Unground it
+	WAIT_ONE_ADC_CLOCK();
+	
+	_IDISSEN = 0;
+	// Enable edge detection
+
+
+	
+	new_sensors_value(sensors, a_state);
 }
 
 void analog_disable(void) {
 	timer_disable(timer);
 	
 	_ADON = 0;
+	_AD1IE = 0;
 	
 	CTMUCONbits.CTMUEN = 0;
 
@@ -150,8 +178,11 @@ void analog_init(int t, int prio) {
 	
 	AD1CHS = 0;
 	
+	_AD1IE = 1;
+	_AD1IP = prio;
+	
 /*** CTMU init */
-	CTMUCON = 0x0F34;	// Edge1: OC1, Edge2: OC1 (don't ask why ....) ! 
+	CTMUCON = 0x0E34;	// Edge1: OC1, Edge2: OC1 (don't ask why ....) ! 
 	CTMUICON = 0x0200 | (0x1F << 10); 	// 0.55uAx100, trim = 0
 	CTMUCONbits.CTMUEN = 1;
 	
@@ -159,8 +190,8 @@ void analog_init(int t, int prio) {
 	OC1CON1 = 0;
 	OC1CON2 = 0;
 	OC1CON1bits.OCTSEL = 0x7; // CPU clock
-	OC1R = 4; // FIXME Delay to start the cpu clock
-	OC1RS = OC1R + 100; // FIXME recompute the delay .....
+	OC1R = 1; // FIXME Delay to start the cpu clock
+	OC1RS = OC1R + 80; // FIXME recompute the delay .....
 	
 // To start the OC: OC1CON1bits.OCM = 4. 
 // We need to reset the module before output next pulse (async) ( by writing OC1CON2 to 0)
@@ -185,7 +216,6 @@ void analog_init(int t, int prio) {
 
 /*** State machine init */
 	analog_state = 2;
-	
 	
 	adc_enable();
 	AD1CON1bits.ASAM = 1;
@@ -225,7 +255,7 @@ void __attribute__((noreturn)) analog_enter_poweroff_mode(void) {
 	SET_IPL(7);
 	
 	_DOZE = 0x6; // CPU clock / 64 == 250kHz when _DOZEN = 1
-	
+/*	
 	// Switch to FRCPLL clock (faster to start)
 	// First switch to FRC without PLL
 	_RCDIV = 0; // 8Mhz RC clock
@@ -241,6 +271,7 @@ void __attribute__((noreturn)) analog_enter_poweroff_mode(void) {
 	__builtin_write_OSCCONH(1); // FRC+PLL
 	__builtin_write_OSCCONL(1); // Switch 
 	while(_OSWEN);
+	*/
 	
 // Enable watchdog to wake us in 200ms (or more ?)
 	while(1) {

@@ -15,8 +15,13 @@ static unsigned int skip;
 unsigned long __udiv3216(unsigned long, unsigned int);
 
 void tone_init(void) {
+	int i;
 	
-	// TODO: compute wave ? 
+	for(i = 0; i < 71; i++) 
+		wave[i] = (255*i)/71;
+		
+	for(i = 71; i < 142; i++) 
+		wave[i] = 255 - (255*(i-71))/71;
 	
 }
 
@@ -30,7 +35,7 @@ void tone_setup(unsigned int dHz) {
 	// Compute the skip value 
 	skip_100 = __udiv3216(__builtin_muluu(dHz, 1420) + 7812/2,7812);
 	skip = skip_100 / 100;
-	skip_100 -= skip;
+	skip_100 -= skip*100;
 	
 	counter = 0;
 	
@@ -43,10 +48,12 @@ void tone_fill_buffer(unsigned char *b, unsigned int c) {
 	for(i = 0; i < c; i++) {
 		*b++ = wave[ptr];
 		ptr += skip;
-		if(++counter == 100) {
-			counter == 0;
+	/*	if(++counter == 100) {
+			counter = 0;
 			ptr += skip_100;
-		}
+		}*/
+		if(ptr > 141)
+			ptr -= 142;
 	}
 }
 

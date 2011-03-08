@@ -17,6 +17,8 @@
 #define CHARGE_500MA  _LATF0
 
 
+void usbInterrupt(void);  // Implemented in usb_function_cdc
+
 void usb_uart_init(void) {
 	USBDeviceInit();
 }
@@ -38,19 +40,20 @@ int usb_uart_serial_port_open(void) {
 // It's absolutly not time-critical
 void usb_uart_tick(void)
 {   
-
+	int vbus = U1OTGSTATbits.SESVD;
 // --- Attaching/detaching part
 	// If we are detached and we sens vbus, then attach
-	if(U1OTGSTATbits.SESVD && (USBGetDeviceState() == DETACHED_STATE))
+	if(vbus && (USBGetDeviceState() == DETACHED_STATE))
 	{
 		USBDeviceAttach();
 	}
 	
 	// If we are not detached and we don't sens vbus, then detach 
-	if((USBGetDeviceState() != DETACHED_STATE) && !U1OTGSTATbits.SESVD)
+	if(!vbus)
 	{
 		USBDeviceDetach();
 	}
+	
 	
 // --- Charge managment part 
 

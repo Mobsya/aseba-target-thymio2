@@ -5,6 +5,10 @@
 
 #include <math.h>
 
+char button_flags[5];
+
+
+
 // last 16 buttons values
 static unsigned int old_b[5][16];
 // Insertion index
@@ -24,14 +28,15 @@ static unsigned long noise[5];
 static unsigned char inhibit[5];
 
 // The binary status of the button
-#define STATE_PRESSED 1
-#define STATE_RELEASED 0
-static unsigned char state[5];
+#define DEBOUNCE 3
+#define STATE_RELEASED (-1)
+static char state[5];
 
 static unsigned char init[5];
 
 // Some offset, constants, etc ...
-#define MIN_TRESHOLD 20
+#define MIN_TRESHOLD 200
+#define TRESH_OFFSET 20
 
 static void iir_sum(unsigned int i) {
 	// Fixed point 26.6
@@ -81,6 +86,8 @@ static void compute_stats(unsigned int b, unsigned int i) {
 }
 
 void button_process(unsigned int b, unsigned int i) {
+	unsigned int tresh;
+	
 	/* first give raw value to the user... */
 	vmVariables.buttons[i] = b;
 	
@@ -93,25 +100,42 @@ void button_process(unsigned int b, unsigned int i) {
 		sum_filtered[i] = 64*16UL * b;
 		sum[i] = 16UL * b;
 	}
-		
 	
+	vmVariables.buttons_mean[i] = sum_filtered[i] / (64*16);
+	vmVariables.buttons_noise[i] = noise[i] / 256;
 		
+	tresh = noise[i]/256;
+	if(tresh < MIN_TRESHOLD)
+		tresh = MIN_TRESHOLD;
+	
+	tresh += TRESH_OFFSET;
 	// FIXME Check the division optimisation (or use div32by16u())
 	// Fixme, do the check only one every 16 samples ? 
-	if(b < ((unsigned int)(sum_filtered[i]/(64*16))) - ((unsigned int)(noise[i]/256)) - MIN_TRESHOLD) {
-		state[i] = STATE_PRESSED;
+	if(b < ((unsigned int)(sum_filtered[i]/(64*16))) - tresh) {
+		state[i]++;
+	} else {
+		if(state[i] == DEBOUNCE)
+			state[i] = STATE_RELEASED;
+		else
+			state[i] = 0;	
+	}
+	
+	if(state[i] > DEBOUNCE) {
+		state[i] = DEBOUNCE;
+		if(!vmVariables.buttons_state[i])
+			button_flags[i] = 1;
 		vmVariables.buttons_state[i] = 1;
 	} else {
-		if(state[i] == STATE_PRESSED) {
+		if(state[i] == STATE_RELEASED) {
 			// We got released, inhibit any stat update for some time ...
-			inhibit[i] = 10;
+			inhibit[i] = 16;
 		}
-		state[i] = STATE_RELEASED;
 		vmVariables.buttons_state[i] = 0;
 		if(inhibit[i] > 0) 
 			inhibit[i]--;
 		else 
-			compute_stats(b,i);
+			if(!state[i])
+				compute_stats(b,i);
 	}
 }
 

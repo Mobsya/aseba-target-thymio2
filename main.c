@@ -19,6 +19,8 @@
 #include "rc5.h"
 #include "sd/diskio.h"
 #include "sd.h"
+#include "tone.h"
+#include "button.h"
 
 #include <skel-usb.h>
 
@@ -31,21 +33,26 @@
 //_CONFIG3(WPEND_WPSTARTMEM & WPCFG_WPCFGDIS & WPDIS_WPEN) 
 
 // Priority 1 is reserverd for SD operations ...
-#define PRIO_SENSORS 5
-#define PRIO_LEDS 4
+#define PRIO_SENSORS 6
+#define PRIO_LEDS 5
+// USB priority: 4
 #define PRIO_RC5 3
 #define PRIO_ACC 2
 #define PRIO_NTC 2
 
-#define CHARGE_ENABLE _LATF1
+#define CHARGE_ENABLE_DIR _TRISF1
 #define CHARGE_500MA  _LATF0
 
 
 #define TIMER_ANALOG TIMER_2
 #define TIMER_RC5 TIMER_3
 
+static unsigned int poweroff_timer;
+#define POWEROFF_TIMEOUT 2000
 
 void cb_1khz(void) {
+	if(poweroff_timer)
+		poweroff_timer++;
 	disk_timerproc();		
 }
 
@@ -77,17 +84,8 @@ static void rc5_callback(unsigned int address, unsigned int command) {
 	SET_EVENT(EVENT_RC5);
 }
 
-void update_aseba_variables_read(void) {
-	// TODO: REMOVE ME (Move to skel)
-	usb_uart_tick();
-	
-	if(usb_uart_serial_port_open()) {
-		leds_set(LED_TEMP_BLUE,32);
-	} else {
-		leds_set(LED_TEMP_BLUE,0);
-	}
-	
-}
+
+
 
 void update_aseba_variables_write(void) {
 }	
@@ -110,8 +108,7 @@ void switch_off(void) {
 	ntc_shutdown();
 	rc5_shutdown();
 
-	CHARGE_500MA = 0;
-	
+	CHARGE_500MA = 0; 
 	// TODO: Force VA ?! Check me that refcount is correct
 }
 
@@ -152,7 +149,8 @@ void power_off(AsebaVMState *vm) {
 	// Switch off USB
 	USBDeviceDetach();
 	
-	CHARGE_ENABLE = 0;
+	CHARGE_ENABLE_DIR = 1; // FIXME: Change this in input, so we will be at 0 if no 5V and at 5 if present ...
+	
 	
 	analog_enter_poweroff_mode();
 }
@@ -195,6 +193,59 @@ void sound_record(AsebaVMState *vm) {
 	sd_start_record(name);
 }
 		
+		
+static void button_managment(void) {
+	int i;
+	
+	for(i = 0; i < 5; i++) {
+		if(button_flags[i]) {
+			play_sound(SOUND_BUTTON);
+			button_flags[i] = 0;
+		}
+	}
+	
+	if(vmVariables.buttons_state[0]) 
+		leds_set(33,32);
+	else
+		leds_set(33,0);
+		
+	if(vmVariables.buttons_state[1])
+		leds_set(34,32);
+	else
+		leds_set(34,0);
+	
+	if(vmVariables.buttons_state[3])
+		leds_set(32,32);
+	else
+		leds_set(32,0);
+		
+	if(vmVariables.buttons_state[4])
+		leds_set(35,32);
+	else
+		leds_set(35,0);
+	
+	if(vmVariables.buttons_state[2]) {
+		if(!poweroff_timer)
+			poweroff_timer = 1;
+			
+		leds_set(33,32);
+		leds_set(34,32);
+		leds_set(32,32);
+		leds_set(35,32);
+	} else {
+		poweroff_timer = 0;
+	}	
+	
+	if(poweroff_timer == POWEROFF_TIMEOUT)
+		power_off(NULL);
+}
+
+void update_aseba_variables_read(void) {
+	// TODO: REMOVE ME (Move to skel)
+	usb_uart_tick();
+	
+	button_managment();
+}
 
 int main(void)
 {   
@@ -205,11 +256,14 @@ int main(void)
 	
 	leds_init();
 
+	// Switch on one led to say we are powered on
+	leds_set(LED_BATTERY_0, 32);
 
 	// Sound must be enabled before analog, as 
 	// The analog interrupt callback into sound processing ... 
 	// But must be initialised _after_ leds as it use one led IO for enabling amp.
 	sound_init();
+	tone_init(); // Init tone generator
 	
 	pwm_motor_init();
 	pid_motor_init();
@@ -239,6 +293,7 @@ int main(void)
 	rc5_init(TIMER_RC5, rc5_callback, PRIO_RC5);
 	
 	init_aseba_and_usb();
+
 	
 	if( ! load_settings_from_flash()) {
 		/* Todo */
