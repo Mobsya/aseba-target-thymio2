@@ -9,6 +9,8 @@ static FATFS fs; // SD fat
 static FIL read_file; // Read handle
 static FIL write_file; // Write handle
 
+#define SD_PRIO 2
+
 // Basic rule: ALL SD ACCESS IS DONE AT IPL == 1 !! 
 
 DWORD get_fattime(void) {
@@ -29,11 +31,15 @@ void sd_init(void) {
 
 void sd_shutdown(void) {
 	unsigned int flags;
-	RAISE_IPL(flags,1);
+	RAISE_IPL(flags, SD_PRIO);
 	
 	f_close(&read_file);
 	f_close(&write_file);
 	f_mount(0,0);
+	
+	_TRISB14 = 1;
+	SPI2STATbits.SPIEN = 0;			/* Disable SPI2 */
+	
 	va_put();	
 	
 	IRQ_ENABLE(flags);
@@ -62,7 +68,7 @@ int sd_play_file(const char * file) {
 	unsigned int flags;
 	int ret;
 	
-	RAISE_IPL(flags,1);
+	RAISE_IPL(flags, SD_PRIO);
 	
 	f_close(&read_file); // Close the last read file
 	if(f_open(&read_file, file, FA_READ) == FR_OK) {
@@ -92,7 +98,7 @@ void sound_mic_buffer(unsigned char *b) {
 }
 void sd_start_record(const char * file) {
 	unsigned int flags;
-	RAISE_IPL(flags,1);
+	RAISE_IPL(flags, SD_PRIO);
 	
 	// Make sure the file is closed
 	f_close(&write_file);
@@ -104,7 +110,7 @@ void sd_start_record(const char * file) {
 }
 void sd_stop_record(void) {
 	unsigned int flags;
-	RAISE_IPL(flags,1);
+	RAISE_IPL(flags, SD_PRIO);
 	
 	record = 0;
 	f_close(&write_file);
