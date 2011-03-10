@@ -32,13 +32,18 @@
 //_CONFIG2(IESO_OFF & PLLDIV_DIV2 & PLL96DIS_ON & FNOSC_PRIPLL & FCKSM_CSDCMD & OSCIOFNC_OFF & IOL1WAY_OFF & DISUVREG_OFF & POSCMOD_HS) 
 //_CONFIG3(WPEND_WPSTARTMEM & WPCFG_WPCFGDIS & WPDIS_WPEN) 
 
+// Maybe we should use IPL 1 for "default behavior", IPL 2 for sd
+// and everything else higher ? 
+// then when VM is in use, we could simply disable IPL 1 .... 
+
 // Priority 1 is reserverd for SD operations ...
 #define PRIO_SENSORS 6
-#define PRIO_LEDS 5
-// USB priority: 4
-#define PRIO_RC5 3
-#define PRIO_ACC 2
-#define PRIO_NTC 2
+// USB priority: 5
+#define PRIO_RC5 4
+#define PRIO_ACC 3
+#define PRIO_NTC 3
+// SD PRIO: 2 
+#define PRIO_BEHAVIOR 1
 
 #define CHARGE_ENABLE_DIR _TRISF1
 #define CHARGE_500MA  _LATF0
@@ -50,9 +55,19 @@
 static unsigned int poweroff_timer;
 #define POWEROFF_TIMEOUT 2000
 
+static unsigned char button_counter[5];
+
 void cb_1khz(void) {
+	int i;
+	
 	if(poweroff_timer)
 		poweroff_timer++;
+	
+	for(i = 0; i < 5; i++) {
+		if(button_counter[i] && button_counter[i] < 250)
+			button_counter[i]++;
+	}	
+	
 	disk_timerproc();		
 }
 
@@ -149,8 +164,7 @@ void power_off(AsebaVMState *vm) {
 	// Switch off USB
 	USBDeviceDetach();
 	
-	CHARGE_ENABLE_DIR = 1; // FIXME: Change this in input, so we will be at 0 if no 5V and at 5 if present ...
-	
+	CHARGE_ENABLE_DIR = 1;
 	
 	analog_enter_poweroff_mode();
 }
@@ -192,8 +206,7 @@ void sound_record(AsebaVMState *vm) {
 	
 	sd_start_record(name);
 }
-		
-		
+				
 static void button_managment(void) {
 	int i;
 	
@@ -204,36 +217,32 @@ static void button_managment(void) {
 		}
 	}
 	
-	if(vmVariables.buttons_state[0]) 
-		leds_set(33,32);
-	else
-		leds_set(33,0);
-		
-	if(vmVariables.buttons_state[1])
-		leds_set(34,32);
-	else
-		leds_set(34,0);
+	for(i = 0; i < 5; i++) {
+		if(vmVariables.buttons_state[i]) {
+			if(!button_counter[i])
+				button_counter[i]++;
+		} else {
+			button_counter[i] = 0;
+		}
+	}
 	
-	if(vmVariables.buttons_state[3])
-		leds_set(32,32);
-	else
-		leds_set(32,0);
-		
-	if(vmVariables.buttons_state[4])
-		leds_set(35,32);
-	else
-		leds_set(35,0);
 	
+
 	if(vmVariables.buttons_state[2]) {
 		if(!poweroff_timer)
 			poweroff_timer = 1;
 			
-		leds_set(33,32);
-		leds_set(34,32);
-		leds_set(32,32);
-		leds_set(35,32);
+		leds_set(33,button_counter[2]/7);
+		leds_set(34,button_counter[2]/7);
+		leds_set(32,button_counter[2]/7);
+		leds_set(35,button_counter[2]/7);
 	} else {
 		poweroff_timer = 0;
+		
+		leds_set(33,button_counter[0]/7);	
+		leds_set(34,button_counter[1]/7);
+		leds_set(32,button_counter[3]/7);
+		leds_set(35,button_counter[4]/7);
 	}	
 	
 	if(poweroff_timer == POWEROFF_TIMEOUT)
