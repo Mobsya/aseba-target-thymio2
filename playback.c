@@ -86,6 +86,11 @@ void play_sound(int number) {
 			play_note(A4,10);
 		}
 		break;
+	case 10 ... 19:
+		name[1] += number;
+		name[0] = 'r';
+		sd_play_file(name);
+		break;
 	case 42:
 		sd_play_file("tujhe.raw");
 		break;
