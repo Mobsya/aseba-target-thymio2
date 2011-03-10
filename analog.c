@@ -242,6 +242,9 @@ void __attribute__((noreturn)) analog_enter_poweroff_mode(void) {
 	int check_usb = 0;
 	int pressed = 0;
 	int i;
+	int was_connected;
+	
+	was_connected = U1OTGSTATbits.SESVD;
 	
 	// Switch off everything
 	PMD1 = 0xFFFF;
@@ -344,8 +347,10 @@ void __attribute__((noreturn)) analog_enter_poweroff_mode(void) {
 			_DOZEN = 0;
 			if(U1OTGSTATbits.SESVD) {
 			// 5V present, wakeup ! 
-				asm volatile("reset");
-			}
+				if(!was_connected)
+					asm volatile("reset");
+			} else
+				was_connected = 0;
 			// Switch off usb module
 			_USB1MD = 1; 
 		}
