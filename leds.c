@@ -22,41 +22,59 @@ static unsigned char index;
 void leds_set(unsigned char l, unsigned char brightness) {
 	unsigned char bank;
 	unsigned char pin;
-	unsigned char ipin;
 	unsigned char i;
-	unsigned char p;
+	unsigned char *p;
 	unsigned char inverted;
 	
-	// TODO Check optimisation ...
+	// ~400 cycles to set a led... 
 	
 	if(l >= LED_BANK * 8) 
 		return;
 		
 	bank = l >> 3;
 	pin = 1 << (l & 0x7);
-	ipin = ~pin;
 	inverted = leds_off[bank] & pin;
 	
-	p = ((l & 0x7) * bank) & 0x1F;
+	p = led + ((((l & 0x7) * LED_BANK) + bank));
+	
+	if(p >= led + sizeof(led))
+		p -= sizeof(led);
 	
 	// FIXME: Disable timer here ? 
 	
-	for(i = 0; i < MAX_BRIGHTNESS; i++) {
-		if(inverted) {
-			if(brightness > i)
-				atomic_andb(&led[p*LED_BANK + bank], ipin);
-			else
-				atomic_orb(&led[p*LED_BANK + bank], pin);
-		} else {
-			if(brightness > i)
-				atomic_orb(&led[p*LED_BANK + bank], pin);
-			else
-				atomic_andb(&led[p*LED_BANK + bank], ipin);
-		}
-		if(++p >= MAX_BRIGHTNESS)
-			p = 0;
-	}
+	if(brightness >= MAX_BRIGHTNESS)
+		brightness = MAX_BRIGHTNESS;
 	
+	if(inverted) {
+		pin = ~pin;
+		for(i = 0; i < brightness; i++) {
+			atomic_andb(p, pin);
+			p = (p + LED_BANK);
+			if(p >= led + sizeof(led))
+				p -= sizeof(led);
+		}
+		pin = ~pin;
+		for(;i < MAX_BRIGHTNESS; i++) {
+			atomic_orb(p, pin);
+			p = (p + LED_BANK);
+			if(p >= led + sizeof(led))
+				p -= sizeof(led);
+		}
+	} else {
+		for(i = 0; i < brightness; i++) {
+			atomic_orb(p,pin);
+			p = (p + LED_BANK);
+			if(p >= led + sizeof(led))
+				p -= sizeof(led);
+		}
+		pin = ~pin;
+		for(; i < MAX_BRIGHTNESS; i++) {
+			atomic_andb(p,pin);
+			p = (p + LED_BANK);
+			if(p >= led + sizeof(led))
+				p -= sizeof(led);
+		}
+	}
 }
 
 void leds_tick_cb(void) {
@@ -77,7 +95,7 @@ void leds_init(void) {
 	LED_CS = 0;
 	
 	va_get();
-	clock_delay_us(1000);
+	clock_delay_us(1000); // FIXME: Check this delay to be the minimal delay ! 
 	
 	SPI1STAT = 0;
 	SPI1CON1bits.DISSCK = 0;
