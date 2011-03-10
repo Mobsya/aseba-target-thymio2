@@ -7,7 +7,7 @@ unsigned char wave[142];
 
 static unsigned int ptr;
 
-static unsigned int skip_100;
+static unsigned int skip_d;
 static unsigned int counter;
 static unsigned int skip;
 
@@ -33,9 +33,12 @@ void tone_setup(unsigned int dHz) {
 		dHz = 78120 / 2;
 	
 	// Compute the skip value 
-	skip_100 = __udiv3216(__builtin_muluu(dHz, 1420) + 7812/2,7812);
-	skip = skip_100 / 100;
-	skip_100 -= skip*100;
+	skip_d = __udiv3216(__builtin_muluu(dHz, 1420) + 7812/2,7812);
+	skip = skip_d / 100;
+	skip_d -= skip*100;
+	
+	if(skip_d)
+		skip_d =  100/skip_d;
 	
 	counter = 0;
 	
@@ -48,10 +51,10 @@ void tone_fill_buffer(unsigned char *b, unsigned int c) {
 	for(i = 0; i < c; i++) {
 		*b++ = wave[ptr];
 		ptr += skip;
-	/*	if(++counter == 100) {
+		if(skip_d && (++counter == skip_d)) {
 			counter = 0;
-			ptr += skip_100;
-		}*/
+			ptr++;
+		}
 		if(ptr > 141)
 			ptr -= 142;
 	}
