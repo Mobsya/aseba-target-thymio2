@@ -21,6 +21,7 @@
 #include "sd.h"
 #include "tone.h"
 #include "button.h"
+#include "behavior.h"
 
 #include <skel-usb.h>
 
@@ -51,17 +52,12 @@
 
 #define TIMER_ANALOG TIMER_2
 #define TIMER_RC5 TIMER_3
-
-static unsigned int poweroff_timer;
-#define POWEROFF_TIMEOUT 2000
+#define TIMER_BEHAVIOR TIMER_1
 
 static unsigned char button_counter[5];
 
 void cb_1khz(void) {
 	int i;
-	
-	if(poweroff_timer)
-		poweroff_timer++;
 	
 	for(i = 0; i < 5; i++) {
 		if(button_counter[i] && button_counter[i] < 250)
@@ -169,6 +165,13 @@ void power_off(AsebaVMState *vm) {
 	analog_enter_poweroff_mode();
 }
 
+void _ISR _INT3Interrupt(void) {
+	_INT3IF = 0;
+	_INT3IE = 0; // ack & disable
+	// Poweroff softirq
+	power_off(NULL);
+}
+
 AsebaNativeFunctionDescription AsebaNativeDescription_record = {
 	"_sound.record",
 	"Start sound recording",
@@ -207,53 +210,10 @@ void sound_record(AsebaVMState *vm) {
 	sd_start_record(name);
 }
 				
-static void button_managment(void) {
-	int i;
-	
-	for(i = 0; i < 5; i++) {
-		if(button_flags[i]) {
-			play_sound(SOUND_BUTTON);
-			button_flags[i] = 0;
-		}
-	}
-	
-	for(i = 0; i < 5; i++) {
-		if(vmVariables.buttons_state[i]) {
-			if(!button_counter[i])
-				button_counter[i]++;
-		} else {
-			button_counter[i] = 0;
-		}
-	}
-	
-	
-
-	if(vmVariables.buttons_state[2]) {
-		if(!poweroff_timer)
-			poweroff_timer = 1;
-			
-		leds_set(33,button_counter[2]/7);
-		leds_set(34,button_counter[2]/7);
-		leds_set(32,button_counter[2]/7);
-		leds_set(35,button_counter[2]/7);
-	} else {
-		poweroff_timer = 0;
-		
-		leds_set(33,button_counter[0]/7);	
-		leds_set(34,button_counter[1]/7);
-		leds_set(32,button_counter[3]/7);
-		leds_set(35,button_counter[4]/7);
-	}	
-	
-	if(poweroff_timer == POWEROFF_TIMEOUT)
-		power_off(NULL);
-}
 
 void update_aseba_variables_read(void) {
-	// TODO: REMOVE ME (Move to skel)
+	// TODO: REMOVE ME (Move to skel) (move to behavior ? /!\ behavior == IPL 1 !! race wrt aseba !)
 	usb_uart_tick();
-	
-	button_managment();
 }
 
 int main(void)
@@ -267,6 +227,11 @@ int main(void)
 
 	// Switch on one led to say we are powered on
 	leds_set(LED_BATTERY_0, 32);
+
+	// Enable the poweroff softirq.
+	_INT3IF = 0;
+	_INT3IP = 1;
+	_INT3IE = 1;
 
 	// Sound must be enabled before analog, as 
 	// The analog interrupt callback into sound processing ... 
@@ -302,6 +267,9 @@ int main(void)
 	rc5_init(TIMER_RC5, rc5_callback, PRIO_RC5);
 	
 	init_aseba_and_usb();
+
+	behavior_init(TIMER_BEHAVIOR, PRIO_BEHAVIOR);
+	behavior_start(B_ALL);
 
 	
 	if( ! load_settings_from_flash()) {

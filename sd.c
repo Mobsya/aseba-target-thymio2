@@ -4,6 +4,7 @@
 #include "sd/ff.h"
 #include "regulator.h"
 #include "sound.h"
+#include "behavior.h"
 
 static FATFS fs; // SD fat 
 static FIL read_file; // Read handle
@@ -54,9 +55,10 @@ static int sd_play_cb(unsigned char * buffer) {
 	for(i = read; i < SOUND_OBUFSZ; i++)
 		buffer[i] = 127;
 	
-	if(read == 0)
-		return 0; // End of playback
-	else
+	if(read == 0) {
+		behavior_notify_sd(BEHAVIOR_STOP | BEHAVIOR_SD_READ);
+		return 0; // End of playback	
+	} else
 		return 1; // Still some data ... 
 }
 
@@ -74,8 +76,10 @@ int sd_play_file(const char * file) {
 	if(f_open(&read_file, file, FA_READ) == FR_OK) {
 		sound_playback_disable();
 		sound_playback_enable(sd_play_cb);
+		behavior_notify_sd(BEHAVIOR_START | BEHAVIOR_SD_READ);
 		ret = 1;
 	} else {
+		behavior_notify_sd(BEHAVIOR_STOP | BEHAVIOR_SD_READ);
 		ret = 0;
 	}
 	
@@ -92,6 +96,7 @@ void sound_mic_buffer(unsigned char *b) {
 		f_write(&write_file, b, SOUND_IBUFSZ, &written);
 		if(written != SOUND_IBUFSZ) {
 			record = 0;
+			behavior_notify_sd(BEHAVIOR_STOP | BEHAVIOR_SD_WRITE);
 			f_close(&write_file);
 		}
 	}
@@ -103,8 +108,10 @@ void sd_start_record(const char * file) {
 	// Make sure the file is closed
 	f_close(&write_file);
 	
-	if(!f_open(&write_file, file, FA_WRITE | FA_CREATE_ALWAYS))
+	if(!f_open(&write_file, file, FA_WRITE | FA_CREATE_ALWAYS)) {
+		behavior_notify_sd(BEHAVIOR_START | BEHAVIOR_SD_WRITE);
 		record = 1;
+	}
 	
 	IRQ_ENABLE(flags);
 }
@@ -113,6 +120,7 @@ void sd_stop_record(void) {
 	RAISE_IPL(flags, SD_PRIO);
 	
 	record = 0;
+	behavior_notify_sd(BEHAVIOR_STOP | BEHAVIOR_SD_WRITE);
 	f_close(&write_file);
 	
 	IRQ_ENABLE(flags);

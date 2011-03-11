@@ -5,6 +5,12 @@
 
 void behavior_init(int timer, int prio);
 
+#define BEHAVIOR_SD_READ 0x1
+#define BEHAVIOR_SD_WRITE 0x2
+#define BEHAVIOR_START 0x8000
+#define BEHAVIOR_STOP 0x0000
+void behavior_notify_sd(unsigned int rw);
+
 void behavior_start(int b);
 void behavior_stop(int b);
 
@@ -20,5 +26,5 @@ void behavior_stop(int b);
 #define B_LEDS_RC5		(1 << 7)
 #define B_MOTORS		(1 << 8)
 #define B_STATE_MACHINE	(1 << 9)
-
+#define B_MAX			B_STATE_MACHINE
 #endif

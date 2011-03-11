@@ -5,7 +5,7 @@
 
 #include <math.h>
 
-char button_flags[5];
+char buttons_state[5]; // duplicate with vmVariables.buttons_state, but we don't want the user to mess with the buttons
 
 
 
@@ -109,9 +109,8 @@ void button_process(unsigned int b, unsigned int i) {
 		tresh = MIN_TRESHOLD;
 	
 	tresh += TRESH_OFFSET;
-	// FIXME Check the division optimisation (or use div32by16u())
 	// Fixme, do the check only one every 16 samples ? 
-	if(b < ((unsigned int)(sum_filtered[i]/(64*16))) - tresh) {
+	if(b < __builtin_divud(sum_filtered[i],64*16) - tresh) {
 		state[i]++;
 	} else {
 		if(state[i] == DEBOUNCE)
@@ -122,8 +121,7 @@ void button_process(unsigned int b, unsigned int i) {
 	
 	if(state[i] > DEBOUNCE) {
 		state[i] = DEBOUNCE;
-		if(!vmVariables.buttons_state[i])
-			button_flags[i] = 1;
+		buttons_state[i] = 1;
 		vmVariables.buttons_state[i] = 1;
 	} else {
 		if(state[i] == STATE_RELEASED) {
@@ -131,11 +129,26 @@ void button_process(unsigned int b, unsigned int i) {
 			inhibit[i] = 16;
 		}
 		vmVariables.buttons_state[i] = 0;
+		buttons_state[i]= 0;
 		if(inhibit[i] > 0) 
 			inhibit[i]--;
 		else 
 			if(!state[i])
 				compute_stats(b,i);
+	}
+	
+	// Poweroff button managment. non-configurable behavior
+	if(i == 2) {
+		static unsigned char poweroff_timer;
+		if(buttons_state[2]) {
+			if(poweroff_timer++ >= 110) {
+				poweroff_timer = 200;
+				// Trigger softirq for poweroff (I cannot do it here ...)
+				_INT3IF = 1;
+			}
+		} else {
+			poweroff_timer = 0;
+		}
 	}
 }
 
