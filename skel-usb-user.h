@@ -5,7 +5,7 @@
 
 #define FLASH_END 0x15800
 
-#define PRIO_USB 4
+#define PRIO_USB 5
 
 #define PRODUCT_ID 8
 
@@ -16,13 +16,13 @@
 #define RECV_QUEUE_SIZE (512+6+4+1)
 
 /* This is the number of "private" variable the aseba script can have */
-#define VM_VARIABLES_FREE_SPACE 256
+#define VM_VARIABLES_FREE_SPACE 512
 
 /* THis is the maximum number of argument an aseba event can recieve */
 #define VM_VARIABLES_ARG_SIZE 32
 
 /* THE nuber of opcode an aseba script can have */
-#define VM_BYTECODE_SIZE 766	// Put here 766+768*a, where a is >= 0
+#define VM_BYTECODE_SIZE (766+768)	// Put here 766+768*a, where a is >= 0
 #define VM_STACK_SIZE 32
 
 struct _vmVariables {
