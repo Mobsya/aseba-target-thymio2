@@ -15,10 +15,6 @@ static unsigned int __attribute((noinline)) ic_buf(int ic) {
 	return *((&IC1BUF) + ic*4);
 }
 
-// TODO: We should _really_ use an OC to trigger the pulse ... 
-// Improvement: Much more precise, less CPU overhead
-// Drawback: Need an RP pin !
-
 void ir_prox_mesure(void) {
 	int temp[2];
 	int i;	
