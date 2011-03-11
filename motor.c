@@ -33,6 +33,9 @@ static int filter_p; // Same for left and right
 static int vind_filtered[2];
 
 static int motor_sens[2];
+
+static unsigned char ir_period; 
+
 #define SENS_MAX 10
 
 // We are called at 8kHz
@@ -118,8 +121,6 @@ void motor_new_analog(unsigned int l, unsigned int r) {
 			}
 					
 			
-			// TODO: Run the PID ! 
-			
 			pid_motor_tick(vind_filtered);
 			
 				
@@ -130,7 +131,10 @@ void motor_new_analog(unsigned int l, unsigned int r) {
 			pwm_motor_unlock_right();
 			
 			// Trigger prox mesurment
-			ir_prox_mesure();
+			if(++ir_period == 10) {
+				ir_period = 0;
+				ir_prox_mesure();
+			}
 
 			
 			state = STATE_PWM;
@@ -174,7 +178,7 @@ void motor_new_analog(unsigned int l, unsigned int r) {
 	
 			break;
 			
-		case STATE_PWM:
+		case STATE_PWM:	
 			if(++counter == DURATION_PWM) {
 				state = STATE_IDLE;
 				counter = 0;
