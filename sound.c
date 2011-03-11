@@ -42,11 +42,11 @@ void sound_init(void) {
 	
 	
 	// We use INT1 to trigger sound buffer filling (read)
-	_INT1IP = 1;
+	_INT1IP = 2;
 	_INT1IE = 1;
 	
 	// We use INT2 to trigger sound buffer writing
-	_INT2IP = 1;
+	_INT2IP = 2;
 	_INT2IE = 1;
 	
 }
