@@ -106,6 +106,8 @@ void update_aseba_variables_write(void) {
 // 	- Disabled
 // 	- In minimal power consuption mode
 void switch_off(void) { 
+	behavior_stop(B_ALL);
+	
 	analog_disable();
 	pwm_motor_poweroff();
 	prox_poweroff();

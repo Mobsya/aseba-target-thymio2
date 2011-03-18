@@ -18,11 +18,13 @@ void ground_ir_new(unsigned int r, unsigned int l) {
 			break;
 		case 53:
 			vmVariables.ground_reflected[0] = r;
+			vmVariables.ground_delta[0] = r - vmVariables.ground_ambiant[0];
 			PULSE_R = 0;
 			PULSE_L = 1;
 			break;
 		case 56: 
 			vmVariables.ground_reflected[1] = l;
+			vmVariables.ground_delta[1] = l - vmVariables.ground_ambiant[1];
 			PULSE_L = 0;
 			break;
 	}	

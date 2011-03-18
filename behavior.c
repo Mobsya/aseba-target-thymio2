@@ -4,6 +4,7 @@
 #include "leds.h"
 #include "button.h"
 #include "playback.h"
+#include "rc5.h"
 #include <skel-usb.h>
 
 
@@ -46,6 +47,7 @@ static void behavior_sd(void) {
 
 static void behavior_battery(void) {
 	static char counter;
+	static char was_charging = 0;
 	
 	// First check if 5V is present, if it's the case then 
 	// Do a funny sequence on the battery led
@@ -54,6 +56,15 @@ static void behavior_battery(void) {
 	
 	if(U1OTGSTATbits.SESVD) {
 		static char state;
+		
+		if(!was_charging) {
+			// switch off everything.
+			leds_set(LED_BATTERY_0, 0);
+			leds_set(LED_BATTERY_1, 0);
+			leds_set(LED_BATTERY_2, 0);
+			was_charging = 1;
+		}
+		
 		// On 5V
 		int i = counter ? counter : 1;
 		counter += i >20 ? 15 : i;
@@ -81,28 +92,51 @@ static void behavior_battery(void) {
 		unsigned long temp = __builtin_mulss(bat,1000);
 		bat = __builtin_divud(temp,3978);
 		
-		// On battery
-		// >3.8 three bar
-		// 3.5-3.8 two bar
-		// 3.4-3.5 one bar
-		// < 3.4 blink one bar
+#define BAT_HIGH 390
+#define BAT_MIDDLE 360
+#define BAT_LOW 340
+	
+		if(was_charging) {
+			was_charging = 0;
+			if(bat >= BAT_HIGH) {
+				leds_set(LED_BATTERY_0, 32);
+				leds_set(LED_BATTERY_1, 32);
+				leds_set(LED_BATTERY_2, 32);
+			} else if (bat > BAT_MIDDLE) {
+				leds_set(LED_BATTERY_0, 32);
+				leds_set(LED_BATTERY_1, 32);
+				leds_set(LED_BATTERY_2, 0);
+			} else if (bat > BAT_LOW) {
+				leds_set(LED_BATTERY_0, 32);
+				leds_set(LED_BATTERY_1, 0);
+				leds_set(LED_BATTERY_2, 0);
+			}
+		}
 		
-		when(bat >= 380) {
+		// On battery
+		// >3.9 three leds
+		// 3.6-3.9 two leds
+		// 3.4-3.55 one led
+		// < 3.4 blink one led
+		
+		
+		
+		when(bat >= BAT_HIGH) {
 			leds_set(LED_BATTERY_0, 32);
 			leds_set(LED_BATTERY_1, 32);
 			leds_set(LED_BATTERY_2, 32);
 		}
-		when(bat > 350 && bat < 380) {
+		when(bat > BAT_MIDDLE && bat < (BAT_HIGH - 5)) {
 			leds_set(LED_BATTERY_0, 32);
 			leds_set(LED_BATTERY_1, 32);
 			leds_set(LED_BATTERY_2, 0);
 		}
-		when(bat > 340 && bat <= 350) {
+		when(bat > BAT_LOW && bat <= (BAT_MIDDLE - 5)) {
 			leds_set(LED_BATTERY_0, 32);
 			leds_set(LED_BATTERY_1, 0);
 			leds_set(LED_BATTERY_2, 0);
 		}
-		if(bat <= 340) {
+		if(bat <= BAT_LOW) {
 			counter++;
 			if(counter == 3) 
 				leds_set(LED_BATTERY_0, 32);
@@ -176,6 +210,134 @@ static void behavior_sound_buttons(void) {
 }
 
 
+static void behavior_leds_prox(void) {
+	// 5 front, two back, two ground
+	static int max[9] = {4000,4000,4000,4000,4000,4000,4000,900,900};
+	static int min[9] = {900,900,900,900,900,900,900,0,0};
+	static unsigned char led[9] = {16,17,20,18,19,0,1,22,23};
+	
+	// 
+// Do some adaptative stuff, so first we have a "standard" model of the sensor
+// Then everytime we are called, we readapt the max&min value of the sensors
+// So we can get the real range and display it on the leds.
+
+	//first the 7 horizontal prox.
+	int i;
+	
+	// Todo: fixme: use vmVariables ? user can corrupt ... 
+	for(i = 0; i < 7; i++) {
+		if(max[i] < vmVariables.prox[i])
+			max[i] = vmVariables.prox[i];
+		if(vmVariables.prox[i] != 0 && min[i] > vmVariables.prox[i])
+			min[i] = vmVariables.prox[i];
+	}
+	for(i = 0; i < 2; i++) {
+		if(max[i+7] < vmVariables.ground_delta[i])
+			max[i+7] = vmVariables.ground_delta[i];
+		// min is fixed to 0 ... this is _physical_ 	
+	}
+
+	// Do a linear transformation from min-max to led 0-31!
+	for(i = 0; i < 7; i++) {
+		// Because of the min&max calculation above, we cannot have a
+		// Division by 0 here.
+		int s = vmVariables.prox[i] - min[i];
+		int d = max[i] - min[i];
+		
+		if(s < 0) 
+			s = 0;
+			
+		int b = __builtin_divsd(__builtin_mulss(s, 32),d);
+		leds_set(led[i], b);
+		// Special case sensor 2 has two leds
+		if(i == 2) 
+			leds_set(led[i] + 1, b);
+	}
+	
+	for(i = 0; i < 2; i++) {
+		int s = vmVariables.ground_delta[i] > 0 ? vmVariables.ground_delta[i] : 0;
+		int b = __builtin_divsd(__builtin_mulss(s,32),max[i + 7]);
+		leds_set(led[i+7], b);
+	}
+}
+
+static void behavior_leds_rc5(void) {
+	// Switch on for a short time when we have a valid rc5 code ..
+	when(rc5_valid_flag == 0) {
+		leds_set(LED_RC, 0);
+	}
+	
+	if(rc5_valid_flag) {
+		rc5_valid_flag = 0;
+		leds_set(LED_RC, 32);
+	}
+}
+
+sint16 aseba_atan2(sint16 y, sint16 x); // We use a function which should be private to aseba native ...
+
+static void behavior_leds_acc(void) {
+	static int previous_led;
+	int led = -1;
+	
+	// FIXME: Use vmVariables ?!
+	if(vmVariables.acc[2] < 21) {
+		int angle = aseba_atan2(vmVariables.acc[0], vmVariables.acc[1]);
+		if(angle >= -4000 && angle < 4000)
+			led = 28;
+		else if (angle < -4000 && angle >= -12000) 
+			led = 27;
+		else if (angle < -12000 && angle >= -20000)
+			led = 26;
+		else if (angle < -20000 && angle >= -28000)
+			led = 25;
+		else if (angle  < -28000 || angle >= 28000)
+			led = 24;
+		else if (angle < 12000 && angle >= 4000) 
+			led = 36;
+		else if (angle < 20000 && angle >= 12000)
+			led = 37;
+		else if (angle < 28000 && angle >= 20000) 
+			led = 31;
+		
+		if(led >= 0) {
+			if(previous_led >= 0)
+				leds_set(previous_led, 0);
+			leds_set(led, 32);
+		}	
+		previous_led = led;
+	} else {
+		if(previous_led >= 0)
+			leds_set(previous_led, 0);
+			
+		previous_led = -1;
+	}
+}
+
+static void behavior_leds_ntc(void ) {
+	// Fixme: Use vmVariables ?!
+	static unsigned char counter = 0;
+
+#define TEMP_HOT 280
+#define TEMP_COLD 150
+
+	if(++counter == 10) {
+		counter = 0;
+		// transistion from TEMP_COLD to TEMP_HOT
+		if(vmVariables.ntc < TEMP_COLD) {
+			leds_set(LED_TEMP_RED, 0);
+			leds_set(LED_TEMP_BLUE, 32);
+		} else if(vmVariables.ntc > TEMP_HOT) {
+			leds_set(LED_TEMP_RED, 32);
+			leds_set(LED_TEMP_BLUE, 0);
+		} else {
+			int t = vmVariables.ntc - TEMP_COLD;
+			t = (t * 32) / (TEMP_HOT-TEMP_COLD);
+			leds_set(LED_TEMP_RED, t);
+			leds_set(LED_TEMP_BLUE, 32 - t);
+		}
+	}
+}
+
 static void timer_cb(int timer_id) {
 	if(ENABLED(B_LEDS_SD)) 
 		behavior_sd();
@@ -188,7 +350,19 @@ static void timer_cb(int timer_id) {
 	
 	if(ENABLED(B_SOUND_BUTTON))
 		behavior_sound_buttons();
-			
+
+	if(ENABLED(B_LEDS_PROX)) 
+		behavior_leds_prox();
+
+	if(ENABLED(B_LEDS_RC5))
+		behavior_leds_rc5();
+		
+	if(ENABLED(B_LEDS_ACC))
+		behavior_leds_acc();
+		
+	if(ENABLED(B_LEDS_NTC))
+		behavior_leds_ntc();
+		
 }
 
 void behavior_init(int t, int prio) {
@@ -198,10 +372,10 @@ void behavior_init(int t, int prio) {
 }
 
 void behavior_start(int b) {
-	ENABLE(b);
-
-	if(behavior)
+	if(!behavior)
 		timer_enable(timer);
+
+	ENABLE(b);
 }
 
 void behavior_stop(int b) {
@@ -214,6 +388,8 @@ void behavior_stop(int b) {
 	}
 }
 
+// Some helper for the SD card, special case because 
+// of no real & proper way to do a refcounting in the SD code
 void behavior_notify_sd(unsigned int rw) {
 	if(rw & BEHAVIOR_START) {
 	 	led_sd |= rw & 0x3;

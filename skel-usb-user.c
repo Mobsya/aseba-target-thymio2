@@ -18,6 +18,7 @@ const AsebaVMDescription vmDescription = {
 		{7, "prox.horizontal"},
 		{2, "prox.ground.ambiant"},
 		{2, "prox.ground.reflected"},
+		{2, "prox.ground.delta"},
 		
 		{2, "motor.target"},
 		{2, "vbat"},

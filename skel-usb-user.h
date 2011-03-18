@@ -48,6 +48,7 @@ struct _vmVariables {
 	sint16 prox[7];
 	sint16 ground_ambiant[2];
 	sint16 ground_reflected[2];
+	sint16 ground_delta[2];
 	
 	sint16 target[2];
 	

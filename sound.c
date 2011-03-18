@@ -69,6 +69,7 @@ void sound_playback_enable(sound_cb cb) {
 void sound_playback_disable(void) {
 	callback = NULL;
 	barrier();
+	leds_set(SOUND_ON, 0);
 	OC6R = 127;
 }
 

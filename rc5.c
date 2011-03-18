@@ -30,6 +30,8 @@ static unsigned int rc5_data;
 static int rc5_index;		// Point to the next bit of rc5_data, from MSB to LSB
 				// Negative index possible in case of errors
 
+unsigned char rc5_valid_flag;
+
 static void timer_cb(int timer_id)
 {
 	// Test rc5_index: fire the callback or reset the state
@@ -144,6 +146,8 @@ void m_throw_cb(void)
 	static unsigned int previous_rc5 = 0;
 	unsigned int rc5_data_save = rc5_data; 		// Avoid inconsistency if rc5_data changes in the interrupt
 	m_reset_state_machine();
+
+	rc5_valid_flag = 1;
 
 	if (cb) {
 		// Check if data has changed + begin with 11 (2x start bit)

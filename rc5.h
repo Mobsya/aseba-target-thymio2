@@ -16,5 +16,7 @@ void rc5_shutdown(void);
 void rc5_disable(void);
 void rc5_enable(void);
 
+extern unsigned char rc5_valid_flag;
+
 #endif // _RC5_H
 
