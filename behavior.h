@@ -28,5 +28,9 @@ void behavior_stop(int b);
 #define B_STATE_MACHINE	(1 << 9)
 #define B_LEDS_ACC		(1 << 10)
 #define B_LEDS_NTC		(1 << 11)
-#define B_MAX			B_LEDS_NTC
+#define B_MODE			(1 << 12)
+#define B_MAX			B_MODE
+
+#define B_ALWAYS		(B_LEDS_BATTERY | B_LEDS_RC5 | B_LEDS_SD)
+
 #endif

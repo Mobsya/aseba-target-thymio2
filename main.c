@@ -22,6 +22,7 @@
 #include "tone.h"
 #include "button.h"
 #include "behavior.h"
+#include "mode.h"
 
 #include <skel-usb.h>
 
@@ -271,7 +272,8 @@ int main(void)
 	init_aseba_and_usb();
 
 	behavior_init(TIMER_BEHAVIOR, PRIO_BEHAVIOR);
-	behavior_start(B_ALL);
+	
+	mode_init();
 
 	
 	if( ! load_settings_from_flash()) {
