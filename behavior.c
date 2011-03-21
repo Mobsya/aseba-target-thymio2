@@ -67,7 +67,7 @@ static void behavior_battery(void) {
 		
 		// On 5V
 		int i = counter ? counter : 1;
-		counter += i >20 ? 15 : i;
+		counter += i > 10 ? 7 : i/2 + 1;
 		
 		if(counter > 100) {
 			state ++;
@@ -78,12 +78,8 @@ static void behavior_battery(void) {
 			switch(state) {
 				case 0:
 					leds_set(LED_BATTERY_2, 0);
+					leds_set(LED_BATTERY_1, 0);
 					break;
-				case 1:
-					leds_set(LED_BATTERY_0, 0);
-					break;
-				case 2:
-					leds_set(LED_BATTERY_1, 0);	
 			}
 		}
 		leds_set(LED_BATTERY_0 + state, counter);
@@ -367,7 +363,7 @@ static void timer_cb(int timer_id) {
 
 void behavior_init(int t, int prio) {
 	timer = t;
-	timer_init(timer, 100, 3);
+	timer_init(timer, 20, 3);
 	timer_enable_interrupt(timer,timer_cb, prio);
 }
 
