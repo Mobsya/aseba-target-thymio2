@@ -2,6 +2,8 @@
 #include <clock/clock.h>
 #include <timer/timer.h>
 
+#include <string.h>
+
 #include "regulator.h"
 #include "leds.h"
 
@@ -18,6 +20,18 @@ static unsigned char index;
 #define atomic_andb(x,y) do { __asm__ volatile ("and.b %[yy], [%[xx]], [%[xx]]": : [xx] "r" (x), [yy] "r"(y): "cc","memory"); } while(0)
 /** Atomic or operation to prevent race conditions inside interrupts: *x = (*x) | y */
 #define atomic_orb(x,y) do { __asm__ volatile ("ior.b %[yy], [%[xx]], [%[xx]]" : : [xx] "r" (x), [yy] "r"(y): "cc","memory"); } while(0)
+
+void leds_clear_all(void) {
+	// Enable you to poweroff all leds, but keep the SOUND_ON as it is.	
+	unsigned char _l[LED_BANK];
+	int i;
+	memcpy(_l,leds_off,LED_BANK);
+	
+	_l[1] |= led[SOUND_ON / 8] & (1 << (SOUND_ON % 8));
+	
+	for(i = 0; i < MAX_BRIGHTNESS; i++) 
+		memcpy(led + i * LED_BANK, _l, LED_BANK);
+}
 
 void leds_set(unsigned char l, unsigned char brightness) {
 	unsigned char bank;

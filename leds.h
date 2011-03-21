@@ -9,6 +9,8 @@ void leds_tick_cb(void);
 
 void leds_set(unsigned char l, unsigned char brightness);
 
+void leds_clear_all(void);
+
 enum leds {
 	LED_IR_BACK_L,		/* 0 */
 	LED_IR_BACK_R,
