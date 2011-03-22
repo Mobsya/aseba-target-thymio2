@@ -132,6 +132,10 @@ static void behavior_battery(void) {
 			leds_set(LED_BATTERY_1, 0);
 			leds_set(LED_BATTERY_2, 0);
 		}
+		when(bat <= BAT_LOW) {
+			leds_set(LED_BATTERY_1, 0);
+			leds_set(LED_BATTERY_2, 0);
+		}
 		if(bat <= BAT_LOW) {
 			counter++;
 			if(counter == 3) 
