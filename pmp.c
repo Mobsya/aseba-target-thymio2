@@ -21,10 +21,11 @@ void setup_io(void) {
 	_TRISE1 = 0;
 	
 	// Output pin
-	_LATF0 = 0;	// USB-500
+	_LATF0 = 1;	// USB-500
 	_TRISF0 = 0;
 	
-	// By default, enable 100mA charging.
+	// By default, enable 500mA charging.
+	// We will switch to 100mA right after making sure to disable the leds
 	_LATF1 = 1; // USB-Charge
 	_TRISF1 = 0;
 	
