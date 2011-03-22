@@ -1,7 +1,19 @@
 #include "mode.h"
 #include "behavior.h"
 #include "leds.h"
+#include "button.h"
 #include <skel-usb.h>
+
+
+// Macro to do a when-like as in aseba
+// We put all the state into a section so we can
+// Zero it on reinit.
+
+#define when(cond) if(({static unsigned char __attribute((section("when"))) p; \
+						unsigned char c = !!(cond); \
+						unsigned char r = c && !p; \
+						p = c; \
+						r;}))
 
 enum mode {
 	MODE_MENU = 0,
