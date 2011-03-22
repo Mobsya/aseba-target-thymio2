@@ -228,6 +228,8 @@ int main(void)
 	
 	leds_init();
 
+	_LATF0 = 0; // Switch back to 100mA charge.
+	
 	// Switch on one led to say we are powered on
 	leds_set(LED_BATTERY_0, 32);
 
