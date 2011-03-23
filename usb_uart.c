@@ -23,6 +23,12 @@ void usb_uart_init(void) {
 	USBDeviceInit();
 }
 
+int usb_uart_configured(void) {
+	if(USBGetDeviceState() == CONFIGURED_STATE)
+		return 1;
+	return 0;
+}
+
 int usb_uart_serial_port_open(void) {
 	// Check that:
 	// 	- We are in configured state

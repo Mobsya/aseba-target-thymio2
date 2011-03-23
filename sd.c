@@ -125,3 +125,21 @@ void sd_stop_record(void) {
 	
 	IRQ_ENABLE(flags);
 }
+
+int sd_test_file_present(void) {
+	unsigned int flags;
+	int ret;
+	RAISE_IPL(flags,SD_PRIO);
+	
+	if(f_open(&read_file, "_TESTMOD.#@!", FA_READ) == FR_OK) {
+		f_close(&read_file);
+		ret = 1;
+	} else {
+		ret = 0;
+	}
+	
+	IRQ_ENABLE(flags);
+	
+	return ret;
+}
+

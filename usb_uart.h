@@ -4,7 +4,7 @@
 void usb_uart_init(void);
 void usb_uart_tick(void);
 int usb_uart_serial_port_open(void);
-
+int usb_uart_configured(void);
 
 void USBDeviceDetach(void);
 #endif

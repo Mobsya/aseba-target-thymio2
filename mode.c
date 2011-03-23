@@ -2,6 +2,7 @@
 #include "behavior.h"
 #include "leds.h"
 #include "button.h"
+#include "test.h"
 #include <skel-usb.h>
 
 
@@ -97,7 +98,6 @@ void mode_tick(void) {
 	when(buttons_state[2]) {
 		switch_to_mode(_selecting);
 	}
-	
 	// TODO: Tick to the differents mode controller ... 
 }
 

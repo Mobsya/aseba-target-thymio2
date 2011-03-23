@@ -23,6 +23,7 @@
 #include "button.h"
 #include "behavior.h"
 #include "mode.h"
+#include "test.h"
 
 #include <skel-usb.h>
 
@@ -34,11 +35,7 @@
 //_CONFIG2(IESO_OFF & PLLDIV_DIV2 & PLL96DIS_ON & FNOSC_PRIPLL & FCKSM_CSDCMD & OSCIOFNC_OFF & IOL1WAY_OFF & DISUVREG_OFF & POSCMOD_HS) 
 //_CONFIG3(WPEND_WPSTARTMEM & WPCFG_WPCFGDIS & WPDIS_WPEN) 
 
-// Maybe we should use IPL 1 for "default behavior", IPL 2 for sd
-// and everything else higher ? 
-// then when VM is in use, we could simply disable IPL 1 .... 
-
-// Priority 1 is reserverd for SD operations ...
+// Priority 2 is reserverd for SD operations ...
 #define PRIO_SENSORS 6
 // USB priority: 5
 #define PRIO_RC5 4
@@ -55,16 +52,8 @@
 #define TIMER_RC5 TIMER_3
 #define TIMER_BEHAVIOR TIMER_1
 
-static unsigned char button_counter[5];
 
 void cb_1khz(void) {
-	int i;
-	
-	for(i = 0; i < 5; i++) {
-		if(button_counter[i] && button_counter[i] < 250)
-			button_counter[i]++;
-	}	
-	
 	disk_timerproc();		
 }
 
@@ -221,6 +210,7 @@ void update_aseba_variables_read(void) {
 
 int main(void)
 {   
+	int test_mode;
 	clock_set_speed(16000000UL,16);	
 	
 	setup_pps();
@@ -275,7 +265,11 @@ int main(void)
 
 	behavior_init(TIMER_BEHAVIOR, PRIO_BEHAVIOR);
 	
-	mode_init();
+	
+	test_mode = sd_test_file_present();
+	
+	if(!test_mode)
+		mode_init();
 
 	
 	if( ! load_settings_from_flash()) {
@@ -283,6 +277,11 @@ int main(void)
 	}
 	
 	play_sound(SOUND_POWERON);
+	
+	if(test_mode) {
+		test_mode_start();
+		
+	}
 	
 	run_aseba_main_loop();
 	

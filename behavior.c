@@ -5,6 +5,8 @@
 #include "button.h"
 #include "playback.h"
 #include "rc5.h"
+#include "mode.h"
+#include "test.h"
 #include <skel-usb.h>
 
 
@@ -363,6 +365,11 @@ static void timer_cb(int timer_id) {
 	if(ENABLED(B_LEDS_NTC))
 		behavior_leds_ntc();
 		
+	if(ENABLED(B_MODE))
+		mode_tick();
+		
+	if(ENABLED(B_TEST))
+		test_mode_tick();
 }
 
 void behavior_init(int t, int prio) {
