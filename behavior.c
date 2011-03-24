@@ -385,6 +385,10 @@ void behavior_start(int b) {
 	ENABLE(b);
 }
 
+int behavior_enabled(int b) {
+	return ENABLED(b);
+}
+
 void behavior_stop(int b) {
 	
 	DISABLE(b);

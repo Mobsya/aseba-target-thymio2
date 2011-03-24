@@ -148,8 +148,13 @@ void _ISR _INT3Interrupt(void) {
 				
 
 void update_aseba_variables_read(void) {
-	// TODO: REMOVE ME (Move to skel) (move to behavior ? /!\ behavior == IPL 1 !! race wrt aseba !)
+	// TODO: REMOVE ME (move to behavior ? /!\ behavior == IPL 1 !! race wrt aseba !)
 	usb_uart_tick();
+}
+
+static void idle_without_aseba(void) {
+	clock_idle(); // race WRT interrupt, but we have tons of periodic interrupt which will wake us ..
+	usb_uart_tick(); // TODO: remove me (mote to behavior ?)	
 }
 
 int main(void)
@@ -224,11 +229,15 @@ int main(void)
 	
 	if(test_mode) {
 		test_mode_start();
-		
+		while(1) 
+			idle_without_aseba();
 	}
 	
+	
+	while(behavior_enabled(B_MODE)) 
+		idle_without_aseba();
+		
+	// Give full control to aseba. No way out (except reset).
 	run_aseba_main_loop();
-	
-	
 }
 
