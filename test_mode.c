@@ -398,17 +398,17 @@ void test_mode_tick(void) {
 	
 	if(counter < 200)
 		vmVariables.target[0] = 200;
-	if(counter < 400)
+	if(counter < 400 && counter > 200)
 		vmVariables.target[0] = -200;
 		
-	if(counter < 600) {
+	if(counter < 600 && counter > 400) {
 		vmVariables.target[0] = 0;
 		vmVariables.target[1] = 200;
 	}
-	if(counter < 800) 
+	if(counter < 800 && counter > 600) 
 		vmVariables.target[1] = -200;
 		
-	if(counter < 1200) {
+	if(counter < 1200 && counter > 800) {
 		vmVariables.target[1]= 0;
 	}
 	if(counter == 1200) 
