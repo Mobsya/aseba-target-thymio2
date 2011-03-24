@@ -115,26 +115,6 @@ void switch_off(void) {
 	// TODO: Force VA ?! Check me that refcount is correct
 }
 
-AsebaNativeFunctionDescription AsebaNativeDescription_set_led = {
-	"_leds.set",
-	"Set the led",
-	{
-		{1,"led"},
-		{1,"brightness"},
-		{0,0}
-	}
-};
-
-void set_led(AsebaVMState *vm) {
-	int led = vm->variables[AsebaNativePopArg(vm)];
-	int b = vm->variables[AsebaNativePopArg(vm)];
-	
-	if(led == SOUND_ON || led < 0 || led > 39) 
-		return;
-	
-	leds_set(led,b);
-}
-
 AsebaNativeFunctionDescription AsebaNativeDescription_poweroff = {
 	"_poweroff",
 	"Poweroff",
@@ -164,43 +144,7 @@ void _ISR _INT3Interrupt(void) {
 	power_off(NULL);
 }
 
-AsebaNativeFunctionDescription AsebaNativeDescription_record = {
-	"_sound.record",
-	"Start sound recording",
-	{
-		{1,"[0-9]"},
-		{0,0},
-	}
-};
 
-AsebaNativeFunctionDescription AsebaNativeDescription_play = {
-	"_sound.play",
-	"Start sound playback",
-	{
-		{1,"[0-9]"},
-		{0,0},
-	}
-};
-
-void sound_playback(AsebaVMState *vm) {
-	int number = vm->variables[AsebaNativePopArg(vm)];
-	play_sound(number);
-}
-
-void sound_record(AsebaVMState *vm) {
-	int number = vm->variables[AsebaNativePopArg(vm)];
-	char name[7] = {'r','0','.','r','a','w', 0};
-	if(number < 0) {
-		sd_stop_record();
-		return;
-	}
-		
-	if(number > 9)
-		number = 9;
-	name[1] += number;
-	
-	sd_start_record(name);
-}
 				
 
 void update_aseba_variables_read(void) {

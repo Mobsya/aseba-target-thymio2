@@ -1,5 +1,7 @@
 /* Descriptors */
 
+#include "thymio_natives.h"
+
 const AsebaVMDescription vmDescription = {
 	"thymio-II", // Name of the microcontroller
 	{
@@ -56,18 +58,9 @@ static const AsebaLocalEventDescription localEvents[] = {
 	{ NULL, NULL }
 };
 
-extern AsebaNativeFunctionDescription AsebaNativeDescription_set_led;
-void set_led(AsebaVMState *vm);
 
 extern AsebaNativeFunctionDescription AsebaNativeDescription_poweroff;
 void power_off(AsebaVMState *vm);
-
-extern AsebaNativeFunctionDescription AsebaNativeDescription_record;
-void sound_record(AsebaVMState *vm);
-
-
-extern AsebaNativeFunctionDescription AsebaNativeDescription_play;
-void sound_playback(AsebaVMState *vm);
 
 static const AsebaNativeFunctionDescription* nativeFunctionsDescription[] = {
 	&AsebaNativeDescription__system_reboot,
@@ -77,11 +70,9 @@ static const AsebaNativeFunctionDescription* nativeFunctionsDescription[] = {
 	
 	ASEBA_NATIVES_STD_DESCRIPTIONS,
 	
-	&AsebaNativeDescription_set_led,
-	&AsebaNativeDescription_poweroff,
-	&AsebaNativeDescription_record,
-	&AsebaNativeDescription_play,
+	THYMIO_NATIVES_DESCRIPTIONS,
 	
+	&AsebaNativeDescription_poweroff,
 	0       // null terminated
 };
 
@@ -93,9 +84,8 @@ static AsebaNativeFunctionPointer nativeFunctions[] = {
 	
 	ASEBA_NATIVES_STD_FUNCTIONS,
 	
-	set_led,
-	power_off,
-	sound_record,
-	sound_playback,
+	THYMIO_NATIVES_FUNCTIONS,
+	
+	power_off
 };
 
