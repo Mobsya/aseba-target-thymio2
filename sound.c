@@ -15,6 +15,10 @@ static unsigned char output_buf[SOUND_OBUFSZ*2];
 static unsigned int obufp;
 static unsigned int ibufp;
 static sound_cb callback;
+static int sound_mic_stat;
+
+unsigned char sound_mic_max;
+unsigned char sound_mic_min;
 
 void sound_init(void) {
 	int i;
@@ -83,6 +87,10 @@ void sound_poweroff(void) {
 	OC6CON1 = 0;
 }	
 
+void sound_set_mic_stat(int enabled) {
+	sound_mic_stat = enabled;
+}
+
 void _ISR _INT1Interrupt(void) {
 	int ret;
 	_INT1IF = 0;
@@ -98,6 +106,28 @@ void _ISR _INT1Interrupt(void) {
 
 void _ISR _INT2Interrupt(void) {
 	_INT2IF = 0;
+	
+	if(sound_mic_stat) {
+		unsigned char *ptr;
+		if(ibufp >= SOUND_IBUFSZ)
+			ptr = input_buf;
+		else
+			ptr = &input_buf[SOUND_IBUFSZ];
+		
+		
+		unsigned char max = 0;
+		unsigned char min = 255;
+		int i;
+		for(i = 0; i < SOUND_IBUFSZ; i++) {
+			if(*ptr > max)
+				max = *ptr;
+			if(*ptr < min)
+				min = *ptr;
+			ptr++;
+		}
+		sound_mic_max = max;
+		sound_mic_min = min;
+	}
 	
 	if(ibufp >= SOUND_IBUFSZ)
 		sound_mic_buffer(&input_buf[0]);

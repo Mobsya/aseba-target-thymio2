@@ -16,6 +16,10 @@ void sound_poweroff(void);
 void sound_playback_enable(sound_cb cb);
 void sound_playback_disable(void);
 
+void sound_set_mic_stat(int enabled);
+
+extern unsigned char sound_mic_max;
+extern unsigned char sound_mic_min;
 
 //callback 
 void sound_mic_buffer(unsigned char * b);
