@@ -64,6 +64,8 @@ struct _vmVariables {
 	sint16 rc5_address;
 	sint16 rc5_command;
 	
+	sint16 acc_tap;
+	
 	/*****
 	---> PUT YOUR VARIABLES HERE <---
 	******/

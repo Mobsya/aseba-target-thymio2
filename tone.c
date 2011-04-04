@@ -33,7 +33,7 @@ void tone_setup(unsigned int dHz) {
 		dHz = 78120 / 2;
 	
 	// Compute the skip value 
-	skip_d = __udiv3216(__builtin_muluu(dHz, 1420) + 7812/2,7812);
+	skip_d = __builtin_divud(__builtin_muluu(dHz, 1420) + 7812/2,7812);
 	skip = skip_d / 100;
 	skip_d -= skip*100;
 	
@@ -55,6 +55,7 @@ void tone_fill_buffer(unsigned char *b, unsigned int c) {
 			counter = 0;
 			ptr++;
 		}
+	
 		if(ptr > 141)
 			ptr -= 142;
 	}

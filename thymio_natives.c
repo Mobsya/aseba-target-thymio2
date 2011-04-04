@@ -88,14 +88,7 @@ void set_led_circle(AsebaVMState *vm) {
 	int l7 = vm->variables[AsebaNativePopArg(vm)];
 	int l8 = vm->variables[AsebaNativePopArg(vm)];
 
-	leds_set(LED_CIRCLE_0, l1);
-	leds_set(LED_CIRCLE_1, l2);
-	leds_set(LED_CIRCLE_2, l3);
-	leds_set(LED_CIRCLE_3, l4);
-	leds_set(LED_CIRCLE_4, l5);
-	leds_set(LED_CIRCLE_5, l6);
-	leds_set(LED_CIRCLE_6, l7);
-	leds_set(LED_CIRCLE_7, l8);
+	leds_set_circle(l1,l2,l3,l4,l5,l6,l7,l8);
 }
 
 AsebaNativeFunctionDescription AsebaNativeDescription_set_led_rgb_top = {
@@ -114,9 +107,7 @@ void set_rgb_top(AsebaVMState *vm) {
 	int g = vm->variables[AsebaNativePopArg(vm)];
 	int b = vm->variables[AsebaNativePopArg(vm)];
 	
-	leds_set(LED_R_TOP, r);
-	leds_set(LED_G_TOP, g);
-	leds_set(LED_B_TOP, b);
+	leds_set_top(r,g,b);
 }
 
 AsebaNativeFunctionDescription AsebaNativeDescription_set_led_rgb_br = {
@@ -135,9 +126,7 @@ void set_rgb_br(AsebaVMState *vm) {
 	int g = vm->variables[AsebaNativePopArg(vm)];
 	int b = vm->variables[AsebaNativePopArg(vm)];
 	
-	leds_set(LED_R_BOT_R, r);
-	leds_set(LED_G_BOT_R, g);
-	leds_set(LED_B_BOT_R, b);
+	leds_set_br(r,g,b);
 }
 AsebaNativeFunctionDescription AsebaNativeDescription_set_led_rgb_bl = {
 	"leds.bottom.left",
@@ -154,10 +143,24 @@ void set_rgb_bl(AsebaVMState *vm) {
 	int r = vm->variables[AsebaNativePopArg(vm)];
 	int g = vm->variables[AsebaNativePopArg(vm)];
 	int b = vm->variables[AsebaNativePopArg(vm)];
-	
-	leds_set(LED_R_BOT_L, r);
-	leds_set(LED_G_BOT_L, g);
-	leds_set(LED_B_BOT_L, b);
+		
+	leds_set_bl(r,g,b);
 }
 
+AsebaNativeFunctionDescription AsebaNativeDescription_play_freq = {
+	"_sound.freq",
+	"Play frequency",
+	{
+		{1,"dHz"},
+		{1,"dS"},
+		{0,0},
+	}
+};
+
+void play_freq(AsebaVMState * vm) {
+	int freq = vm->variables[AsebaNativePopArg(vm)];
+	int time = vm->variables[AsebaNativePopArg(vm)];
+	
+	play_frequency_block(freq, time);
+}
 

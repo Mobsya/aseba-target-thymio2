@@ -279,32 +279,38 @@ sint16 aseba_atan2(sint16 y, sint16 x); // We use a function which should be pri
 
 static void behavior_leds_acc(void) {
 	static int previous_led;
+	static int ha;
+	int intensity;
 	int led = -1;
 	
 	// FIXME: Use vmVariables ?!
 	if(vmVariables.acc[2] < 21) {
-		int angle = aseba_atan2(vmVariables.acc[0], vmVariables.acc[1]);
-		if(angle >= -4000 && angle < 4000)
+		int ha = aseba_atan2(vmVariables.acc[0], vmVariables.acc[1])/2;
+		if(ha >= -2000 && ha < 2000)
 			led = 28;
-		else if (angle < -4000 && angle >= -12000) 
+		else if (ha < -2000 && ha >= -6000) 
 			led = 27;
-		else if (angle < -12000 && angle >= -20000)
+		else if (ha < -6000 && ha >= -10000)
 			led = 26;
-		else if (angle < -20000 && angle >= -28000)
+		else if (ha < -10000 && ha >= -14000)
 			led = 25;
-		else if (angle  < -28000 || angle >= 28000)
+		else if (ha  < -14000 || ha >= 14000)
 			led = 24;
-		else if (angle < 12000 && angle >= 4000) 
+		else if (ha < 6000 && ha >= 2000) 
 			led = 36;
-		else if (angle < 20000 && angle >= 12000)
+		else if (ha < 10000 && ha >= 6000)
 			led = 37;
-		else if (angle < 28000 && angle >= 20000) 
+		else if (ha < 14000 && ha >= 10000) 
 			led = 31;
+		
+		intensity = 40 - abs(vmVariables.acc[2])*2;
+		if(intensity < 0)
+			intensity = 0;
 		
 		if(led >= 0) {
 			if(previous_led >= 0)
 				leds_set(previous_led, 0);
-			leds_set(led, 32);
+			leds_set(led, intensity);
 		}	
 		previous_led = led;
 	} else {

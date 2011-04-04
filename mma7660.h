@@ -1,7 +1,7 @@
 #ifndef _MMA_7660_H_
 #define _MMA_7660_H_
 
-typedef void (*mma7660_cb)(int x, int y, int z);
+typedef void (*mma7660_cb)(int x, int y, int z, int tap);
 
 #define MMA7660_DEFAULT_ADDRESS	(0x4c)
 
@@ -26,7 +26,7 @@ enum mma7660_errors
 // Warning, the prio level is the internal interrupt level.
 // The callback will be called with the same priority as the i2c bus interrupt.
 void mma7660_init(int i2c, unsigned char address, mma7660_cb cb, int prio);
-void mma7660_set_mode(int hz);
+void mma7660_set_mode(int hz, int tap_en);
 
 // PM
 void mma7660_suspend(void);

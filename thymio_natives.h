@@ -22,6 +22,9 @@ void set_rgb_bl(AsebaVMState *vm);
 extern AsebaNativeFunctionDescription AsebaNativeDescription_set_led_rgb_br;
 void set_rgb_br(AsebaVMState *vm);
 
+extern AsebaNativeFunctionDescription AsebaNativeDescription_play_freq;
+void play_freq(AsebaVMState * vm);
+
 #define THYMIO_NATIVES_DESCRIPTIONS \
 	&AsebaNativeDescription_set_led, \
 	&AsebaNativeDescription_record, \
@@ -29,7 +32,8 @@ void set_rgb_br(AsebaVMState *vm);
 	&AsebaNativeDescription_set_led_circle, \
 	&AsebaNativeDescription_set_led_rgb_top, \
 	&AsebaNativeDescription_set_led_rgb_bl, \
-	&AsebaNativeDescription_set_led_rgb_br
+	&AsebaNativeDescription_set_led_rgb_br, \
+	&AsebaNativeDescription_play_freq
 	
 #define THYMIO_NATIVES_FUNCTIONS \
 	set_led, \
@@ -38,7 +42,8 @@ void set_rgb_br(AsebaVMState *vm);
 	set_led_circle, \
 	set_rgb_top, \
 	set_rgb_bl, \
-	set_rgb_br
+	set_rgb_br, \
+	play_freq
 
 
 #endif

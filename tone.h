@@ -7,7 +7,6 @@ void tone_setup(unsigned int dHz);
 
 void tone_fill_buffer(unsigned char * buf, unsigned int c);
 
-
 #define A1	550
 #define Bb1	583
 #define B1	617

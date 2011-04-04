@@ -33,6 +33,8 @@ const AsebaVMDescription vmDescription = {
 		
 		{1, "rc5.address"},
 		{1, "rc5.command"},
+		
+		{1, "acc._tap"},
 		/******
 		 ---> PUT YOUR VARIABLES DESCRIPTIONS HERE <---
 		first value is the number of element in the array (1 if not an array)

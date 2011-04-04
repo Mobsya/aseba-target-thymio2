@@ -51,26 +51,22 @@
 #define TIMER_ANALOG TIMER_2
 #define TIMER_RC5 TIMER_3
 #define TIMER_BEHAVIOR TIMER_1
+#define TIMER_NTC TIMER_45
 
 
 void cb_1khz(void) {
 	disk_timerproc();		
 }
 
-static void acc_cb(int x, int y, int z) {
-static int ntc_prescaler;
+static void acc_cb(int x, int y, int z, int tap) {
 
 	vmVariables.acc[0] = x;
 	vmVariables.acc[1] = y;
 	vmVariables.acc[2] = z;	
+	if(tap)
+		vmVariables.acc_tap = tap; // set only variable.
 	
 	SET_EVENT(EVENT_ACC);
-	
-	if(ntc_prescaler++ > 10) {
-		rc5_disable();
-		ntc_mesure();
-		ntc_prescaler = 0;
-	}
 }
 
 static void ntc_callback(int temp) {
@@ -83,6 +79,11 @@ static void rc5_callback(unsigned int address, unsigned int command) {
 	vmVariables.rc5_address = address;
 	vmVariables.rc5_command = command;
 	SET_EVENT(EVENT_RC5);
+}
+
+static void timer_ntc_callback(int timer) {
+	rc5_disable();
+	ntc_mesure();
 }
 
 
@@ -206,9 +207,14 @@ int main(void)
 	i2c_init_master(I2C_3, 400000, PRIO_ACC);
 	
 	mma7660_init(I2C_3, MMA7660_DEFAULT_ADDRESS, acc_cb, PRIO_ACC);
-	mma7660_set_mode(MMA7660_16HZ);
+	mma7660_set_mode(MMA7660_120HZ, 1);
+	
+	timer_init(TIMER_NTC, 1000, 3); // 32 bits timer
+	timer_enable_interrupt(TIMER_NTC, timer_ntc_callback, PRIO_ACC);
 	
 	rc5_init(TIMER_RC5, rc5_callback, PRIO_RC5);
+	
+	timer_enable(TIMER_NTC);
 	
 	init_aseba_and_usb();
 
@@ -236,6 +242,8 @@ int main(void)
 	
 	while(behavior_enabled(B_MODE)) 
 		idle_without_aseba();
+		
+	mma7660_set_mode(MMA7660_16HZ, 0);
 		
 	// Give full control to aseba. No way out (except reset).
 	run_aseba_main_loop();

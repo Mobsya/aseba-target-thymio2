@@ -24,6 +24,7 @@
 
 // INT_SETUP bits
 #define GINT		4
+#define PDINT 		2	
 
 // MODE bits
 #define ON		0
@@ -36,17 +37,30 @@
 static int i2c_bus;
 static int i2c_address;
 static mma7660_cb cb;
-static char data[3];
+static char data[4];
 static unsigned char reg;
 
+static void mma7660_int_cb(void);
+
 static void mma7660_i2c_cb(int i2c_id, bool status) {
+	static int relaunched;
+	int tap;
 	// Check is the ALERT bit is set -> invalid input
 	if ( (data[0] & ALERT_MASK) ||
 	     (data[1] & ALERT_MASK) ||
-	     (data[2] & ALERT_MASK) ){
+	     (data[2] & ALERT_MASK) ||
+		 (data[3] & ALERT_MASK)) {
 		// Don't fire the callback
+		if(!relaunched) {
+			mma7660_int_cb();
+			relaunched = 1;
+		}
 		return;
 	}
+	
+	relaunched = 0;
+	
+	tap = data[3] & 0x20;
 
 	// Fix the sign bit
 	data[0] = ((signed char) (((unsigned char) data[0]) << 2)) >> 2;
@@ -54,13 +68,17 @@ static void mma7660_i2c_cb(int i2c_id, bool status) {
 	data[2] = ((signed char) (((unsigned char) data[2]) << 2)) >> 2;
 
 	if(cb)
-		cb(data[0],data[1],data[2]);
+		cb(data[0],data[1],data[2],tap);
 }
 
 static void mma7660_int_cb(void) {
-	// Read XOUT, YOUT, ZOUT and fire the callback
+	// Safety: If i2c is busy, ignore this interrupt
+	if(i2c_master_is_busy(i2c_bus))
+		return;
+	
+	// Read XOUT, YOUT, ZOUT, status and fire the callback
 	reg = XOUT;
-	i2c_master_transfert_async(i2c_bus, i2c_address, &reg, 1, (unsigned char *) data, 3, mma7660_i2c_cb);
+	i2c_master_transfert_async(i2c_bus, i2c_address, &reg, 1, (unsigned char *) data, 4, mma7660_i2c_cb);
 }
 
 static void write(unsigned char reg, unsigned char data){
@@ -95,13 +113,18 @@ void mma7660_init(int i2c, unsigned char address, mma7660_cb ucb, int prio) {
 	IEC1bits.CNIE = 1;			// Enable CN interrupt
 }
 
-void mma7660_set_mode(int hz) {
+void mma7660_set_mode(int hz, int tap_en) {
 	ERROR_CHECK_RANGE(hz, MMA7660_120HZ, MMA7660_0HZ, MMA7660_ERROR_INVALID_PARAM);
 
 	IEC1bits.CNIE = 0;
 
+	while(i2c_master_is_busy(i2c_bus));
+
 	// Set the device into standby mode
 	write(MODE, MODE_CONFIG_OFF);
+
+	if(tap_en && hz != MMA7660_120HZ)
+		ERROR(MMA7660_ERROR_INVALID_PARAM, &hz);
 
 	// Change
 	if (hz == MMA7660_0HZ)
@@ -110,6 +133,26 @@ void mma7660_set_mode(int hz) {
 	else
 		// Set the frequency
 		write(SR, hz);
+		
+	// Write the Tap detection register
+	// All axis, treshold: 12 counts
+	if(tap_en)
+		write(TAP_DETECT, 11);
+	else
+		write(TAP_DETECT,  0xE0);
+	
+	//write the tap debounce register
+	// 12 counts debouce
+	if(tap_en) 
+		write(TAP_DEBOUNCE, 11);
+	else
+		write(TAP_DEBOUNCE, 0);
+/*		
+	if(tap_en)
+		write(INT_SETUP, (1 << GINT));
+	else
+		write(INT_SETUP, (1 << GINT));
+	*/
 
 	// Enable the device
 	write(MODE, MODE_CONFIG_ON);

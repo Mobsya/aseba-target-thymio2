@@ -9,6 +9,7 @@
 static FATFS fs; // SD fat 
 static FIL read_file; // Read handle
 static FIL write_file; // Write handle
+static unsigned char l;
 
 #define SD_PRIO 2
 
@@ -54,27 +55,40 @@ static int sd_play_cb(unsigned char * buffer) {
 	// Fill the remaining bytes with middle value
 	for(i = read; i < SOUND_OBUFSZ; i++)
 		buffer[i] = 127;
+		
+	// sd buffer size 512, so we want to stay 512 aligned, 
+	// So even if we are at the end, we fill the end of the buffer with 0
+	// So next read, we stay aligned (loop case only).
+	if(read != SOUND_OBUFSZ && l) {
+		// If loop and EOF soon
+		f_lseek(&read_file, 0); // Move back to the start;
+		read = SOUND_OBUFSZ;
+	}
 	
 	if(read == 0) {
 		behavior_notify_sd(BEHAVIOR_STOP | BEHAVIOR_SD_READ);
 		return 0; // End of playback	
 	} else
-		return 1; // Still some data ... 
+		return 1; // Still some data ... 			
 }
 
 
 // return 1 if file found
 // return 0 if not found
-int sd_play_file(const char * file) {
+int sd_play_file(const char * file, int loop) {
 	// start to play a file ... 
 	unsigned int flags;
 	int ret;
+
 	
 	RAISE_IPL(flags, SD_PRIO);
 	
 	f_close(&read_file); // Close the last read file
 	if(f_open(&read_file, file, FA_READ) == FR_OK) {
 		sound_playback_disable();
+		
+		l = loop;
+		
 		sound_playback_enable(sd_play_cb);
 		behavior_notify_sd(BEHAVIOR_START | BEHAVIOR_SD_READ);
 		ret = 1;

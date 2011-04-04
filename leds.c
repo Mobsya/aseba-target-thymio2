@@ -166,3 +166,33 @@ void leds_poweroff(void) {
 	
 	va_put();
 }
+
+
+void leds_set_circle(unsigned char l1, unsigned char l2, unsigned char l3, unsigned char l4, unsigned char l5, unsigned char l6, unsigned char l7, unsigned char l8) {
+	leds_set(LED_CIRCLE_0, l1);
+	leds_set(LED_CIRCLE_1, l2);
+	leds_set(LED_CIRCLE_2, l3);
+	leds_set(LED_CIRCLE_3, l4);
+	leds_set(LED_CIRCLE_4, l5);
+	leds_set(LED_CIRCLE_5, l6);
+	leds_set(LED_CIRCLE_6, l7);
+	leds_set(LED_CIRCLE_7, l8);
+}
+
+void leds_set_top(unsigned char r, unsigned char g, unsigned char b) {
+	leds_set(LED_R_TOP, r);
+	leds_set(LED_G_TOP, g);
+	leds_set(LED_B_TOP, b);	
+}
+
+void leds_set_br(unsigned char r, unsigned char g, unsigned char b) {
+	leds_set(LED_R_BOT_R, r);
+	leds_set(LED_G_BOT_R, g);
+	leds_set(LED_B_BOT_R, b);
+}
+
+void leds_set_bl(unsigned char r, unsigned char g, unsigned char b) {
+	leds_set(LED_R_BOT_L, r);
+	leds_set(LED_G_BOT_L, g);
+	leds_set(LED_B_BOT_L, b);
+}
