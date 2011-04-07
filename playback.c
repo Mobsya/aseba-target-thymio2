@@ -34,10 +34,18 @@ static const struct music m_poweroff[] =
 
 static const struct music m_button[] =
 	{
-		{E5,4},
-		{Bb4,3},
+		{1100,1},
+		{2200,1},
 		{0,0},
 	};
+static const struct music m_button_m[] = 
+	{
+		{3300,1},
+		{4400,2},
+		{6600,1},
+		{0,0},
+	};
+	
 static const struct music m_freefall[] = 
 	{
 		{A4, 1},
@@ -145,6 +153,11 @@ static void _play_sound(int number, int loop) {
 			play_music(m_button,loop);
 		}
 		break;
+	case SOUND_BUTTON_M:
+		if(!sd_play_file("button_m.raw",loop)) {
+			play_music(m_button_m, loop);
+		}
+		break;	
 	case SOUND_FREEFALL:
 		if(!sd_play_file("freefall.raw",loop)) {
 			play_music(m_freefall, loop);

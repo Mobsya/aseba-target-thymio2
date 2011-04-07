@@ -114,6 +114,8 @@ static void exit_mode(enum mode m) {
 			behavior_stop(B_LEDS_PROX);
 			break;
 		case MODE_LINE:
+			vmVariables.target[0] = 0;
+			vmVariables.target[1] = 0;
 			behavior_stop(B_LEDS_PROX);
 			break;
 		case MODE_RC5:
@@ -176,6 +178,49 @@ static void tick_follow(void) {
 	static int speed = 300;
 #define DETECT 500 
 
+	int i;
+	int speed_diff;
+	int speed_l = 0;
+	int max, mi, t;
+	
+	max = vmVariables.prox[0];
+	mi = 0;
+	for(i = 1; i < 5; i++) {
+		if(vmVariables.prox[i]> max) {
+			max = vmVariables.prox[i];
+			mi = i;
+		}
+	}
+	
+	t = 2 - mi;
+	speed_diff = t * (speed / 2);
+	if (max > 3500) 
+		speed_l = (3500 - max) / 2;
+	
+	if (max > 4000)
+		speed_l = -speed;
+	
+	if (max < 3000) {
+		t = 300 - (max - 1000) / 7;
+		speed_l = t;
+	}
+	
+	if (max < 2000) 
+		speed_l = speed;
+	
+	if(speed_l > speed)
+		speed_l = speed;
+	if(speed_l < -speed)
+		speed_l = -speed;
+	
+	if(max < DETECT) {
+		vmVariables.target[0] = 0;
+		vmVariables.target[1] = 0;
+	} else {
+		vmVariables.target[1] = speed_diff + speed_l;
+		vmVariables.target[0] = speed_l - speed_diff;
+	}
+
 /* Body led managment */	
 	led_pulse = led_pulse + 1;
 	if(led_pulse > 0) { 
@@ -198,31 +243,7 @@ static void tick_follow(void) {
 			speed = -300;
 	}
 	
-	if(vmVariables.prox[0] > DETECT || 
-		vmVariables.prox[1] > DETECT ||
-		vmVariables.prox[2] > DETECT ||
-		vmVariables.prox[3] > DETECT ||
-		vmVariables.prox[4] > DETECT) {
-		long temp1;
-		long temp2;
-		
-		temp1 = vmVariables.prox[0];
-		temp1 += vmVariables.prox[1]; 
-		temp1 += (vmVariables.prox[2] - 2500) * 4;
-		temp1 += vmVariables.prox[3];
-		temp1 += vmVariables.prox[4];
-		
-		temp2 = -3 * vmVariables.prox[0];
-		temp2 += -2 * vmVariables.prox[1];
-		temp2 += 2 * vmVariables.prox[3];
-		temp2 += 3 * vmVariables.prox[4];
-		
-		vmVariables.target[0] = speed - __builtin_divsd((temp1 - temp2) * speed, 2000);
-		vmVariables.target[1] = speed - __builtin_divsd((temp1 + temp2) * speed, 2000);
-	} else {
-		vmVariables.target[0] = 0;
-		vmVariables.target[1] = 0;
-	}
+
 	
 	if(vmVariables.ground_delta[0] < 130 || vmVariables.ground_delta[0] < 130) {
 		vmVariables.target[0] = 0;
@@ -277,6 +298,16 @@ static void tick_explorer(void) {
 		temp2 += vmVariables.prox[4] * 4;
 		vmVariables.target[0] = speed - __builtin_divsd((temp1 + temp2) * speed, 2000);
 		vmVariables.target[1] = speed - __builtin_divsd((temp1 - temp2) * speed, 2000);
+		
+		if(vmVariables.target[0] < -600) 
+			vmVariables.target[0] = -600;
+		if(vmVariables.target[1] < -600)
+			vmVariables.target[1]= -600;
+		if(vmVariables.target[0] > 600)
+			vmVariables.target[0] = 600;
+		if(vmVariables.target[1] > 600)
+			vmVariables.target[1] = 600;
+			
 	} else {
 		long temp = __builtin_mulss(vmVariables.prox[6], speed);
 		vmVariables.target[0] = speed + __builtin_divsd(temp, -300);
@@ -334,25 +365,106 @@ static void tick_music(void) {
 }
 
 static void tick_line(void) {
+	static unsigned int black_level = 200;
+	static unsigned int white_level = 400;
+#define STATE_BLACK = 0
+#define STATE_WHITE = 0
+	static char dir;
+#define DIR_LEFT (-1)
+#define DIR_L_LEFT (-2)
+#define DIR_RIGHT (1)
+#define DIR_L_RIGHT (2)
+#define DIR_LOST	(10)
+#define DIR_FRONT (0)
+
+#define SPEED_LINE 300
 	
+	
+// Calibration feature
+	if(buttons_state[0] && buttons_state[3]) {
+		black_level = (vmVariables.ground_delta[0] + vmVariables.ground_delta[1]) / 2;
+		black_level += 150;
+	}
+	
+	if(buttons_state[1] && buttons_state[4]) {
+		white_level = (vmVariables.ground_delta[0] + vmVariables.ground_delta[1]) / 2;
+		if(white_level < 150)
+			white_level = 200;
+		white_level -= 150;
+	}
+	
+	if(vmVariables.ground_delta[0] < black_level && vmVariables.ground_delta[1] < black_level)
+		// Black line right under us
+		dir = DIR_FRONT;
+	else if (vmVariables.ground_delta[0] > white_level && vmVariables.ground_delta[1] < black_level)
+		dir = DIR_RIGHT;
+	else if (vmVariables.ground_delta[1] > white_level && vmVariables.ground_delta[0] < black_level)
+		dir = DIR_LEFT;
+	else {
+		// Lost
+		if (dir > 0) 
+			dir = DIR_L_RIGHT;
+		else if (dir < 0)
+			dir = DIR_L_LEFT;
+		else
+			dir = DIR_LOST;
+	}
+	
+	if(dir == DIR_FRONT) {
+		vmVariables.target[0] = SPEED_LINE;
+		vmVariables.target[1] = SPEED_LINE;
+		leds_set_circle(32,0,0,0,32,0,0,0);
+	} else if(dir == DIR_RIGHT) {
+		vmVariables.target[0] = SPEED_LINE;
+		vmVariables.target[1] = 0;
+		leds_set_circle(0,32,0,32,0,0,0,0);
+	} else if (dir == DIR_LEFT) {
+		vmVariables.target[0] = 0;
+		vmVariables.target[1] = SPEED_LINE;
+		leds_set_circle(0,0,0,0,0,32,0,32);
+	} else if (dir == DIR_L_LEFT) {
+		vmVariables.target[0] = -SPEED_LINE;
+		vmVariables.target[1] = SPEED_LINE;
+		leds_set_circle(0,0,0,0,0,0,32,0);
+	} else if (dir == DIR_L_RIGHT) {
+		vmVariables.target[0] = SPEED_LINE;
+		vmVariables.target[1] = -SPEED_LINE;
+		leds_set_circle(0,0,32,0,0,0,0,0);
+	} else if( dir == DIR_LOST) {
+		vmVariables.target[0] = SPEED_LINE;
+		vmVariables.target[1] = -SPEED_LINE;
+//		leds_set_circle(32,32,32,32,32,32,32,32);
+	}
+
 }
 static void tick_rc5(void) {
 	
 }
 static void tick_side(void) {
 	
-}		
+}	
+
+static int mode_enabled(int temp) {
+	if(	temp == MODE_DRAW || 
+		temp == MODE_MUSIC ||
+		temp == MODE_RC5 || 
+		temp == MODE_SIDE )
+			return 0;
+	return 1;
+}
 
 static enum mode next_mode(enum mode m, int i) {
 	int temp = m;
-	temp += i;
 	
-	// TODO: Add here a check if the mode is disabled
+	do {
+		temp += i;
 	
-	while(temp > MODE_MAX)
-		temp -= MODE_MAX+1; 
-	while(temp < 0)
-		temp += MODE_MAX+1;
+		while(temp > MODE_MAX)
+			temp -= MODE_MAX+1; 
+		while(temp < 0)
+			temp += MODE_MAX+1;
+			
+	} while(!mode_enabled(temp));
 	
 	return temp;
 }
@@ -441,7 +553,7 @@ void mode_init(void) {
 	
 	// TODO: Check that SD card is present, if not disable "Music" mode.
 	init_mode(MODE_MENU);
-	behavior_start(B_ALWAYS | B_MODE | B_LEDS_BUTTON);
+	behavior_start(B_ALWAYS | B_MODE);
 
 }
 

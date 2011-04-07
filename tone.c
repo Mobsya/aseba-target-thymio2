@@ -16,13 +16,12 @@ unsigned long __udiv3216(unsigned long, unsigned int);
 
 void tone_init(void) {
 	int i;
-	
+
 	for(i = 0; i < 71; i++) 
 		wave[i] = (255*i)/71;
 		
 	for(i = 71; i < 142; i++) 
 		wave[i] = 255 - (255*(i-71))/71;
-	
 }
 
 void tone_setup(unsigned int dHz) {

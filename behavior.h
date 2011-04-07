@@ -30,6 +30,6 @@ int behavior_enabled(int b);
 #define B_TEST			(1 << 11)
 #define B_MAX			B_TEST
 
-#define B_ALWAYS		(B_LEDS_BATTERY | B_LEDS_RC5 | B_LEDS_SD)
+#define B_ALWAYS		(B_LEDS_BATTERY | B_LEDS_RC5 | B_LEDS_SD | B_SOUND_BUTTON | B_LEDS_BUTTON)
 
 #endif

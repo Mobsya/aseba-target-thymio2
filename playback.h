@@ -8,6 +8,7 @@
 #define SOUND_BUTTON	(-4)
 #define SOUND_FREEFALL 	(-5)
 #define SOUND_TAP		(-6)
+#define SOUND_BUTTON_M	(-7)
 
 
 // Negative: system sound

@@ -202,7 +202,7 @@ static void behavior_sound_buttons(void) {
 		play_sound(SOUND_BUTTON);
 	
 	when(buttons_state[2])
-		play_sound(SOUND_BUTTON);
+		play_sound(SOUND_BUTTON_M);
 	
 	when(buttons_state[3])
 		play_sound(SOUND_BUTTON);
