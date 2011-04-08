@@ -147,6 +147,32 @@ void set_rgb_bl(AsebaVMState *vm) {
 	leds_set_bl(r,g,b);
 }
 
+AsebaNativeFunctionDescription AsebaNativeDescription_set_led_buttons = {
+	"leds.buttons",
+	"Set buttons leds",
+	{
+		{1,"led 1"},
+		{1,"led 2"},
+		{1,"led 3"},
+		{1,"led 4"},
+		{0,0},
+	}
+};
+
+void set_buttons_leds(AsebaVMState *vm) {
+	int l1 = vm->variables[AsebaNativePopArg(vm)];
+	int l2 = vm->variables[AsebaNativePopArg(vm)];
+	int l3 = vm->variables[AsebaNativePopArg(vm)];
+	int l4 = vm->variables[AsebaNativePopArg(vm)];
+		
+	leds_set(LED_BUTTON_0, l1);
+	leds_set(LED_BUTTON_1, l2);
+	leds_set(LED_BUTTON_2, l3);
+	leds_set(LED_BUTTON_3, l4);
+}
+
+
+
 AsebaNativeFunctionDescription AsebaNativeDescription_play_freq = {
 	"_sound.freq",
 	"Play frequency",

@@ -54,7 +54,7 @@ static void set_mode_color(enum mode m) {
 			leds_set_top(32,0,0);
 			break;
 		case MODE_DRAW:
-			leds_set_top(32,0,32);
+			leds_set_top(32,32,32);	
 			break;
 		case MODE_MUSIC:
 			leds_set_top(0,0,32);
@@ -63,7 +63,7 @@ static void set_mode_color(enum mode m) {
 			leds_set_top(0,32,32);
 			break;
 		case MODE_RC5:
-			leds_set_top(32,32,32);
+			leds_set_top(32,0,32);
 			break;
 		case MODE_SIDE:
 			leds_set_top(32,15,5); // TODO enable a rainbow mode ?
@@ -105,7 +105,9 @@ static void exit_mode(enum mode m) {
 			behavior_stop(B_LEDS_ACC);
 			behavior_stop(B_LEDS_PROX);
 			// TODO: Stop playing sound
-			play_sound(SOUND_DISABLE);
+			// we don't need as the button to switch the mode 
+			// has been pressed, so generated a sound.
+		//	play_sound(SOUND_DISABLE);
 			break;
 		case MODE_DRAW:
 			behavior_stop(B_LEDS_PROX);
@@ -119,6 +121,8 @@ static void exit_mode(enum mode m) {
 			behavior_stop(B_LEDS_PROX);
 			break;
 		case MODE_RC5:
+			vmVariables.target[0] = 0;
+			vmVariables.target[1] = 0;
 			behavior_stop(B_LEDS_PROX);
 			break;
 		case MODE_SIDE:
@@ -175,7 +179,9 @@ static void init_mode(enum mode m) {
 
 static void tick_follow(void) {
 	static char led_pulse;
+	static char sound_done = 0;
 	static int speed = 300;
+
 #define DETECT 500 
 
 	int i;
@@ -242,6 +248,16 @@ static void tick_follow(void) {
 		if(speed < -300)
 			speed = -300;
 	}
+	
+	when(max > DETECT) 
+		play_sound(SOUND_F_DETECT);
+	
+	if(speed_diff == 0 && speed_l == 0 && sound_done == 0 && max > DETECT) {
+		sound_done = 1;
+		play_sound(SOUND_F_OK);
+	}
+	if(speed_diff != 0 || max < DETECT)
+		sound_done = 0;
 	
 
 	
@@ -330,8 +346,8 @@ static void tick_explorer(void) {
 static void tick_acc(void) {
 	static unsigned int acc = 32;
 	static int counter;
-	acc += abs(vmVariables.acc[0]) + abs(vmVariables.acc[1]) + abs(vmVariables.acc[2]);
-	acc >>= 1;
+	acc = acc + acc + acc + abs(vmVariables.acc[0]) + abs(vmVariables.acc[1]) + abs(vmVariables.acc[2]);
+	acc >>= 2;
 	when(acc < 5) {
 		play_sound_loop(SOUND_FREEFALL);
 	}
@@ -367,8 +383,10 @@ static void tick_music(void) {
 static void tick_line(void) {
 	static unsigned int black_level = 200;
 	static unsigned int white_level = 400;
-#define STATE_BLACK = 0
-#define STATE_WHITE = 0
+#define STATE_BLACK 0
+#define STATE_WHITE 1
+	static unsigned char s[2];
+
 	static char dir;
 #define DIR_LEFT (-1)
 #define DIR_L_LEFT (-2)
@@ -393,12 +411,23 @@ static void tick_line(void) {
 		white_level -= 150;
 	}
 	
-	if(vmVariables.ground_delta[0] < black_level && vmVariables.ground_delta[1] < black_level)
+	if(vmVariables.ground_delta[0] < black_level)
+		s[0] = STATE_BLACK;
+	if(vmVariables.ground_delta[0] > white_level)
+		s[0] = STATE_WHITE;
+	
+	if(vmVariables.ground_delta[1] < black_level)
+		s[1] = STATE_BLACK;
+	if(vmVariables.ground_delta[1] > white_level)
+		s[1] = STATE_WHITE;
+	
+	
+	if(s[0] == STATE_BLACK && s[1] == STATE_BLACK)
 		// Black line right under us
 		dir = DIR_FRONT;
-	else if (vmVariables.ground_delta[0] > white_level && vmVariables.ground_delta[1] < black_level)
+	else if (s[0] == STATE_WHITE && s[1] == STATE_BLACK)
 		dir = DIR_RIGHT;
-	else if (vmVariables.ground_delta[1] > white_level && vmVariables.ground_delta[0] < black_level)
+	else if (s[1] == STATE_WHITE && s[0] == STATE_BLACK)
 		dir = DIR_LEFT;
 	else {
 		// Lost
@@ -439,6 +468,73 @@ static void tick_line(void) {
 }
 static void tick_rc5(void) {
 	
+	static int s_l;
+	static int s_t;
+
+	when(buttons_state[1]) {
+		s_t = -200;
+	}
+	
+	when(buttons_state[4]) {
+		s_t = 200;
+	}
+	
+	when(buttons_state[0]) {
+		if(s_t)
+			s_t = 0;
+		else
+			s_l -= 200;
+	}
+	
+	when(buttons_state[3]) {
+		if(s_t)
+			s_t = 0;
+		else
+			s_l += 200;
+	}
+
+	when(buttons_state[0] && buttons_state[3]) 
+		s_l = 0;
+	when(buttons_state[4] && buttons_state[1])
+		s_t = 0;
+		
+	if(vmVariables.rc5_command) {
+		switch(vmVariables.rc5_command) {
+			case 2:
+				if(s_t)
+					s_t = 0;
+				else
+					s_l += 200;
+				break;
+			case 4:
+				s_t = -200;
+				break;
+			case 8:
+				if(s_t)
+					s_t = 0;
+				else
+					s_l -= 200;
+				break;
+			case 6:
+				s_t = 200;
+				break;
+		}
+		vmVariables.rc5_command = 0;
+	}
+	
+	
+	if(s_l > 600) 
+		s_l = 600;
+	if(s_l < -600)
+		s_l = -600;
+	if(s_t > 600)
+		s_t = 600;
+	if(s_t < -600)
+		s_t = -600;
+		
+	vmVariables.target[0] = s_l + s_t;
+	vmVariables.target[1] = s_l - s_t;
+	
 }
 static void tick_side(void) {
 	
@@ -447,7 +543,6 @@ static void tick_side(void) {
 static int mode_enabled(int temp) {
 	if(	temp == MODE_DRAW || 
 		temp == MODE_MUSIC ||
-		temp == MODE_RC5 || 
 		temp == MODE_SIDE )
 			return 0;
 	return 1;

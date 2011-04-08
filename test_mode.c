@@ -344,15 +344,13 @@ void test_mode_tick(void) {
 		leds_set(LED_GROUND_IR_1,0);
 		checked |= C_IRBR;
 	}
-	if(vmVariables.rc5_command != 0 && vmVariables.rc5_address != 0) {
+	if(vmVariables.rc5_command != 0 || vmVariables.rc5_address != 0) {
 		leds_set(LED_RC,0);
 		checked |= C_RC5;
 	}
 		
 	unsigned int mic_2m = sound_mic_max + sound_mic_min;
 	
-	vmVariables.fwversion[0] = sound_mic_max;
-	vmVariables.fwversion[1] = sound_mic_min;
 	if(((sound_mic_max - sound_mic_min) > 40) && (mic_2m > 200) && (mic_2m < 300)) {
 		checked |= C_MIC;
 		leds_set(LED_SOUND,0);

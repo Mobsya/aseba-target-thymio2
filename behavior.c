@@ -279,7 +279,7 @@ sint16 aseba_atan2(sint16 y, sint16 x); // We use a function which should be pri
 
 static void behavior_leds_acc(void) {
 	static int previous_led;
-	static int ha;
+
 	int intensity;
 	int led = -1;
 	

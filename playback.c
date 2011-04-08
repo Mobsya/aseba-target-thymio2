@@ -19,48 +19,66 @@ struct music {
 
 static const struct music m_poweron[] = 
 	{
-		{C5,4},
-		{E5,3},
-		{G5,4},
-		{0,0},
+	{3400,12},
+	{4400,6},
+	{5100,6},
+	{6400,6},
+	{7800,6},
+	{0,0}
 	};
 static const struct music m_poweroff[] = 
 	{
-		{E5,4},
-		{G5,3},
-		{C5,5},
-		{0,0},
+	{7800,12},
+	{6400,6},
+	{5100,6},
+	{4400,6},
+	{3400,6},
+	{0,0}
 	};
 
 static const struct music m_button[] =
 	{
-		{1100,1},
-		{2200,1},
+		{1100,6},
+		{2200,6},
 		{0,0},
 	};
 static const struct music m_button_m[] = 
 	{
-		{3300,1},
-		{4400,2},
-		{6600,1},
+		{3300,6},
+		{4400,12},
+		{6600,6},
 		{0,0},
 	};
 	
 static const struct music m_freefall[] = 
 	{
-		{A4, 1},
-		{A6, 1},
+		{4400,3},
+		{5500,3},
+		{15400,6},
 		{0,0},
 	};
 	
 static const struct music m_tap[] =
 	{
-		{A4, 1},
-		{Bb5, 1},
-		{A5, 1},
+		{6600, 4},
+		{2750, 4},
 		{0,0},
 	};
 
+static const struct music m_f_detect [] =
+	{
+		{4400,6},
+		{5500,6},
+		{0,0}
+	};
+
+static const struct music m_f_ok[] = 
+	{
+		{4400,6},
+		{5500,6},
+		{6600,6},
+		{0,0}
+	};
 
 static int playback_buffer(unsigned char * b) {
 	
@@ -69,7 +87,7 @@ static int playback_buffer(unsigned char * b) {
 			if(m) {
 				m++;
 				if(m->duration) {
-					time = m->duration*6;
+					time = m->duration;
 					tone_setup(m->freq);
 				} else if(!l){
 					time = 0;
@@ -77,7 +95,7 @@ static int playback_buffer(unsigned char * b) {
 					return 0;
 				} else {
 					m = m_start;
-					time = m->duration*6;
+					time = m->duration;
 					tone_setup(m->freq);
 				}
 			} else {
@@ -96,7 +114,7 @@ static void play_note(unsigned int freq, unsigned int duration) {
 	if(duration == 0)
 		time = -1;
 	else
-		time = duration*6;
+		time = duration;
 	sound_playback_enable(playback_buffer);
 }
 
@@ -105,7 +123,7 @@ static void play_music(const struct music * p, int loop) {
 	m = p;
 	l = loop;
 	tone_setup(m->freq);
-	time = m->duration * 6;
+	time = m->duration ;
 	sound_playback_enable(playback_buffer);
 }
 
@@ -144,9 +162,9 @@ static void _play_sound(int number, int loop) {
 		}
 		break;
 	case SOUND_POWEROFF:
-		if(!sd_play_file("poweroff.raw",loop)) {
+	//	if(!sd_play_file("poweroff.raw",loop)) {
 			play_music(m_poweroff,loop);
-		}
+	//	}
 		break;
 	case SOUND_BUTTON:
 		if(!sd_play_file("button.raw",loop)) {
@@ -167,6 +185,15 @@ static void _play_sound(int number, int loop) {
 		if(!sd_play_file("tap.raw",loop)) {
 			play_music(m_tap,loop);
 		}
+	case SOUND_F_DETECT:
+		if(!sd_play_file("f_detect.raw",loop)) {
+			play_music(m_f_detect, loop);
+		}
+		break;
+	case SOUND_F_OK:
+		if(!sd_play_file("f_ok.raw",loop)) {
+			play_music(m_f_ok, loop);
+		}
 		break;
 	}
 	
@@ -184,7 +211,7 @@ void play_sound_block(int number) {
 	_play_sound(number,0);
 	if(number == SOUND_DISABLE)
 		return;
-	while(!(time == 0xFFFF || time == 0x0000)) barrier();
+	while(m) barrier();
 }
 
 void play_frequency_block(int freq, int time) {

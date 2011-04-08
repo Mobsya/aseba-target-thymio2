@@ -109,6 +109,9 @@ void switch_off(void) {
 	I2C3CONbits.I2CEN = 0; // Disable i2c.
 	_MI2C3IE = 0;
 	
+	timer_disable(TIMER_NTC);
+	timer_disable_interrupt(TIMER_NTC);
+	
 	ntc_shutdown();
 	rc5_shutdown();
 
@@ -144,9 +147,6 @@ void _ISR _INT3Interrupt(void) {
 	// Poweroff softirq
 	power_off(NULL);
 }
-
-
-				
 
 void update_aseba_variables_read(void) {
 	// TODO: REMOVE ME (move to behavior ? /!\ behavior == IPL 1 !! race wrt aseba !)
@@ -234,6 +234,8 @@ int main(void)
 	play_sound(SOUND_POWERON);
 	
 	if(test_mode) {
+		mma7660_set_mode(MMA7660_16HZ, 0);
+		
 		test_mode_start();
 		while(1) 
 			idle_without_aseba();
