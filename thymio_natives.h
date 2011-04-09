@@ -28,6 +28,21 @@ void play_freq(AsebaVMState * vm);
 extern AsebaNativeFunctionDescription AsebaNativeDescription_set_led_buttons;
 void set_buttons_leds(AsebaVMState *vm);
 
+extern AsebaNativeFunctionDescription AsebaNativeDescription_set_hprox_leds;
+void set_hprox_leds(AsebaVMState *vm);
+
+extern AsebaNativeFunctionDescription AsebaNativeDescription_set_vprox_leds;
+void set_vprox_leds(AsebaVMState *vm);
+
+extern AsebaNativeFunctionDescription AsebaNativeDescription_set_rc_leds;
+void set_rc_leds(AsebaVMState *vm);
+
+extern AsebaNativeFunctionDescription AsebaNativeDescription_set_sound_leds;
+void set_sound_leds(AsebaVMState *vm);
+
+extern AsebaNativeFunctionDescription AsebaNativeDescription_set_ntc_leds;
+void set_ntc_leds(AsebaVMState *vm);
+
 #define THYMIO_NATIVES_DESCRIPTIONS \
 	&AsebaNativeDescription_set_led, \
 	&AsebaNativeDescription_record, \
@@ -37,7 +52,12 @@ void set_buttons_leds(AsebaVMState *vm);
 	&AsebaNativeDescription_set_led_rgb_bl, \
 	&AsebaNativeDescription_set_led_rgb_br, \
 	&AsebaNativeDescription_play_freq, \
-	&AsebaNativeDescription_set_led_buttons
+	&AsebaNativeDescription_set_led_buttons, \
+	&AsebaNativeDescription_set_hprox_leds, \
+	&AsebaNativeDescription_set_vprox_leds, \
+	&AsebaNativeDescription_set_rc_leds, \
+	&AsebaNativeDescription_set_sound_leds, \
+	&AsebaNativeDescription_set_ntc_leds
 	
 #define THYMIO_NATIVES_FUNCTIONS \
 	set_led, \
@@ -48,7 +68,12 @@ void set_buttons_leds(AsebaVMState *vm);
 	set_rgb_bl, \
 	set_rgb_br, \
 	play_freq, \
-	set_buttons_leds
+	set_buttons_leds, \
+	set_hprox_leds, \
+	set_vprox_leds, \
+	set_rc_leds, \
+	set_sound_leds, \
+	set_ntc_leds
 
 
 #endif
