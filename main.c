@@ -161,6 +161,7 @@ static void idle_without_aseba(void) {
 int main(void)
 {   
 	int test_mode;
+	int flash_present;
 	clock_set_speed(16000000UL,16);	
 	
 	setup_pps();
@@ -216,7 +217,7 @@ int main(void)
 	
 	timer_enable(TIMER_NTC);
 	
-	init_aseba_and_usb();
+	flash_present = init_aseba_and_usb();
 
 	behavior_init(TIMER_BEHAVIOR, PRIO_BEHAVIOR);
 	
@@ -224,7 +225,7 @@ int main(void)
 	test_mode = sd_test_file_present();
 	
 	if(!test_mode)
-		mode_init();
+		mode_init(flash_present);
 
 	
 	if( ! load_settings_from_flash()) {

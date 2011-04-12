@@ -110,12 +110,12 @@ section                    address   length (PC units)   length (bytes) (dec)
 .text                       0x23ec                 0xc            0x12  (18)
 .isr                        0x23f8                 0x2             0x3  (3)
 .aseba_bytecode             0x2400              0x1800          0x2400  (9216)
-.text                       0x3c00              0x4406          0x6609  (26121)
-.dinit                      0x8006               0x35a           0x507  (1287)
-.text                       0x8360              0x22dc          0x344a  (13386)
-.text                       0xa63c               0x956           0xe01  (3585)
+.text                       0x3c00              0x44d2          0x673b  (26427)
+.dinit                      0x80d2               0x35a           0x507  (1287)
+.text                       0x842c              0x22f2          0x346b  (13419)
+.text                       0xa71e               0x95a           0xe07  (3591)
 
-                     Total program memory used (bytes):        0x10452  (66642) 53%
+                     Total program memory used (bytes):        0x105ab  (66987) 53%
 
 
 Data Memory  [Origin = 0x800, Length = 0x4000]
@@ -173,24 +173,23 @@ _019203104d88ce30           0x11c0                   0             0x6  (6)
 .nbss                       0x11c6                   0           0x8c4  (2244)
 .nbss                       0x1a8a                   0           0x10c  (268)
 .ndata                      0x1b96                   0            0xfe  (254)
-.nbss                       0x1c94                   0           0x138  (312)
-.ndata                      0x1dcc                   0            0x52  (82)
-.nbss                       0x1e1e                   0            0x3e  (62)
-when                        0x1e5c                   0            0x12  (18)
-.nbss                       0x1e6e                   0            0x32  (50)
-when                        0x1ea0                   0            0x10  (16)
-.nbss                       0x1eb0                   0            0x1a  (26)
-.ndata                      0x1eca                   0            0x12  (18)
-.nbss                       0x1edc                   0            0x10  (16)
-.ndata                      0x1eec                   0             0x6  (6)
-.nbss                       0x1ef2                   0            0x12  (18)
-_019323f04da0cd51           0x1f04                   0             0x4  (4)
-.nbss                       0x1f08                   0             0xc  (12)
-.nbss                       0x1f14                   0             0x2  (2)
-.ndata                      0x1f16                   0             0x6  (6)
-.bss                        0x1f1c                   0          0x1052  (4178)
+_019324604da400dc           0x1c94                   0            0xb4  (180)
+.nbss                       0x1d48                   0           0x138  (312)
+.ndata                      0x1e80                   0            0x52  (82)
+.nbss                       0x1ed2                   0            0x56  (86)
+when                        0x1f28                   0            0x12  (18)
+.nbss                       0x1f3a                   0            0x20  (32)
+when                        0x1f5a                   0            0x10  (16)
+.nbss                       0x1f6a                   0            0x1a  (26)
+.ndata                      0x1f84                   0            0x12  (18)
+.nbss                       0x1f96                   0            0x10  (16)
+.ndata                      0x1fa6                   0             0x6  (6)
+.nbss                       0x1fac                   0            0x1e  (30)
+.nbss                       0x1fca                   0             0x2  (2)
+.ndata                      0x1fcc                   0             0x6  (6)
+.bss                        0x1fd2                   0          0x1052  (4178)
 
-                        Total data memory used (bytes):         0x276e  (10094) 61%
+                        Total data memory used (bytes):         0x2824  (10276) 62%
 
 
 Dynamic Memory Usage
@@ -198,9 +197,9 @@ Dynamic Memory Usage
 region                     address                      maximum length  (dec)
 ------                     -------                      ---------------------
 heap                             0                                   0  (0)
-stack                       0x2f6e                              0x1892  (6290)
+stack                       0x3024                              0x17dc  (6108)
 
-                        Maximum dynamic memory (bytes):         0x1892  (6290)
+                        Maximum dynamic memory (bytes):         0x17dc  (6108)
 
 
 External Symbols in Data Memory (by address):
@@ -270,16 +269,16 @@ External Symbols in Data Memory (by address):
                     0x1a8b                  _buttons_state
                     0x1b96                  _vmState
                     0x1bcc                  _events_flags
-                    0x1d36                  _wave
-                    0x1e82                  _rc5_valid_flag
-                    0x1ed4                  _AsebaNativeDescription_poweroff
-                    0x1f04                  _settings
+                    0x1c94                  _settings
+                    0x1dea                  _wave
+                    0x1f3c                  _rc5_valid_flag
+                    0x1f8e                  _AsebaNativeDescription_poweroff
 
 External Symbols in Data Memory (by name):
 
                     0x0f5e                  _AsebaNativeDescription_play
                     0x0e72                  _AsebaNativeDescription_play_freq
-                    0x1ed4                  _AsebaNativeDescription_poweroff
+                    0x1f8e                  _AsebaNativeDescription_poweroff
                     0x0f6a                  _AsebaNativeDescription_record
                     0x0eba                  _AsebaNativeDescription_set_hprox_leds
                     0x0f76                  _AsebaNativeDescription_set_led
@@ -334,28 +333,28 @@ External Symbols in Data Memory (by name):
                     0x1050                  _pBDTEntryIn
                     0x104a                  _pBDTEntryOut
                     0x1068                  _pDst
-                    0x1e82                  _rc5_valid_flag
+                    0x1f3c                  _rc5_valid_flag
                     0x111e                  _rx_blocked
                     0x1176                  _sd000
                     0x117a                  _sd001
                     0x1190                  _sd002
-                    0x1f04                  _settings
+                    0x1c94                  _settings
                     0x1056                  _shortPacketStatus
                     0x1679                  _sound_mic_max
                     0x1678                  _sound_mic_min
                     0x1b96                  _vmState
                     0x11ce                  _vmVariables
-                    0x1d36                  _wave
+                    0x1dea                  _wave
 
 External Symbols in Program Memory (by address):
 
-                  0x000200                  __reset
                   0x000200                  __resetALT
-                  0x0002d2                  __data_init_standard
+                  0x000200                  __reset
                   0x0002d2                  __data_init
+                  0x0002d2                  __data_init_standard
                   0x0003f8                  ___mulp32peds3
-                  0x0003f8                  ___mulsi3
                   0x0003f8                  ___mulp32eds3
+                  0x0003f8                  ___mulsi3
                   0x000404                  ___udiv3216
                   0x000414                  ___udivsi3
                   0x000434                  ___divsi3
@@ -403,7 +402,7 @@ External Symbols in Program Memory (by address):
                   0x0017a6                  _AsebaNativeDescription_vecaddscalar
                   0x0017ea                  _AsebaNativeDescription_vecfill
                   0x00182a                  _AsebaNativeDescription_veccopy
-                  0x001b98                  _vmDescription
+                  0x001b9a                  _vmDescription
                   0x0022cc                  mma7660.o:_mma7660_i2c_cb
                   0x00233e                  _mma7660_init
                   0x002376                  _mma7660_set_mode
@@ -444,255 +443,255 @@ External Symbols in Program Memory (by address):
                   0x00588e                  _timer_enable_interrupt
                   0x005968                  _timer_init
                   0x0059e6                  _timer_release
-                  0x005bca                  _mode_tick
-                  0x006288                  _mode_init
-                  0x0062a0                  _aseba_atan2
-                  0x006356                  _aseba_sin
-                  0x0063b0                  _aseba_cos
-                  0x0063b6                  _aseba_sqrt
-                  0x0063da                  _AsebaNative_veccopy
-                  0x00640c                  _AsebaNative_vecfill
-                  0x00643c                  _AsebaNative_vecaddscalar
-                  0x00647e                  _AsebaNative_vecadd
-                  0x0064c0                  _AsebaNative_vecsub
-                  0x006502                  _AsebaNative_vecmul
-                  0x006548                  _AsebaNative_vecdiv
-                  0x0065ac                  _AsebaNative_vecmin
-                  0x0065f0                  _AsebaNative_vecmax
-                  0x006634                  _AsebaNative_vecdot
-                  0x0066a2                  _AsebaNative_vecstat
-                  0x00671a                  _AsebaNative_mathmuldiv
-                  0x0067a4                  _AsebaNative_mathatan2
-                  0x0067ee                  _AsebaNative_mathsin
-                  0x006828                  _AsebaNative_mathcos
-                  0x006862                  _AsebaNative_mathrot2
-                  0x0068f6                  _AsebaNative_mathsqrt
-                  0x006930                  _AsebaNative_vecnonzerosequence
-                  0x006a18                  _AsebaVMInit
-                  0x006a2c                  _AsebaVMGetEventAddress
-                  0x006a4e                  _AsebaVMSendExecutionStateChanged
-                  0x006a64                  _AsebaVMSetupEvent
-                  0x006b5a                  _AsebaVMStep
-                  0x006d58                  _AsebaVMEmitNodeSpecificError
-                  0x006d96                  _AsebaVMCheckBreakpoint
-                  0x006db6                  _AsebaDebugBareRun
-                  0x006dfc                  _AsebaDebugBreakpointRun
-                  0x006e5e                  _AsebaVMRun
-                  0x006e7e                  _AsebaVMSetBreakpoint
-                  0x006e96                  _AsebaVMClearBreakpoint
-                  0x006ed2                  _AsebaVMClearBreakpoints
-                  0x006ed8                  _AsebaVMShouldDropPacket
-                  0x006f0a                  _AsebaVMDebugMessage
-                  0x007004                  behavior.o:_timer_cb
-                  0x007564                  _behavior_init
-                  0x00757e                  _behavior_start
-                  0x007592                  _behavior_enabled
-                  0x007596                  _behavior_stop
-                  0x0075a4                  _behavior_notify_sd
-                  0x007710                  _disk_initialize
-                  0x00782a                  _disk_status
-                  0x007838                  _disk_read
-                  0x0078b0                  _disk_write
-                  0x00794c                  _disk_ioctl
-                  0x007b06                  _disk_timerproc
-                  0x007b32                  _test_mode_start
-                  0x007e34                  _test_mode_tick
-                  0x008370                  _set_led
-                  0x0083a0                  _sound_playback
-                  0x0083b6                  _sound_record
-                  0x0083ee                  _set_led_circle
-                  0x00846e                  _set_rgb_top
-                  0x00849c                  _set_rgb_br
-                  0x0084ca                  _set_rgb_bl
-                  0x0084f8                  _set_buttons_leds
-                  0x00854a                  _set_hprox_leds
-                  0x0085e8                  _set_vprox_leds
-                  0x008616                  _set_rc_leds
-                  0x00862e                  _set_sound_leds
-                  0x008646                  _set_ntc_leds
-                  0x008674                  _play_freq
-                  0x0086a6                  _AsebaResetIntoBootloader
-                  0x0086c0                  _AsebaNative__system_reboot
-                  0x0086c4                  skel-usb.o:_AsebaNative__system_settings_read
-                  0x0086f0                  skel-usb.o:_AsebaNative__system_settings_write
-                  0x00871c                  _AsebaPutVmToSleep
-                  0x008720                  _AsebaGetLocalEventsDescriptions
-                  0x008724                  _AsebaIdle
-                  0x008726                  _AsebaNativeFunction
-                  0x00872e                  _AsebaGetVMDescription
-                  0x008732                  _AsebaGetNativeFunctionsDescriptions
-                  0x008736                  _AsebaWriteBytecode
-                  0x008810                  skel-usb.o:_AsebaNative__system_settings_flash
-                  0x008872                  _load_settings_from_flash
-                  0x0088c4                  _error_handler
-                  0x0088c8                  _init_aseba_and_usb
-                  0x00895e                  _run_aseba_main_loop
-                  0x0089be                  _USBDeviceInit
-                  0x008a4c                  _USBCtrlEPAllowStatusStage
-                  0x008af2                  _USBCtrlEPAllowDataStage
-                  0x008b6c                  _USBEnableEndpoint
-                  0x008b96                  _USBStallEndpoint
-                  0x008bd6                  _USBTransferOnePacket
-                  0x008c1e                  _USBCancelIO
-                  0x008c58                  _USBDeviceDetach
-                  0x008c62                  _USBDeviceAttach
-                  0x008c8c                  _leds_clear_all
-                  0x008cbc                  _leds_set
-                  0x008d60                  _leds_tick_cb
-                  0x008daa                  _leds_init
-                  0x008e26                  _leds_poweroff
-                  0x008e5a                  _leds_set_circle
-                  0x008eaa                  _leds_set_top
-                  0x008ec6                  _leds_set_br
-                  0x008ee2                  _leds_set_bl
-                  0x008efe                  __ADC1Interrupt
-                  0x008f04                  analog.o:_timer_cb
-                  0x008fc2                  _analog_disable
-                  0x008fe0                  _analog_init
-                  0x0090a6                  _analog_enter_poweroff_mode
-                  0x0091a4                  _pwm_motor_init
-                  0x009204                  _pwm_motor_poweroff
-                  0x0092c0                  _pwm_motor_left
-                  0x009300                  _pwm_motor_right
-                  0x009340                  _pwm_motor_lock_off_left
-                  0x009358                  _pwm_motor_lock_vbat_left
-                  0x009364                  _pwm_motor_lock_vind1_left
-                  0x009370                  _pwm_motor_lock_vind2_left
-                  0x00937a                  _pwm_motor_unlock_left
-                  0x009386                  _pwm_motor_unlock_right
-                  0x009392                  _pwm_motor_lock_off_right
-                  0x0093aa                  _pwm_motor_lock_vbat_right
-                  0x0093b6                  _pwm_motor_lock_vind1_right
-                  0x0093c2                  _pwm_motor_lock_vind2_right
-                  0x009404                  _flash_read_instr
-                  0x009416                  _flash_read_low
-                  0x009422                  _flash_read_high
-                  0x009430                  _flash_read_chunk
-                  0x0094d6                  _flash_erase_page
-                  0x009504                  _flash_prepare_write
-                  0x00952e                  ___fixup_errata
-                  0x009560                  _flash_write_instruction
-                  0x0095b0                  _flash_write_buffer
-                  0x009610                  _flash_complete_write
-                  0x009622                  _i2c_master_transfert_async
-                  0x009682                  _i2c_master_transfert_block
-                  0x0096a0                  _i2c_read
-                  0x0096b2                  _i2c_write
-                  0x00970e                  master_protocol.o:_i2c_master_transfert_op
-                  0x00989e                  _AsebaSendMessage
-                  0x0098ca                  _AsebaSendVariables
-                  0x009906                  _AsebaSendDescription
-                  0x009a16                  _AsebaProcessIncomingEvents
-                  0x009b0e                  _AsebaTxReady
-                  0x009b3a                  _AsebaUsbBulkRecv
-                  0x009b5a                  _AsebaSendBuffer
-                  0x009bdc                  _AsebaGetBuffer
-                  0x009c54                  _AsebaUsbInit
-                  0x009c5e                  _AsebaUsbRecvBufferEmpty
-                  0x009c88                  _AsebaUsbTxBusy
-                  0x009c8c                  _button_process
-                  0x009e64                  playback.o:_playback_buffer
-                  0x009ff0                  _play_sound
-                  0x009ff4                  _play_sound_loop
-                  0x009ff8                  _play_sound_block
-                  0x00a00e                  _play_frequency_block
-                  0x00a028                  _get_fattime
-                  0x00a02e                  _sd_init
-                  0x00a036                  _sd_shutdown
-                  0x00a06c                  sd.o:_sd_play_cb
-                  0x00a0b2                  _sd_play_file
-                  0x00a106                  _sound_mic_buffer
-                  0x00a12c                  _sd_start_record
-                  0x00a168                  _sd_stop_record
-                  0x00a194                  _sd_test_file_present
-                  0x00a1cc                  _USBCheckCDCRequest
-                  0x00a26c                  _handle_rx_urb
-                  0x00a29c                  _handle_tx_urb
-                  0x00a2ce                  _USBCBTransfertDoneHandler
-                  0x00a2e4                  _USBTXBusy
-                  0x00a2f2                  _USBCDCKickTx
-                  0x00a302                  _USBCDCKickRx
-                  0x00a318                  _usbInterrupt
-                  0x00a338                  _CDCInitEP
-                  0x00a36c                  _motor_new_analog
-                  0x00a4de                  _i2c_master_reset
-                  0x00a4fc                  _i2c_init_master
-                  0x00a5ce                  _i2c_master_start_operations
-                  0x00a61a                  _i2c_master_is_busy
-                  0x00a650                  _ir_prox_mesure
-                  0x00a6b2                  _prox_init
-                  0x00a73a                  _prox_poweroff
-                  0x00a76e                  _cb_1khz
-                  0x00a770                  main.o:_acc_cb
-                  0x00a784                  main.o:_ntc_callback
-                  0x00a78e                  main.o:_rc5_callback
-                  0x00a79a                  main.o:_timer_ntc_callback
-                  0x00a79e                  _update_aseba_variables_write
-                  0x00a7a0                  _switch_off
-                  0x00a7c6                  _power_off
-                  0x00a7d2                  _update_aseba_variables_read
-                  0x00a7d8                  _main
-                  0x00a88c                  _setup_io
-                  0x00a8ec                  _setup_pps
-                  0x00a9a0                  _rc5_init
-                  0x00a9fc                  _rc5_enable
-                  0x00aa0a                  _m_flush_buffer
-                  0x00aa16                  _m_reset_state_machine
-                  0x00aa28                  _m_throw_cb
-                  0x00aa56                  _rc5_disable
-                  0x00aa62                  _rc5_shutdown
-                  0x00aa70                  rc5.o:_timer_cb
-                  0x00aa86                  _sound_init
-                  0x00aad2                  _sound_playback_enable
-                  0x00aaf0                  _sound_playback_disable
-                  0x00aafe                  _sound_poweroff
-                  0x00ab0a                  _sound_set_mic_stat
-                  0x00ab0e                  _sound_new_sample
-                  0x00ab58                  _usb_uart_init
-                  0x00ab5a                  _usb_uart_configured
-                  0x00ab6a                  _usb_uart_serial_port_open
-                  0x00ab80                  _usb_uart_tick
-                  0x00abc0                  _USBCBSuspend
-                  0x00abc4                  _USBCBWakeFromSuspend
-                  0x00abc8                  _USBCB_SOF_Handler
-                  0x00abca                  _USBCBErrorHandler
-                  0x00abcc                  _USBCBCheckOtherReq
-                  0x00abce                  _USBCBStdSetDscHandler
-                  0x00abd0                  _USBCBInitEP
-                  0x00abd2                  _USER_USB_CALLBACK_EVENT_HANDLER
-                  0x00ac10                  _tone_init
-                  0x00ac3a                  _tone_setup
-                  0x00ac80                  _tone_fill_buffer
-                  0x00acc0                  _pid_motor_tick
-                  0x00ad46                  _pid_motor_init
-                  0x00ad54                  _ntc_init
-                  0x00adc0                  _ntc_shutdown
-                  0x00add6                  _ntc_mesure
-                  0x00ade6                  _i2c_init
-                  0x00ae66                  _new_sensors_value
-                  0x00aece                  _clock_set_speed
-                  0x00aed6                  _clock_get_cycle_duration
-                  0x00aee0                  _clock_get_cycle_frequency
-                  0x00aee6                  _clock_get_target_bogomips
-                  0x00aeea                  _clock_disable_idle
-                  0x00aefc                  _clock_enable_idle
-                  0x00af0e                  _clock_idle
-                  0x00af1a                  _clock_delay_us
-                  0x00af30                  _ground_ir_new
-                  0x00af74                  _ground_ir_shutdown
-                  0x00af7a                  _va_get
-                  0x00af84                  _va_put
+                  0x005bd8                  _mode_tick
+                  0x006344                  _mode_init
+                  0x00636c                  _aseba_atan2
+                  0x006422                  _aseba_sin
+                  0x00647c                  _aseba_cos
+                  0x006482                  _aseba_sqrt
+                  0x0064a6                  _AsebaNative_veccopy
+                  0x0064d8                  _AsebaNative_vecfill
+                  0x006508                  _AsebaNative_vecaddscalar
+                  0x00654a                  _AsebaNative_vecadd
+                  0x00658c                  _AsebaNative_vecsub
+                  0x0065ce                  _AsebaNative_vecmul
+                  0x006614                  _AsebaNative_vecdiv
+                  0x006678                  _AsebaNative_vecmin
+                  0x0066bc                  _AsebaNative_vecmax
+                  0x006700                  _AsebaNative_vecdot
+                  0x00676e                  _AsebaNative_vecstat
+                  0x0067e6                  _AsebaNative_mathmuldiv
+                  0x006870                  _AsebaNative_mathatan2
+                  0x0068ba                  _AsebaNative_mathsin
+                  0x0068f4                  _AsebaNative_mathcos
+                  0x00692e                  _AsebaNative_mathrot2
+                  0x0069c2                  _AsebaNative_mathsqrt
+                  0x0069fc                  _AsebaNative_vecnonzerosequence
+                  0x006ae4                  _AsebaVMInit
+                  0x006af8                  _AsebaVMGetEventAddress
+                  0x006b1a                  _AsebaVMSendExecutionStateChanged
+                  0x006b30                  _AsebaVMSetupEvent
+                  0x006c26                  _AsebaVMStep
+                  0x006e24                  _AsebaVMEmitNodeSpecificError
+                  0x006e62                  _AsebaVMCheckBreakpoint
+                  0x006e82                  _AsebaDebugBareRun
+                  0x006ec8                  _AsebaDebugBreakpointRun
+                  0x006f2a                  _AsebaVMRun
+                  0x006f4a                  _AsebaVMSetBreakpoint
+                  0x006f62                  _AsebaVMClearBreakpoint
+                  0x006f9e                  _AsebaVMClearBreakpoints
+                  0x006fa4                  _AsebaVMShouldDropPacket
+                  0x006fd6                  _AsebaVMDebugMessage
+                  0x0070d0                  behavior.o:_timer_cb
+                  0x007630                  _behavior_init
+                  0x00764a                  _behavior_start
+                  0x00765e                  _behavior_enabled
+                  0x007662                  _behavior_stop
+                  0x007670                  _behavior_notify_sd
+                  0x0077dc                  _disk_initialize
+                  0x0078f6                  _disk_status
+                  0x007904                  _disk_read
+                  0x00797c                  _disk_write
+                  0x007a18                  _disk_ioctl
+                  0x007bd2                  _disk_timerproc
+                  0x007bfe                  _test_mode_start
+                  0x007f00                  _test_mode_tick
+                  0x00843c                  _AsebaResetIntoBootloader
+                  0x008456                  _AsebaNative__system_reboot
+                  0x00845a                  skel-usb.o:_AsebaNative__system_settings_read
+                  0x00848a                  skel-usb.o:_AsebaNative__system_settings_write
+                  0x0084ba                  _AsebaPutVmToSleep
+                  0x0084be                  _AsebaGetLocalEventsDescriptions
+                  0x0084c2                  _AsebaIdle
+                  0x0084c4                  _AsebaNativeFunction
+                  0x0084cc                  _AsebaGetVMDescription
+                  0x0084d0                  _AsebaGetNativeFunctionsDescriptions
+                  0x0084d4                  _AsebaWriteBytecode
+                  0x0085ae                  skel-usb.o:_AsebaNative__system_settings_flash
+                  0x008610                  _load_settings_from_flash
+                  0x008662                  _error_handler
+                  0x008666                  _init_aseba_and_usb
+                  0x008704                  _run_aseba_main_loop
+                  0x008774                  _set_led
+                  0x0087a4                  _sound_playback
+                  0x0087ba                  _sound_record
+                  0x0087f2                  _set_led_circle
+                  0x008872                  _set_rgb_top
+                  0x0088a0                  _set_rgb_br
+                  0x0088ce                  _set_rgb_bl
+                  0x0088fc                  _set_buttons_leds
+                  0x00894e                  _set_hprox_leds
+                  0x0089ec                  _set_vprox_leds
+                  0x008a1a                  _set_rc_leds
+                  0x008a32                  _set_sound_leds
+                  0x008a4a                  _set_ntc_leds
+                  0x008a78                  _play_freq
+                  0x008a9a                  _USBDeviceInit
+                  0x008b28                  _USBCtrlEPAllowStatusStage
+                  0x008bce                  _USBCtrlEPAllowDataStage
+                  0x008c48                  _USBEnableEndpoint
+                  0x008c72                  _USBStallEndpoint
+                  0x008cb2                  _USBTransferOnePacket
+                  0x008cfa                  _USBCancelIO
+                  0x008d34                  _USBDeviceDetach
+                  0x008d3e                  _USBDeviceAttach
+                  0x008d68                  _leds_clear_all
+                  0x008d98                  _leds_set
+                  0x008e3c                  _leds_tick_cb
+                  0x008e86                  _leds_init
+                  0x008f08                  _leds_poweroff
+                  0x008f3c                  _leds_set_circle
+                  0x008f8c                  _leds_set_top
+                  0x008fa8                  _leds_set_br
+                  0x008fc4                  _leds_set_bl
+                  0x008fe0                  __ADC1Interrupt
+                  0x008fe6                  analog.o:_timer_cb
+                  0x0090a4                  _analog_disable
+                  0x0090c2                  _analog_init
+                  0x009188                  _analog_enter_poweroff_mode
+                  0x009286                  _pwm_motor_init
+                  0x0092e6                  _pwm_motor_poweroff
+                  0x0093a2                  _pwm_motor_left
+                  0x0093e2                  _pwm_motor_right
+                  0x009422                  _pwm_motor_lock_off_left
+                  0x00943a                  _pwm_motor_lock_vbat_left
+                  0x009446                  _pwm_motor_lock_vind1_left
+                  0x009452                  _pwm_motor_lock_vind2_left
+                  0x00945c                  _pwm_motor_unlock_left
+                  0x009468                  _pwm_motor_unlock_right
+                  0x009474                  _pwm_motor_lock_off_right
+                  0x00948c                  _pwm_motor_lock_vbat_right
+                  0x009498                  _pwm_motor_lock_vind1_right
+                  0x0094a4                  _pwm_motor_lock_vind2_right
+                  0x0094e6                  _flash_read_instr
+                  0x0094f8                  _flash_read_low
+                  0x009504                  _flash_read_high
+                  0x009512                  _flash_read_chunk
+                  0x0095b8                  _flash_erase_page
+                  0x0095e6                  _flash_prepare_write
+                  0x009610                  ___fixup_errata
+                  0x009642                  _flash_write_instruction
+                  0x009692                  _flash_write_buffer
+                  0x0096f2                  _flash_complete_write
+                  0x009704                  _i2c_master_transfert_async
+                  0x009764                  _i2c_master_transfert_block
+                  0x009782                  _i2c_read
+                  0x009794                  _i2c_write
+                  0x0097f0                  master_protocol.o:_i2c_master_transfert_op
+                  0x009980                  _AsebaSendMessage
+                  0x0099ac                  _AsebaSendVariables
+                  0x0099e8                  _AsebaSendDescription
+                  0x009af8                  _AsebaProcessIncomingEvents
+                  0x009bf0                  _AsebaTxReady
+                  0x009c1c                  _AsebaUsbBulkRecv
+                  0x009c3c                  _AsebaSendBuffer
+                  0x009cbe                  _AsebaGetBuffer
+                  0x009d36                  _AsebaUsbInit
+                  0x009d40                  _AsebaUsbRecvBufferEmpty
+                  0x009d6a                  _AsebaUsbTxBusy
+                  0x009d6e                  _button_process
+                  0x009f46                  playback.o:_playback_buffer
+                  0x00a0d2                  _play_sound
+                  0x00a0d6                  _play_sound_loop
+                  0x00a0da                  _play_sound_block
+                  0x00a0f0                  _play_frequency_block
+                  0x00a10a                  _get_fattime
+                  0x00a110                  _sd_init
+                  0x00a118                  _sd_shutdown
+                  0x00a14e                  sd.o:_sd_play_cb
+                  0x00a194                  _sd_play_file
+                  0x00a1e8                  _sound_mic_buffer
+                  0x00a20e                  _sd_start_record
+                  0x00a24a                  _sd_stop_record
+                  0x00a276                  _sd_test_file_present
+                  0x00a2ae                  _USBCheckCDCRequest
+                  0x00a34e                  _handle_rx_urb
+                  0x00a37e                  _handle_tx_urb
+                  0x00a3b0                  _USBCBTransfertDoneHandler
+                  0x00a3c6                  _USBTXBusy
+                  0x00a3d4                  _USBCDCKickTx
+                  0x00a3e4                  _USBCDCKickRx
+                  0x00a3fa                  _usbInterrupt
+                  0x00a41a                  _CDCInitEP
+                  0x00a44e                  _motor_new_analog
+                  0x00a5c0                  _i2c_master_reset
+                  0x00a5de                  _i2c_init_master
+                  0x00a6b0                  _i2c_master_start_operations
+                  0x00a6fc                  _i2c_master_is_busy
+                  0x00a732                  _ir_prox_mesure
+                  0x00a794                  _prox_init
+                  0x00a81c                  _prox_poweroff
+                  0x00a850                  _cb_1khz
+                  0x00a852                  main.o:_acc_cb
+                  0x00a866                  main.o:_ntc_callback
+                  0x00a870                  main.o:_rc5_callback
+                  0x00a87c                  main.o:_timer_ntc_callback
+                  0x00a880                  _update_aseba_variables_write
+                  0x00a882                  _switch_off
+                  0x00a8a8                  _power_off
+                  0x00a8b4                  _update_aseba_variables_read
+                  0x00a8ba                  _main
+                  0x00a972                  _setup_io
+                  0x00a9d2                  _setup_pps
+                  0x00aa86                  _rc5_init
+                  0x00aae2                  _rc5_enable
+                  0x00aaf0                  _m_flush_buffer
+                  0x00aafc                  _m_reset_state_machine
+                  0x00ab0e                  _m_throw_cb
+                  0x00ab3c                  _rc5_disable
+                  0x00ab48                  _rc5_shutdown
+                  0x00ab56                  rc5.o:_timer_cb
+                  0x00ab6c                  _sound_init
+                  0x00abb8                  _sound_playback_enable
+                  0x00abd6                  _sound_playback_disable
+                  0x00abe4                  _sound_poweroff
+                  0x00abf0                  _sound_set_mic_stat
+                  0x00abf4                  _sound_new_sample
+                  0x00ac3e                  _usb_uart_init
+                  0x00ac40                  _usb_uart_configured
+                  0x00ac50                  _usb_uart_serial_port_open
+                  0x00ac66                  _usb_uart_tick
+                  0x00aca6                  _USBCBSuspend
+                  0x00acaa                  _USBCBWakeFromSuspend
+                  0x00acae                  _USBCB_SOF_Handler
+                  0x00acb0                  _USBCBErrorHandler
+                  0x00acb2                  _USBCBCheckOtherReq
+                  0x00acb4                  _USBCBStdSetDscHandler
+                  0x00acb6                  _USBCBInitEP
+                  0x00acb8                  _USER_USB_CALLBACK_EVENT_HANDLER
+                  0x00acf6                  _tone_init
+                  0x00ad20                  _tone_setup
+                  0x00ad66                  _tone_fill_buffer
+                  0x00ada6                  _pid_motor_tick
+                  0x00ae2c                  _pid_motor_init
+                  0x00ae3a                  _ntc_init
+                  0x00aea6                  _ntc_shutdown
+                  0x00aebc                  _ntc_mesure
+                  0x00aecc                  _i2c_init
+                  0x00af4c                  _new_sensors_value
+                  0x00afb4                  _clock_set_speed
+                  0x00afbc                  _clock_get_cycle_duration
+                  0x00afc6                  _clock_get_cycle_frequency
+                  0x00afcc                  _clock_get_target_bogomips
+                  0x00afd0                  _clock_disable_idle
+                  0x00afe2                  _clock_enable_idle
+                  0x00aff4                  _clock_idle
+                  0x00b000                  _clock_delay_us
+                  0x00b016                  _ground_ir_new
+                  0x00b05a                  _ground_ir_shutdown
+                  0x00b060                  _va_get
+                  0x00b06a                  _va_put
                   0x014800                  _aseba_settings_flash
 
 External Symbols in Program Memory (by name):
 
-                  0x006db6                  _AsebaDebugBareRun
-                  0x006dfc                  _AsebaDebugBreakpointRun
-                  0x009bdc                  _AsebaGetBuffer
-                  0x008720                  _AsebaGetLocalEventsDescriptions
-                  0x008732                  _AsebaGetNativeFunctionsDescriptions
-                  0x00872e                  _AsebaGetVMDescription
-                  0x008724                  _AsebaIdle
+                  0x006e82                  _AsebaDebugBareRun
+                  0x006ec8                  _AsebaDebugBreakpointRun
+                  0x009cbe                  _AsebaGetBuffer
+                  0x0084be                  _AsebaGetLocalEventsDescriptions
+                  0x0084d0                  _AsebaGetNativeFunctionsDescriptions
+                  0x0084cc                  _AsebaGetVMDescription
+                  0x0084c2                  _AsebaIdle
                   0x00142c                  _AsebaNativeDescription_mathatan2
                   0x00139c                  _AsebaNativeDescription_mathcos
                   0x001486                  _AsebaNativeDescription_mathmuldiv
@@ -711,76 +710,76 @@ External Symbols in Program Memory (by name):
                   0x0012cc                  _AsebaNativeDescription_vecnonzerosequence
                   0x0014d0                  _AsebaNativeDescription_vecstat
                   0x0016f4                  _AsebaNativeDescription_vecsub
-                  0x008726                  _AsebaNativeFunction
-                  0x0086c0                  _AsebaNative__system_reboot
-                  0x0067a4                  _AsebaNative_mathatan2
-                  0x006828                  _AsebaNative_mathcos
-                  0x00671a                  _AsebaNative_mathmuldiv
-                  0x006862                  _AsebaNative_mathrot2
-                  0x0067ee                  _AsebaNative_mathsin
-                  0x0068f6                  _AsebaNative_mathsqrt
-                  0x00647e                  _AsebaNative_vecadd
-                  0x00643c                  _AsebaNative_vecaddscalar
-                  0x0063da                  _AsebaNative_veccopy
-                  0x006548                  _AsebaNative_vecdiv
-                  0x006634                  _AsebaNative_vecdot
-                  0x00640c                  _AsebaNative_vecfill
-                  0x0065f0                  _AsebaNative_vecmax
-                  0x0065ac                  _AsebaNative_vecmin
-                  0x006502                  _AsebaNative_vecmul
-                  0x006930                  _AsebaNative_vecnonzerosequence
-                  0x0066a2                  _AsebaNative_vecstat
-                  0x0064c0                  _AsebaNative_vecsub
-                  0x009a16                  _AsebaProcessIncomingEvents
-                  0x00871c                  _AsebaPutVmToSleep
-                  0x0086a6                  _AsebaResetIntoBootloader
-                  0x009b5a                  _AsebaSendBuffer
-                  0x009906                  _AsebaSendDescription
-                  0x00989e                  _AsebaSendMessage
-                  0x0098ca                  _AsebaSendVariables
-                  0x009b0e                  _AsebaTxReady
-                  0x009b3a                  _AsebaUsbBulkRecv
-                  0x009c54                  _AsebaUsbInit
-                  0x009c5e                  _AsebaUsbRecvBufferEmpty
-                  0x009c88                  _AsebaUsbTxBusy
-                  0x006d96                  _AsebaVMCheckBreakpoint
-                  0x006e96                  _AsebaVMClearBreakpoint
-                  0x006ed2                  _AsebaVMClearBreakpoints
-                  0x006f0a                  _AsebaVMDebugMessage
-                  0x006d58                  _AsebaVMEmitNodeSpecificError
-                  0x006a2c                  _AsebaVMGetEventAddress
-                  0x006a18                  _AsebaVMInit
-                  0x006e5e                  _AsebaVMRun
-                  0x006a4e                  _AsebaVMSendExecutionStateChanged
-                  0x006e7e                  _AsebaVMSetBreakpoint
-                  0x006a64                  _AsebaVMSetupEvent
-                  0x006ed8                  _AsebaVMShouldDropPacket
-                  0x006b5a                  _AsebaVMStep
-                  0x008736                  _AsebaWriteBytecode
-                  0x00a338                  _CDCInitEP
-                  0x00abcc                  _USBCBCheckOtherReq
-                  0x00abca                  _USBCBErrorHandler
-                  0x00abd0                  _USBCBInitEP
-                  0x00abce                  _USBCBStdSetDscHandler
-                  0x00abc0                  _USBCBSuspend
-                  0x00a2ce                  _USBCBTransfertDoneHandler
-                  0x00abc4                  _USBCBWakeFromSuspend
-                  0x00abc8                  _USBCB_SOF_Handler
-                  0x00a302                  _USBCDCKickRx
-                  0x00a2f2                  _USBCDCKickTx
-                  0x008c1e                  _USBCancelIO
-                  0x00a1cc                  _USBCheckCDCRequest
-                  0x008af2                  _USBCtrlEPAllowDataStage
-                  0x008a4c                  _USBCtrlEPAllowStatusStage
-                  0x008c62                  _USBDeviceAttach
-                  0x008c58                  _USBDeviceDetach
-                  0x0089be                  _USBDeviceInit
-                  0x008b6c                  _USBEnableEndpoint
-                  0x008b96                  _USBStallEndpoint
-                  0x00a2e4                  _USBTXBusy
-                  0x008bd6                  _USBTransferOnePacket
-                  0x00abd2                  _USER_USB_CALLBACK_EVENT_HANDLER
-                  0x008efe                  __ADC1Interrupt
+                  0x0084c4                  _AsebaNativeFunction
+                  0x008456                  _AsebaNative__system_reboot
+                  0x006870                  _AsebaNative_mathatan2
+                  0x0068f4                  _AsebaNative_mathcos
+                  0x0067e6                  _AsebaNative_mathmuldiv
+                  0x00692e                  _AsebaNative_mathrot2
+                  0x0068ba                  _AsebaNative_mathsin
+                  0x0069c2                  _AsebaNative_mathsqrt
+                  0x00654a                  _AsebaNative_vecadd
+                  0x006508                  _AsebaNative_vecaddscalar
+                  0x0064a6                  _AsebaNative_veccopy
+                  0x006614                  _AsebaNative_vecdiv
+                  0x006700                  _AsebaNative_vecdot
+                  0x0064d8                  _AsebaNative_vecfill
+                  0x0066bc                  _AsebaNative_vecmax
+                  0x006678                  _AsebaNative_vecmin
+                  0x0065ce                  _AsebaNative_vecmul
+                  0x0069fc                  _AsebaNative_vecnonzerosequence
+                  0x00676e                  _AsebaNative_vecstat
+                  0x00658c                  _AsebaNative_vecsub
+                  0x009af8                  _AsebaProcessIncomingEvents
+                  0x0084ba                  _AsebaPutVmToSleep
+                  0x00843c                  _AsebaResetIntoBootloader
+                  0x009c3c                  _AsebaSendBuffer
+                  0x0099e8                  _AsebaSendDescription
+                  0x009980                  _AsebaSendMessage
+                  0x0099ac                  _AsebaSendVariables
+                  0x009bf0                  _AsebaTxReady
+                  0x009c1c                  _AsebaUsbBulkRecv
+                  0x009d36                  _AsebaUsbInit
+                  0x009d40                  _AsebaUsbRecvBufferEmpty
+                  0x009d6a                  _AsebaUsbTxBusy
+                  0x006e62                  _AsebaVMCheckBreakpoint
+                  0x006f62                  _AsebaVMClearBreakpoint
+                  0x006f9e                  _AsebaVMClearBreakpoints
+                  0x006fd6                  _AsebaVMDebugMessage
+                  0x006e24                  _AsebaVMEmitNodeSpecificError
+                  0x006af8                  _AsebaVMGetEventAddress
+                  0x006ae4                  _AsebaVMInit
+                  0x006f2a                  _AsebaVMRun
+                  0x006b1a                  _AsebaVMSendExecutionStateChanged
+                  0x006f4a                  _AsebaVMSetBreakpoint
+                  0x006b30                  _AsebaVMSetupEvent
+                  0x006fa4                  _AsebaVMShouldDropPacket
+                  0x006c26                  _AsebaVMStep
+                  0x0084d4                  _AsebaWriteBytecode
+                  0x00a41a                  _CDCInitEP
+                  0x00acb2                  _USBCBCheckOtherReq
+                  0x00acb0                  _USBCBErrorHandler
+                  0x00acb6                  _USBCBInitEP
+                  0x00acb4                  _USBCBStdSetDscHandler
+                  0x00aca6                  _USBCBSuspend
+                  0x00a3b0                  _USBCBTransfertDoneHandler
+                  0x00acaa                  _USBCBWakeFromSuspend
+                  0x00acae                  _USBCB_SOF_Handler
+                  0x00a3e4                  _USBCDCKickRx
+                  0x00a3d4                  _USBCDCKickTx
+                  0x008cfa                  _USBCancelIO
+                  0x00a2ae                  _USBCheckCDCRequest
+                  0x008bce                  _USBCtrlEPAllowDataStage
+                  0x008b28                  _USBCtrlEPAllowStatusStage
+                  0x008d3e                  _USBDeviceAttach
+                  0x008d34                  _USBDeviceDetach
+                  0x008a9a                  _USBDeviceInit
+                  0x008c48                  _USBEnableEndpoint
+                  0x008c72                  _USBStallEndpoint
+                  0x00a3c6                  _USBTXBusy
+                  0x008cb2                  _USBTransferOnePacket
+                  0x00acb8                  _USER_USB_CALLBACK_EVENT_HANDLER
+                  0x008fe0                  __ADC1Interrupt
                   0x00078a                  __CNInterrupt
                   0x0023f8                  __DefaultInterrupt
                   0x0007b0                  __IC8Interrupt
@@ -799,7 +798,7 @@ External Symbols in Program Memory (by name):
                   0x000a4e                  __USB1Interrupt
                   0x0005b8                  ___divdi3
                   0x000434                  ___divsi3
-                  0x00952e                  ___fixup_errata
+                  0x009610                  ___fixup_errata
                   0x0005f2                  ___moddi3
                   0x000452                  ___muldi3
                   0x0003f8                  ___mulp32eds3
@@ -815,40 +814,40 @@ External Symbols in Program Memory (by name):
                   0x0002d2                  __data_init_standard
                   0x000200                  __reset
                   0x000200                  __resetALT
-                  0x008fc2                  _analog_disable
-                  0x0090a6                  _analog_enter_poweroff_mode
-                  0x008fe0                  _analog_init
-                  0x0062a0                  _aseba_atan2
-                  0x0063b0                  _aseba_cos
+                  0x0090a4                  _analog_disable
+                  0x009188                  _analog_enter_poweroff_mode
+                  0x0090c2                  _analog_init
+                  0x00636c                  _aseba_atan2
+                  0x00647c                  _aseba_cos
                   0x003400                  _aseba_flash
                   0x002c00                  _aseba_flash1
                   0x002400                  _aseba_flash2
                   0x014800                  _aseba_settings_flash
-                  0x006356                  _aseba_sin
-                  0x0063b6                  _aseba_sqrt
-                  0x007592                  _behavior_enabled
-                  0x007564                  _behavior_init
-                  0x0075a4                  _behavior_notify_sd
-                  0x00757e                  _behavior_start
-                  0x007596                  _behavior_stop
-                  0x009c8c                  _button_process
-                  0x00a76e                  _cb_1khz
-                  0x00af1a                  _clock_delay_us
-                  0x00aeea                  _clock_disable_idle
-                  0x00aefc                  _clock_enable_idle
-                  0x00aed6                  _clock_get_cycle_duration
-                  0x00aee0                  _clock_get_cycle_frequency
-                  0x00aee6                  _clock_get_target_bogomips
-                  0x00af0e                  _clock_idle
-                  0x00aece                  _clock_set_speed
+                  0x006422                  _aseba_sin
+                  0x006482                  _aseba_sqrt
+                  0x00765e                  _behavior_enabled
+                  0x007630                  _behavior_init
+                  0x007670                  _behavior_notify_sd
+                  0x00764a                  _behavior_start
+                  0x007662                  _behavior_stop
+                  0x009d6e                  _button_process
+                  0x00a850                  _cb_1khz
+                  0x00b000                  _clock_delay_us
+                  0x00afd0                  _clock_disable_idle
+                  0x00afe2                  _clock_enable_idle
+                  0x00afbc                  _clock_get_cycle_duration
+                  0x00afc6                  _clock_get_cycle_frequency
+                  0x00afcc                  _clock_get_target_bogomips
+                  0x00aff4                  _clock_idle
+                  0x00afb4                  _clock_set_speed
                   0x003ca6                  _clust2sect
-                  0x007710                  _disk_initialize
-                  0x00794c                  _disk_ioctl
-                  0x007838                  _disk_read
-                  0x00782a                  _disk_status
-                  0x007b06                  _disk_timerproc
-                  0x0078b0                  _disk_write
-                  0x0088c4                  _error_handler
+                  0x0077dc                  _disk_initialize
+                  0x007a18                  _disk_ioctl
+                  0x007904                  _disk_read
+                  0x0078f6                  _disk_status
+                  0x007bd2                  _disk_timerproc
+                  0x00797c                  _disk_write
+                  0x008662                  _error_handler
                   0x0023f4                  _error_register_callback
                   0x0023f0                  _error_report
                   0x004e7c                  _f_close
@@ -858,121 +857,121 @@ External Symbols in Program Memory (by name):
                   0x004a12                  _f_read
                   0x004d5e                  _f_sync
                   0x004b98                  _f_write
-                  0x009610                  _flash_complete_write
-                  0x0094d6                  _flash_erase_page
-                  0x009504                  _flash_prepare_write
-                  0x009430                  _flash_read_chunk
-                  0x009422                  _flash_read_high
-                  0x009404                  _flash_read_instr
-                  0x009416                  _flash_read_low
-                  0x0095b0                  _flash_write_buffer
-                  0x009560                  _flash_write_instruction
+                  0x0096f2                  _flash_complete_write
+                  0x0095b8                  _flash_erase_page
+                  0x0095e6                  _flash_prepare_write
+                  0x009512                  _flash_read_chunk
+                  0x009504                  _flash_read_high
+                  0x0094e6                  _flash_read_instr
+                  0x0094f8                  _flash_read_low
+                  0x009692                  _flash_write_buffer
+                  0x009642                  _flash_write_instruction
                   0x003cd6                  _get_fat
-                  0x00a028                  _get_fattime
-                  0x00af30                  _ground_ir_new
-                  0x00af74                  _ground_ir_shutdown
-                  0x00a26c                  _handle_rx_urb
-                  0x00a29c                  _handle_tx_urb
-                  0x00ade6                  _i2c_init
-                  0x00a4fc                  _i2c_init_master
-                  0x00a61a                  _i2c_master_is_busy
-                  0x00a4de                  _i2c_master_reset
-                  0x00a5ce                  _i2c_master_start_operations
-                  0x009622                  _i2c_master_transfert_async
-                  0x009682                  _i2c_master_transfert_block
-                  0x0096a0                  _i2c_read
-                  0x0096b2                  _i2c_write
-                  0x0088c8                  _init_aseba_and_usb
-                  0x00a650                  _ir_prox_mesure
-                  0x008c8c                  _leds_clear_all
-                  0x008daa                  _leds_init
-                  0x008e26                  _leds_poweroff
-                  0x008cbc                  _leds_set
-                  0x008ee2                  _leds_set_bl
-                  0x008ec6                  _leds_set_br
-                  0x008e5a                  _leds_set_circle
-                  0x008eaa                  _leds_set_top
-                  0x008d60                  _leds_tick_cb
-                  0x008872                  _load_settings_from_flash
-                  0x00aa0a                  _m_flush_buffer
-                  0x00aa16                  _m_reset_state_machine
-                  0x00aa28                  _m_throw_cb
-                  0x00a7d8                  _main
+                  0x00a10a                  _get_fattime
+                  0x00b016                  _ground_ir_new
+                  0x00b05a                  _ground_ir_shutdown
+                  0x00a34e                  _handle_rx_urb
+                  0x00a37e                  _handle_tx_urb
+                  0x00aecc                  _i2c_init
+                  0x00a5de                  _i2c_init_master
+                  0x00a6fc                  _i2c_master_is_busy
+                  0x00a5c0                  _i2c_master_reset
+                  0x00a6b0                  _i2c_master_start_operations
+                  0x009704                  _i2c_master_transfert_async
+                  0x009764                  _i2c_master_transfert_block
+                  0x009782                  _i2c_read
+                  0x009794                  _i2c_write
+                  0x008666                  _init_aseba_and_usb
+                  0x00a732                  _ir_prox_mesure
+                  0x008d68                  _leds_clear_all
+                  0x008e86                  _leds_init
+                  0x008f08                  _leds_poweroff
+                  0x008d98                  _leds_set
+                  0x008fc4                  _leds_set_bl
+                  0x008fa8                  _leds_set_br
+                  0x008f3c                  _leds_set_circle
+                  0x008f8c                  _leds_set_top
+                  0x008e3c                  _leds_tick_cb
+                  0x008610                  _load_settings_from_flash
+                  0x00aaf0                  _m_flush_buffer
+                  0x00aafc                  _m_reset_state_machine
+                  0x00ab0e                  _m_throw_cb
+                  0x00a8ba                  _main
                   0x000708                  _memcmp
                   0x000756                  _memcpy
                   0x00073c                  _memset
                   0x00233e                  _mma7660_init
                   0x002376                  _mma7660_set_mode
                   0x0023e2                  _mma7660_suspend
-                  0x006288                  _mode_init
-                  0x005bca                  _mode_tick
-                  0x00a36c                  _motor_new_analog
-                  0x00ae66                  _new_sensors_value
-                  0x00ad54                  _ntc_init
-                  0x00add6                  _ntc_mesure
-                  0x00adc0                  _ntc_shutdown
-                  0x00ad46                  _pid_motor_init
-                  0x00acc0                  _pid_motor_tick
-                  0x008674                  _play_freq
-                  0x00a00e                  _play_frequency_block
-                  0x009ff0                  _play_sound
-                  0x009ff8                  _play_sound_block
-                  0x009ff4                  _play_sound_loop
-                  0x00a7c6                  _power_off
-                  0x00a6b2                  _prox_init
-                  0x00a73a                  _prox_poweroff
+                  0x006344                  _mode_init
+                  0x005bd8                  _mode_tick
+                  0x00a44e                  _motor_new_analog
+                  0x00af4c                  _new_sensors_value
+                  0x00ae3a                  _ntc_init
+                  0x00aebc                  _ntc_mesure
+                  0x00aea6                  _ntc_shutdown
+                  0x00ae2c                  _pid_motor_init
+                  0x00ada6                  _pid_motor_tick
+                  0x008a78                  _play_freq
+                  0x00a0f0                  _play_frequency_block
+                  0x00a0d2                  _play_sound
+                  0x00a0da                  _play_sound_block
+                  0x00a0d6                  _play_sound_loop
+                  0x00a8a8                  _power_off
+                  0x00a794                  _prox_init
+                  0x00a81c                  _prox_poweroff
                   0x003de6                  _put_fat
-                  0x0091a4                  _pwm_motor_init
-                  0x0092c0                  _pwm_motor_left
-                  0x009340                  _pwm_motor_lock_off_left
-                  0x009392                  _pwm_motor_lock_off_right
-                  0x009358                  _pwm_motor_lock_vbat_left
-                  0x0093aa                  _pwm_motor_lock_vbat_right
-                  0x009364                  _pwm_motor_lock_vind1_left
-                  0x0093b6                  _pwm_motor_lock_vind1_right
-                  0x009370                  _pwm_motor_lock_vind2_left
-                  0x0093c2                  _pwm_motor_lock_vind2_right
-                  0x009204                  _pwm_motor_poweroff
-                  0x009300                  _pwm_motor_right
-                  0x00937a                  _pwm_motor_unlock_left
-                  0x009386                  _pwm_motor_unlock_right
-                  0x00aa56                  _rc5_disable
-                  0x00a9fc                  _rc5_enable
-                  0x00a9a0                  _rc5_init
-                  0x00aa62                  _rc5_shutdown
-                  0x00895e                  _run_aseba_main_loop
-                  0x00a02e                  _sd_init
-                  0x00a0b2                  _sd_play_file
-                  0x00a036                  _sd_shutdown
-                  0x00a12c                  _sd_start_record
-                  0x00a168                  _sd_stop_record
-                  0x00a194                  _sd_test_file_present
-                  0x0084f8                  _set_buttons_leds
-                  0x00854a                  _set_hprox_leds
-                  0x008370                  _set_led
-                  0x0083ee                  _set_led_circle
-                  0x008646                  _set_ntc_leds
-                  0x008616                  _set_rc_leds
-                  0x0084ca                  _set_rgb_bl
-                  0x00849c                  _set_rgb_br
-                  0x00846e                  _set_rgb_top
-                  0x00862e                  _set_sound_leds
-                  0x0085e8                  _set_vprox_leds
-                  0x00a88c                  _setup_io
-                  0x00a8ec                  _setup_pps
-                  0x00aa86                  _sound_init
-                  0x00a106                  _sound_mic_buffer
-                  0x00ab0e                  _sound_new_sample
-                  0x0083a0                  _sound_playback
-                  0x00aaf0                  _sound_playback_disable
-                  0x00aad2                  _sound_playback_enable
-                  0x00aafe                  _sound_poweroff
-                  0x0083b6                  _sound_record
-                  0x00ab0a                  _sound_set_mic_stat
+                  0x009286                  _pwm_motor_init
+                  0x0093a2                  _pwm_motor_left
+                  0x009422                  _pwm_motor_lock_off_left
+                  0x009474                  _pwm_motor_lock_off_right
+                  0x00943a                  _pwm_motor_lock_vbat_left
+                  0x00948c                  _pwm_motor_lock_vbat_right
+                  0x009446                  _pwm_motor_lock_vind1_left
+                  0x009498                  _pwm_motor_lock_vind1_right
+                  0x009452                  _pwm_motor_lock_vind2_left
+                  0x0094a4                  _pwm_motor_lock_vind2_right
+                  0x0092e6                  _pwm_motor_poweroff
+                  0x0093e2                  _pwm_motor_right
+                  0x00945c                  _pwm_motor_unlock_left
+                  0x009468                  _pwm_motor_unlock_right
+                  0x00ab3c                  _rc5_disable
+                  0x00aae2                  _rc5_enable
+                  0x00aa86                  _rc5_init
+                  0x00ab48                  _rc5_shutdown
+                  0x008704                  _run_aseba_main_loop
+                  0x00a110                  _sd_init
+                  0x00a194                  _sd_play_file
+                  0x00a118                  _sd_shutdown
+                  0x00a20e                  _sd_start_record
+                  0x00a24a                  _sd_stop_record
+                  0x00a276                  _sd_test_file_present
+                  0x0088fc                  _set_buttons_leds
+                  0x00894e                  _set_hprox_leds
+                  0x008774                  _set_led
+                  0x0087f2                  _set_led_circle
+                  0x008a4a                  _set_ntc_leds
+                  0x008a1a                  _set_rc_leds
+                  0x0088ce                  _set_rgb_bl
+                  0x0088a0                  _set_rgb_br
+                  0x008872                  _set_rgb_top
+                  0x008a32                  _set_sound_leds
+                  0x0089ec                  _set_vprox_leds
+                  0x00a972                  _setup_io
+                  0x00a9d2                  _setup_pps
+                  0x00ab6c                  _sound_init
+                  0x00a1e8                  _sound_mic_buffer
+                  0x00abf4                  _sound_new_sample
+                  0x0087a4                  _sound_playback
+                  0x00abd6                  _sound_playback_disable
+                  0x00abb8                  _sound_playback_enable
+                  0x00abe4                  _sound_poweroff
+                  0x0087ba                  _sound_record
+                  0x00abf0                  _sound_set_mic_stat
                   0x00074a                  _strlen
-                  0x00a7a0                  _switch_off
-                  0x007b32                  _test_mode_start
-                  0x007e34                  _test_mode_tick
+                  0x00a882                  _switch_off
+                  0x007bfe                  _test_mode_start
+                  0x007f00                  _test_mode_tick
                   0x005886                  _timer_disable
                   0x0050a0                  _timer_disable_interrupt
                   0x00588a                  _timer_enable
@@ -992,34 +991,34 @@ External Symbols in Program Memory (by name):
                   0x005536                  _timer_set_period
                   0x0052e0                  _timer_set_value
                   0x005186                  _timer_use_gated_time_accumulation
-                  0x00ac80                  _tone_fill_buffer
-                  0x00ac10                  _tone_init
-                  0x00ac3a                  _tone_setup
-                  0x00a7d2                  _update_aseba_variables_read
-                  0x00a79e                  _update_aseba_variables_write
-                  0x00a318                  _usbInterrupt
-                  0x00ab5a                  _usb_uart_configured
-                  0x00ab58                  _usb_uart_init
-                  0x00ab6a                  _usb_uart_serial_port_open
-                  0x00ab80                  _usb_uart_tick
-                  0x00af7a                  _va_get
-                  0x00af84                  _va_put
-                  0x001b98                  _vmDescription
-                  0x008f04                  analog.o:_timer_cb
-                  0x007004                  behavior.o:_timer_cb
+                  0x00ad66                  _tone_fill_buffer
+                  0x00acf6                  _tone_init
+                  0x00ad20                  _tone_setup
+                  0x00a8b4                  _update_aseba_variables_read
+                  0x00a880                  _update_aseba_variables_write
+                  0x00a3fa                  _usbInterrupt
+                  0x00ac40                  _usb_uart_configured
+                  0x00ac3e                  _usb_uart_init
+                  0x00ac50                  _usb_uart_serial_port_open
+                  0x00ac66                  _usb_uart_tick
+                  0x00b060                  _va_get
+                  0x00b06a                  _va_put
+                  0x001b9a                  _vmDescription
+                  0x008fe6                  analog.o:_timer_cb
+                  0x0070d0                  behavior.o:_timer_cb
                   0x0023ec                  error.o:_error_default_handler
-                  0x00a770                  main.o:_acc_cb
-                  0x00a784                  main.o:_ntc_callback
-                  0x00a78e                  main.o:_rc5_callback
-                  0x00a79a                  main.o:_timer_ntc_callback
-                  0x00970e                  master_protocol.o:_i2c_master_transfert_op
+                  0x00a852                  main.o:_acc_cb
+                  0x00a866                  main.o:_ntc_callback
+                  0x00a870                  main.o:_rc5_callback
+                  0x00a87c                  main.o:_timer_ntc_callback
+                  0x0097f0                  master_protocol.o:_i2c_master_transfert_op
                   0x0022cc                  mma7660.o:_mma7660_i2c_cb
-                  0x009e64                  playback.o:_playback_buffer
-                  0x00aa70                  rc5.o:_timer_cb
-                  0x00a06c                  sd.o:_sd_play_cb
-                  0x008810                  skel-usb.o:_AsebaNative__system_settings_flash
-                  0x0086c4                  skel-usb.o:_AsebaNative__system_settings_read
-                  0x0086f0                  skel-usb.o:_AsebaNative__system_settings_write
+                  0x009f46                  playback.o:_playback_buffer
+                  0x00ab56                  rc5.o:_timer_cb
+                  0x00a14e                  sd.o:_sd_play_cb
+                  0x0085ae                  skel-usb.o:_AsebaNative__system_settings_flash
+                  0x00845a                  skel-usb.o:_AsebaNative__system_settings_read
+                  0x00848a                  skel-usb.o:_AsebaNative__system_settings_write
 
 Memory Configuration
 
@@ -1233,7 +1232,7 @@ __CONFIG1         0x0157fe          0x2
                   0x000028          0x4 LONG 0x23f8 DEFINED (__SPI1Interrupt)?<code 339> (__SPI1Interrupt):<code 339> (__DefaultInterrupt)
                   0x00002a          0x4 LONG 0x23f8 DEFINED (__U1RXInterrupt)?<code 339> (__U1RXInterrupt):<code 339> (__DefaultInterrupt)
                   0x00002c          0x4 LONG 0x23f8 DEFINED (__U1TXInterrupt)?<code 339> (__U1TXInterrupt):<code 339> (__DefaultInterrupt)
-                  0x00002e          0x4 LONG 0x8efe DEFINED (__ADC1Interrupt)?<code 339> (__ADC1Interrupt):<code 339> (__DefaultInterrupt)
+                  0x00002e          0x4 LONG 0x8fe0 DEFINED (__ADC1Interrupt)?<code 339> (__ADC1Interrupt):<code 339> (__DefaultInterrupt)
                   0x000030          0x4 LONG 0x23f8 DEFINED (__Interrupt14)?<code 339> (__Interrupt14):<code 339> (__DefaultInterrupt)
                   0x000032          0x4 LONG 0x23f8 DEFINED (__Interrupt15)?<code 339> (__Interrupt15):<code 339> (__DefaultInterrupt)
                   0x000034          0x4 LONG 0x23f8 DEFINED (__SI2C1Interrupt)?<code 339> (__SI2C1Interrupt):<code 339> (__DefaultInterrupt)
@@ -1361,7 +1360,7 @@ __CONFIG1         0x0157fe          0x2
                   0x000128          0x4 LONG 0x23f8 DEFINED (__AltSPI1Interrupt)?<code 339> (__AltSPI1Interrupt):DEFINED (__SPI1Interrupt)?<code 339> (__SPI1Interrupt):<code 339> (__DefaultInterrupt)
                   0x00012a          0x4 LONG 0x23f8 DEFINED (__AltU1RXInterrupt)?<code 339> (__AltU1RXInterrupt):DEFINED (__U1RXInterrupt)?<code 339> (__U1RXInterrupt):<code 339> (__DefaultInterrupt)
                   0x00012c          0x4 LONG 0x23f8 DEFINED (__AltU1TXInterrupt)?<code 339> (__AltU1TXInterrupt):DEFINED (__U1TXInterrupt)?<code 339> (__U1TXInterrupt):<code 339> (__DefaultInterrupt)
-                  0x00012e          0x4 LONG 0x8efe DEFINED (__AltADC1Interrupt)?<code 339> (__AltADC1Interrupt):DEFINED (__ADC1Interrupt)?<code 339> (__ADC1Interrupt):<code 339> (__DefaultInterrupt)
+                  0x00012e          0x4 LONG 0x8fe0 DEFINED (__AltADC1Interrupt)?<code 339> (__AltADC1Interrupt):DEFINED (__ADC1Interrupt)?<code 339> (__ADC1Interrupt):<code 339> (__DefaultInterrupt)
                   0x000130          0x4 LONG 0x23f8 DEFINED (__AltInterrupt14)?<code 339> (__AltInterrupt14):DEFINED (__Interrupt14)?<code 339> (__Interrupt14):<code 339> (__DefaultInterrupt)
                   0x000132          0x4 LONG 0x23f8 DEFINED (__AltInterrupt15)?<code 339> (__AltInterrupt15):DEFINED (__Interrupt15)?<code 339> (__Interrupt15):<code 339> (__DefaultInterrupt)
                   0x000134          0x4 LONG 0x23f8 DEFINED (__AltSI2C1Interrupt)?<code 339> (__AltSI2C1Interrupt):DEFINED (__SI2C1Interrupt)?<code 339> (__SI2C1Interrupt):<code 339> (__DefaultInterrupt)
@@ -2966,84 +2965,82 @@ _018d03104d88ce30
                     0x1b96                  vmState
                     0x1bcc                  events_flags
 
-.nbss               0x1c94        0x138
- .nbss              0x1c94         0xa2 leds.o
- .nbss              0x1d36         0x96 tone.o
-                    0x1d36                  wave
+_019324604da400dc
+                    0x1c94         0xb4
+ _019324604da400dc
+                    0x1c94         0xb4 skel-usb.o
+                    0x1c94                  settings
+
+.nbss               0x1d48        0x138
+ .nbss              0x1d48         0xa2 leds.o
+ .nbss              0x1dea         0x96 tone.o
+                    0x1dea                  wave
 
 .nbss               0x0f86         0x60
  .nbss              0x0f86         0x30 motor.o
  .nbss              0x0fb6         0x30 master_protocol.o
 
-.ndata              0x1dcc         0x52
- .ndata             0x1dcc         0x2e behavior.o
- .ndata             0x1dfa         0x24 timer.o
+.ndata              0x1e80         0x52
+ .ndata             0x1e80         0x2e behavior.o
+ .ndata             0x1eae         0x24 timer.o
 
 .nbss               0x0fe6         0x18
  .nbss              0x0fe6         0x18 flash.o
 
-.nbss               0x1e1e         0x3e
- .nbss              0x1e1e         0x18 master.o
- .nbss              0x1e36         0x14 usb-buffer.o
- .nbss              0x1e4a         0x12 behavior.o
+.nbss               0x1ed2         0x56
+ .nbss              0x1ed2         0x18 master.o
+ .nbss              0x1eea         0x18 mode.o
+ .nbss              0x1f02         0x14 usb-buffer.o
+ .nbss              0x1f16         0x12 behavior.o
 
-when                0x1e5c         0x12
- when               0x1e5c         0x12 mode.o
+when                0x1f28         0x12
+ when               0x1f28         0x12 mode.o
 
-.nbss               0x1e6e         0x32
- .nbss              0x1e6e         0x12 mode.o
- .nbss              0x1e80         0x10 rc5.o
-                    0x1e82                  rc5_valid_flag
- .nbss              0x1e90         0x10 sensors.o
+.nbss               0x1f3a         0x20
+ .nbss              0x1f3a         0x10 rc5.o
+                    0x1f3c                  rc5_valid_flag
+ .nbss              0x1f4a         0x10 sensors.o
 
-when                0x1ea0         0x10
- when               0x1ea0         0x10 behavior.o
+when                0x1f5a         0x10
+ when               0x1f5a         0x10 behavior.o
 
-.nbss               0x1eb0         0x1a
- .nbss              0x1eb0          0xe mma7660.o
- .nbss              0x1ebe          0xc pid_motor.o
+.nbss               0x1f6a         0x1a
+ .nbss              0x1f6a          0xe mma7660.o
+ .nbss              0x1f78          0xc pid_motor.o
 
-.ndata              0x1eca         0x12
- .ndata             0x1eca          0xa mode.o
- .ndata             0x1ed4          0x8 main.o
-                    0x1ed4                  AsebaNativeDescription_poweroff
+.ndata              0x1f84         0x12
+ .ndata             0x1f84          0xa mode.o
+ .ndata             0x1f8e          0x8 main.o
+                    0x1f8e                  AsebaNativeDescription_poweroff
 
-.nbss               0x1edc         0x10
- .nbss              0x1edc          0x8 playback.o
- .nbss              0x1ee4          0x8 pwm_motor.o
+.nbss               0x1f96         0x10
+ .nbss              0x1f96          0x8 playback.o
+ .nbss              0x1f9e          0x8 pwm_motor.o
 
-.ndata              0x1eec          0x6
- .ndata             0x1eec          0x6 leds.o
+.ndata              0x1fa6          0x6
+ .ndata             0x1fa6          0x6 leds.o
 
-.nbss               0x1ef2         0x12
- .nbss              0x1ef2          0x6 mmc.o
- .nbss              0x1ef8          0x6 clock.o
- .nbss              0x1efe          0x6 test_mode.o
-
-_019323f04da0cd51
-                    0x1f04          0x4
- _019323f04da0cd51
-                    0x1f04          0x4 skel-usb.o
-                    0x1f04                  settings
-
-.nbss               0x1f08          0xc
- .nbss              0x1f08          0x4 analog.o
- .nbss              0x1f0c          0x4 ntc.o
- .nbss              0x1f10          0x4 ff.o
+.nbss               0x1fac         0x1e
+ .nbss              0x1fac          0x6 mmc.o
+ .nbss              0x1fb2          0x6 clock.o
+ .nbss              0x1fb8          0x6 test_mode.o
+ .nbss              0x1fbe          0x4 analog.o
+ .nbss              0x1fc2          0x4 ntc.o
+ .nbss              0x1fc6          0x4 ff.o
 
 .nbss               0x0ffe          0x2
  .nbss              0x0ffe          0x2 ground_ir.o
 
-.nbss               0x1f14          0x2
- .nbss              0x1f14          0x2 regulator.o
+.nbss               0x1fca          0x2
+ .nbss              0x1fca          0x2 regulator.o
 
-.ndata              0x1f16          0x6
- .ndata             0x1f16          0x2 mmc.o
- .ndata             0x1f18          0x2 clock.o
- .ndata             0x1f1a          0x2 error.o
+.ndata              0x1fcc          0x6
+ .ndata             0x1fcc          0x2 mmc.o
+ .ndata             0x1fce          0x2 clock.o
+ .ndata             0x1fd0          0x2 error.o
 
-.bss                0x1f1c       0x1052
- .bss               0x1f1c       0x1052 skel-usb.o
+.bss                0x1fd2       0x1052
+ .bss               0x1fd2       0x1052 skel-usb.o
 
 .aseba_settings
                   0x014800        0x400
@@ -3071,9 +3068,9 @@ _019323f04da0cd51
                     0x97a6                  AsebaNativeDescription_vecaddscalar
                     0x97ea                  AsebaNativeDescription_vecfill
                     0x982a                  AsebaNativeDescription_veccopy
- .const             0x9a7e        0x3a0 skel-usb.o
-                    0x9b98                  vmDescription
- .const             0x9e1e        0x218 thymio_natives.o
+ .const             0x9a7e        0x3a2 skel-usb.o
+                    0x9b9a                  vmDescription
+ .const             0x9e20        0x216 thymio_natives.o
  .const             0xa036         0xee playback.o
  .const             0xa124         0x90 ff.o
  .const             0xa1b4         0x3a master_protocol.o
@@ -3094,7 +3091,7 @@ _019323f04da0cd51
                   0x002c00                  aseba_flash1
                   0x003400                  aseba_flash
 
-.text             0x003c00       0x4406
+.text             0x003c00       0x44d2
  .text            0x003c00       0x148a ff.o
                   0x003ca6                  clust2sect
                   0x003cd6                  get_fat
@@ -3126,208 +3123,208 @@ _019323f04da0cd51
                   0x00588e                  timer_enable_interrupt
                   0x005968                  timer_init
                   0x0059e6                  timer_release
- .text            0x005a1c        0x874 mode.o
-                  0x005bca                  mode_tick
-                  0x006288                  mode_init
- .text            0x006290        0x788 natives.o
-                  0x0062a0                  aseba_atan2
-                  0x006356                  aseba_sin
-                  0x0063b0                  aseba_cos
-                  0x0063b6                  aseba_sqrt
-                  0x0063da                  AsebaNative_veccopy
-                  0x00640c                  AsebaNative_vecfill
-                  0x00643c                  AsebaNative_vecaddscalar
-                  0x00647e                  AsebaNative_vecadd
-                  0x0064c0                  AsebaNative_vecsub
-                  0x006502                  AsebaNative_vecmul
-                  0x006548                  AsebaNative_vecdiv
-                  0x0065ac                  AsebaNative_vecmin
-                  0x0065f0                  AsebaNative_vecmax
-                  0x006634                  AsebaNative_vecdot
-                  0x0066a2                  AsebaNative_vecstat
-                  0x00671a                  AsebaNative_mathmuldiv
-                  0x0067a4                  AsebaNative_mathatan2
-                  0x0067ee                  AsebaNative_mathsin
-                  0x006828                  AsebaNative_mathcos
-                  0x006862                  AsebaNative_mathrot2
-                  0x0068f6                  AsebaNative_mathsqrt
-                  0x006930                  AsebaNative_vecnonzerosequence
- .text            0x006a18        0x5ec vm.o
-                  0x006a18                  AsebaVMInit
-                  0x006a2c                  AsebaVMGetEventAddress
-                  0x006a4e                  AsebaVMSendExecutionStateChanged
-                  0x006a64                  AsebaVMSetupEvent
-                  0x006b5a                  AsebaVMStep
-                  0x006d58                  AsebaVMEmitNodeSpecificError
-                  0x006d96                  AsebaVMCheckBreakpoint
-                  0x006db6                  AsebaDebugBareRun
-                  0x006dfc                  AsebaDebugBreakpointRun
-                  0x006e5e                  AsebaVMRun
-                  0x006e7e                  AsebaVMSetBreakpoint
-                  0x006e96                  AsebaVMClearBreakpoint
-                  0x006ed2                  AsebaVMClearBreakpoints
-                  0x006ed8                  AsebaVMShouldDropPacket
-                  0x006f0a                  AsebaVMDebugMessage
- .text            0x007004        0x5b6 behavior.o
-                  0x007004                  behavior.o:_timer_cb
-                  0x007564                  behavior_init
-                  0x00757e                  behavior_start
-                  0x007592                  behavior_enabled
-                  0x007596                  behavior_stop
-                  0x0075a4                  behavior_notify_sd
- .text            0x0075ba        0x562 mmc.o
-                  0x007710                  disk_initialize
-                  0x00782a                  disk_status
-                  0x007838                  disk_read
-                  0x0078b0                  disk_write
-                  0x00794c                  disk_ioctl
-                  0x007b06                  disk_timerproc
- .text            0x007b1c        0x4ea test_mode.o
-                  0x007b32                  test_mode_start
-                  0x007e34                  test_mode_tick
+ .text            0x005a1c        0x940 mode.o
+                  0x005bd8                  mode_tick
+                  0x006344                  mode_init
+ .text            0x00635c        0x788 natives.o
+                  0x00636c                  aseba_atan2
+                  0x006422                  aseba_sin
+                  0x00647c                  aseba_cos
+                  0x006482                  aseba_sqrt
+                  0x0064a6                  AsebaNative_veccopy
+                  0x0064d8                  AsebaNative_vecfill
+                  0x006508                  AsebaNative_vecaddscalar
+                  0x00654a                  AsebaNative_vecadd
+                  0x00658c                  AsebaNative_vecsub
+                  0x0065ce                  AsebaNative_vecmul
+                  0x006614                  AsebaNative_vecdiv
+                  0x006678                  AsebaNative_vecmin
+                  0x0066bc                  AsebaNative_vecmax
+                  0x006700                  AsebaNative_vecdot
+                  0x00676e                  AsebaNative_vecstat
+                  0x0067e6                  AsebaNative_mathmuldiv
+                  0x006870                  AsebaNative_mathatan2
+                  0x0068ba                  AsebaNative_mathsin
+                  0x0068f4                  AsebaNative_mathcos
+                  0x00692e                  AsebaNative_mathrot2
+                  0x0069c2                  AsebaNative_mathsqrt
+                  0x0069fc                  AsebaNative_vecnonzerosequence
+ .text            0x006ae4        0x5ec vm.o
+                  0x006ae4                  AsebaVMInit
+                  0x006af8                  AsebaVMGetEventAddress
+                  0x006b1a                  AsebaVMSendExecutionStateChanged
+                  0x006b30                  AsebaVMSetupEvent
+                  0x006c26                  AsebaVMStep
+                  0x006e24                  AsebaVMEmitNodeSpecificError
+                  0x006e62                  AsebaVMCheckBreakpoint
+                  0x006e82                  AsebaDebugBareRun
+                  0x006ec8                  AsebaDebugBreakpointRun
+                  0x006f2a                  AsebaVMRun
+                  0x006f4a                  AsebaVMSetBreakpoint
+                  0x006f62                  AsebaVMClearBreakpoint
+                  0x006f9e                  AsebaVMClearBreakpoints
+                  0x006fa4                  AsebaVMShouldDropPacket
+                  0x006fd6                  AsebaVMDebugMessage
+ .text            0x0070d0        0x5b6 behavior.o
+                  0x0070d0                  behavior.o:_timer_cb
+                  0x007630                  behavior_init
+                  0x00764a                  behavior_start
+                  0x00765e                  behavior_enabled
+                  0x007662                  behavior_stop
+                  0x007670                  behavior_notify_sd
+ .text            0x007686        0x562 mmc.o
+                  0x0077dc                  disk_initialize
+                  0x0078f6                  disk_status
+                  0x007904                  disk_read
+                  0x00797c                  disk_write
+                  0x007a18                  disk_ioctl
+                  0x007bd2                  disk_timerproc
+ .text            0x007be8        0x4ea test_mode.o
+                  0x007bfe                  test_mode_start
+                  0x007f00                  test_mode_tick
 
-.dinit            0x008006        0x35a
- .dinit           0x008006        0x35a data_init
+.dinit            0x0080d2        0x35a
+ .dinit           0x0080d2        0x35a data_init
 
-.text             0x008360       0x22dc
- .text            0x008360        0x336 thymio_natives.o
-                  0x008370                  set_led
-                  0x0083a0                  sound_playback
-                  0x0083b6                  sound_record
-                  0x0083ee                  set_led_circle
-                  0x00846e                  set_rgb_top
-                  0x00849c                  set_rgb_br
-                  0x0084ca                  set_rgb_bl
-                  0x0084f8                  set_buttons_leds
-                  0x00854a                  set_hprox_leds
-                  0x0085e8                  set_vprox_leds
-                  0x008616                  set_rc_leds
-                  0x00862e                  set_sound_leds
-                  0x008646                  set_ntc_leds
-                  0x008674                  play_freq
- .text            0x008696        0x328 skel-usb.o
-                  0x0086a6                  AsebaResetIntoBootloader
-                  0x0086c0                  AsebaNative__system_reboot
-                  0x0086c4                  skel-usb.o:_AsebaNative__system_settings_read
-                  0x0086f0                  skel-usb.o:_AsebaNative__system_settings_write
-                  0x00871c                  AsebaPutVmToSleep
-                  0x008720                  AsebaGetLocalEventsDescriptions
-                  0x008724                  AsebaIdle
-                  0x008726                  AsebaNativeFunction
-                  0x00872e                  AsebaGetVMDescription
-                  0x008732                  AsebaGetNativeFunctionsDescriptions
-                  0x008736                  AsebaWriteBytecode
-                  0x008810                  skel-usb.o:_AsebaNative__system_settings_flash
-                  0x008872                  load_settings_from_flash
-                  0x0088c4                  error_handler
-                  0x0088c8                  init_aseba_and_usb
-                  0x00895e                  run_aseba_main_loop
- .text            0x0089be        0x2ce usb_device.o
-                  0x0089be                  USBDeviceInit
-                  0x008a4c                  USBCtrlEPAllowStatusStage
-                  0x008af2                  USBCtrlEPAllowDataStage
-                  0x008b6c                  USBEnableEndpoint
-                  0x008b96                  USBStallEndpoint
-                  0x008bd6                  USBTransferOnePacket
-                  0x008c1e                  USBCancelIO
-                  0x008c58                  USBDeviceDetach
-                  0x008c62                  USBDeviceAttach
- .text            0x008c8c        0x272 leds.o
-                  0x008c8c                  leds_clear_all
-                  0x008cbc                  leds_set
-                  0x008d60                  leds_tick_cb
-                  0x008daa                  leds_init
-                  0x008e26                  leds_poweroff
-                  0x008e5a                  leds_set_circle
-                  0x008eaa                  leds_set_top
-                  0x008ec6                  leds_set_br
-                  0x008ee2                  leds_set_bl
- .text            0x008efe        0x26c analog.o
-                  0x008efe                  _ADC1Interrupt
-                  0x008f04                  analog.o:_timer_cb
-                  0x008fc2                  analog_disable
-                  0x008fe0                  analog_init
-                  0x0090a6                  analog_enter_poweroff_mode
- .text            0x00916a        0x262 pwm_motor.o
-                  0x0091a4                  pwm_motor_init
-                  0x009204                  pwm_motor_poweroff
-                  0x0092c0                  pwm_motor_left
-                  0x009300                  pwm_motor_right
-                  0x009340                  pwm_motor_lock_off_left
-                  0x009358                  pwm_motor_lock_vbat_left
-                  0x009364                  pwm_motor_lock_vind1_left
-                  0x009370                  pwm_motor_lock_vind2_left
-                  0x00937a                  pwm_motor_unlock_left
-                  0x009386                  pwm_motor_unlock_right
-                  0x009392                  pwm_motor_lock_off_right
-                  0x0093aa                  pwm_motor_lock_vbat_right
-                  0x0093b6                  pwm_motor_lock_vind1_right
-                  0x0093c2                  pwm_motor_lock_vind2_right
- .text            0x0093cc        0x256 flash.o
-                  0x009404                  flash_read_instr
-                  0x009416                  flash_read_low
-                  0x009422                  flash_read_high
-                  0x009430                  flash_read_chunk
-                  0x0094d6                  flash_erase_page
-                  0x009504                  flash_prepare_write
-                  0x00952e                  __fixup_errata
-                  0x009560                  flash_write_instruction
-                  0x0095b0                  flash_write_buffer
-                  0x009610                  flash_complete_write
- .text            0x009622        0x230 master_protocol.o
-                  0x009622                  i2c_master_transfert_async
-                  0x009682                  i2c_master_transfert_block
-                  0x0096a0                  i2c_read
-                  0x0096b2                  i2c_write
-                  0x00970e                  master_protocol.o:_i2c_master_transfert_op
- .text            0x009852        0x22c vm-buffer.o
-                  0x00989e                  AsebaSendMessage
-                  0x0098ca                  AsebaSendVariables
-                  0x009906                  AsebaSendDescription
-                  0x009a16                  AsebaProcessIncomingEvents
- .text            0x009a7e        0x20e usb-buffer.o
-                  0x009b0e                  AsebaTxReady
-                  0x009b3a                  AsebaUsbBulkRecv
-                  0x009b5a                  AsebaSendBuffer
-                  0x009bdc                  AsebaGetBuffer
-                  0x009c54                  AsebaUsbInit
-                  0x009c5e                  AsebaUsbRecvBufferEmpty
-                  0x009c88                  AsebaUsbTxBusy
- .text            0x009c8c        0x1d8 button.o
-                  0x009c8c                  button_process
- .text            0x009e64        0x1c4 playback.o
-                  0x009e64                  playback.o:_playback_buffer
-                  0x009ff0                  play_sound
-                  0x009ff4                  play_sound_loop
-                  0x009ff8                  play_sound_block
-                  0x00a00e                  play_frequency_block
- .text            0x00a028        0x1a4 sd.o
-                  0x00a028                  get_fattime
-                  0x00a02e                  sd_init
-                  0x00a036                  sd_shutdown
-                  0x00a06c                  sd.o:_sd_play_cb
-                  0x00a0b2                  sd_play_file
-                  0x00a106                  sound_mic_buffer
-                  0x00a12c                  sd_start_record
-                  0x00a168                  sd_stop_record
-                  0x00a194                  sd_test_file_present
- .text            0x00a1cc        0x1a0 usb_function_cdc.o
-                  0x00a1cc                  USBCheckCDCRequest
-                  0x00a26c                  handle_rx_urb
-                  0x00a29c                  handle_tx_urb
-                  0x00a2ce                  USBCBTransfertDoneHandler
-                  0x00a2e4                  USBTXBusy
-                  0x00a2f2                  USBCDCKickTx
-                  0x00a302                  USBCDCKickRx
-                  0x00a318                  usbInterrupt
-                  0x00a338                  CDCInitEP
- .text            0x00a36c        0x172 motor.o
-                  0x00a36c                  motor_new_analog
- .text            0x00a4de        0x15e master.o
-                  0x00a4de                  i2c_master_reset
-                  0x00a4fc                  i2c_init_master
-                  0x00a5ce                  i2c_master_start_operations
-                  0x00a61a                  i2c_master_is_busy
+.text             0x00842c       0x22f2
+ .text            0x00842c        0x338 skel-usb.o
+                  0x00843c                  AsebaResetIntoBootloader
+                  0x008456                  AsebaNative__system_reboot
+                  0x00845a                  skel-usb.o:_AsebaNative__system_settings_read
+                  0x00848a                  skel-usb.o:_AsebaNative__system_settings_write
+                  0x0084ba                  AsebaPutVmToSleep
+                  0x0084be                  AsebaGetLocalEventsDescriptions
+                  0x0084c2                  AsebaIdle
+                  0x0084c4                  AsebaNativeFunction
+                  0x0084cc                  AsebaGetVMDescription
+                  0x0084d0                  AsebaGetNativeFunctionsDescriptions
+                  0x0084d4                  AsebaWriteBytecode
+                  0x0085ae                  skel-usb.o:_AsebaNative__system_settings_flash
+                  0x008610                  load_settings_from_flash
+                  0x008662                  error_handler
+                  0x008666                  init_aseba_and_usb
+                  0x008704                  run_aseba_main_loop
+ .text            0x008764        0x336 thymio_natives.o
+                  0x008774                  set_led
+                  0x0087a4                  sound_playback
+                  0x0087ba                  sound_record
+                  0x0087f2                  set_led_circle
+                  0x008872                  set_rgb_top
+                  0x0088a0                  set_rgb_br
+                  0x0088ce                  set_rgb_bl
+                  0x0088fc                  set_buttons_leds
+                  0x00894e                  set_hprox_leds
+                  0x0089ec                  set_vprox_leds
+                  0x008a1a                  set_rc_leds
+                  0x008a32                  set_sound_leds
+                  0x008a4a                  set_ntc_leds
+                  0x008a78                  play_freq
+ .text            0x008a9a        0x2ce usb_device.o
+                  0x008a9a                  USBDeviceInit
+                  0x008b28                  USBCtrlEPAllowStatusStage
+                  0x008bce                  USBCtrlEPAllowDataStage
+                  0x008c48                  USBEnableEndpoint
+                  0x008c72                  USBStallEndpoint
+                  0x008cb2                  USBTransferOnePacket
+                  0x008cfa                  USBCancelIO
+                  0x008d34                  USBDeviceDetach
+                  0x008d3e                  USBDeviceAttach
+ .text            0x008d68        0x278 leds.o
+                  0x008d68                  leds_clear_all
+                  0x008d98                  leds_set
+                  0x008e3c                  leds_tick_cb
+                  0x008e86                  leds_init
+                  0x008f08                  leds_poweroff
+                  0x008f3c                  leds_set_circle
+                  0x008f8c                  leds_set_top
+                  0x008fa8                  leds_set_br
+                  0x008fc4                  leds_set_bl
+ .text            0x008fe0        0x26c analog.o
+                  0x008fe0                  _ADC1Interrupt
+                  0x008fe6                  analog.o:_timer_cb
+                  0x0090a4                  analog_disable
+                  0x0090c2                  analog_init
+                  0x009188                  analog_enter_poweroff_mode
+ .text            0x00924c        0x262 pwm_motor.o
+                  0x009286                  pwm_motor_init
+                  0x0092e6                  pwm_motor_poweroff
+                  0x0093a2                  pwm_motor_left
+                  0x0093e2                  pwm_motor_right
+                  0x009422                  pwm_motor_lock_off_left
+                  0x00943a                  pwm_motor_lock_vbat_left
+                  0x009446                  pwm_motor_lock_vind1_left
+                  0x009452                  pwm_motor_lock_vind2_left
+                  0x00945c                  pwm_motor_unlock_left
+                  0x009468                  pwm_motor_unlock_right
+                  0x009474                  pwm_motor_lock_off_right
+                  0x00948c                  pwm_motor_lock_vbat_right
+                  0x009498                  pwm_motor_lock_vind1_right
+                  0x0094a4                  pwm_motor_lock_vind2_right
+ .text            0x0094ae        0x256 flash.o
+                  0x0094e6                  flash_read_instr
+                  0x0094f8                  flash_read_low
+                  0x009504                  flash_read_high
+                  0x009512                  flash_read_chunk
+                  0x0095b8                  flash_erase_page
+                  0x0095e6                  flash_prepare_write
+                  0x009610                  __fixup_errata
+                  0x009642                  flash_write_instruction
+                  0x009692                  flash_write_buffer
+                  0x0096f2                  flash_complete_write
+ .text            0x009704        0x230 master_protocol.o
+                  0x009704                  i2c_master_transfert_async
+                  0x009764                  i2c_master_transfert_block
+                  0x009782                  i2c_read
+                  0x009794                  i2c_write
+                  0x0097f0                  master_protocol.o:_i2c_master_transfert_op
+ .text            0x009934        0x22c vm-buffer.o
+                  0x009980                  AsebaSendMessage
+                  0x0099ac                  AsebaSendVariables
+                  0x0099e8                  AsebaSendDescription
+                  0x009af8                  AsebaProcessIncomingEvents
+ .text            0x009b60        0x20e usb-buffer.o
+                  0x009bf0                  AsebaTxReady
+                  0x009c1c                  AsebaUsbBulkRecv
+                  0x009c3c                  AsebaSendBuffer
+                  0x009cbe                  AsebaGetBuffer
+                  0x009d36                  AsebaUsbInit
+                  0x009d40                  AsebaUsbRecvBufferEmpty
+                  0x009d6a                  AsebaUsbTxBusy
+ .text            0x009d6e        0x1d8 button.o
+                  0x009d6e                  button_process
+ .text            0x009f46        0x1c4 playback.o
+                  0x009f46                  playback.o:_playback_buffer
+                  0x00a0d2                  play_sound
+                  0x00a0d6                  play_sound_loop
+                  0x00a0da                  play_sound_block
+                  0x00a0f0                  play_frequency_block
+ .text            0x00a10a        0x1a4 sd.o
+                  0x00a10a                  get_fattime
+                  0x00a110                  sd_init
+                  0x00a118                  sd_shutdown
+                  0x00a14e                  sd.o:_sd_play_cb
+                  0x00a194                  sd_play_file
+                  0x00a1e8                  sound_mic_buffer
+                  0x00a20e                  sd_start_record
+                  0x00a24a                  sd_stop_record
+                  0x00a276                  sd_test_file_present
+ .text            0x00a2ae        0x1a0 usb_function_cdc.o
+                  0x00a2ae                  USBCheckCDCRequest
+                  0x00a34e                  handle_rx_urb
+                  0x00a37e                  handle_tx_urb
+                  0x00a3b0                  USBCBTransfertDoneHandler
+                  0x00a3c6                  USBTXBusy
+                  0x00a3d4                  USBCDCKickTx
+                  0x00a3e4                  USBCDCKickRx
+                  0x00a3fa                  usbInterrupt
+                  0x00a41a                  CDCInitEP
+ .text            0x00a44e        0x172 motor.o
+                  0x00a44e                  motor_new_analog
+ .text            0x00a5c0        0x15e master.o
+                  0x00a5c0                  i2c_master_reset
+                  0x00a5de                  i2c_init_master
+                  0x00a6b0                  i2c_master_start_operations
+                  0x00a6fc                  i2c_master_is_busy
 
 .text             0x0022ae        0x13e
  .text            0x0022ae        0x13e mma7660.o
@@ -3336,84 +3333,84 @@ _019323f04da0cd51
                   0x002376                  mma7660_set_mode
                   0x0023e2                  mma7660_suspend
 
-.text             0x00a63c        0x956
- .text            0x00a63c        0x132 ir_prox.o
-                  0x00a650                  ir_prox_mesure
-                  0x00a6b2                  prox_init
-                  0x00a73a                  prox_poweroff
- .text            0x00a76e        0x11e main.o
-                  0x00a76e                  cb_1khz
-                  0x00a770                  main.o:_acc_cb
-                  0x00a784                  main.o:_ntc_callback
-                  0x00a78e                  main.o:_rc5_callback
-                  0x00a79a                  main.o:_timer_ntc_callback
-                  0x00a79e                  update_aseba_variables_write
-                  0x00a7a0                  switch_off
-                  0x00a7c6                  power_off
-                  0x00a7d2                  update_aseba_variables_read
-                  0x00a7d8                  main
- .text            0x00a88c        0x114 pmp.o
-                  0x00a88c                  setup_io
-                  0x00a8ec                  setup_pps
- .text            0x00a9a0         0xe6 rc5.o
-                  0x00a9a0                  rc5_init
-                  0x00a9fc                  rc5_enable
-                  0x00aa0a                  m_flush_buffer
-                  0x00aa16                  m_reset_state_machine
-                  0x00aa28                  m_throw_cb
-                  0x00aa56                  rc5_disable
-                  0x00aa62                  rc5_shutdown
-                  0x00aa70                  rc5.o:_timer_cb
- .text            0x00aa86         0xd2 sound.o
-                  0x00aa86                  sound_init
-                  0x00aad2                  sound_playback_enable
-                  0x00aaf0                  sound_playback_disable
-                  0x00aafe                  sound_poweroff
-                  0x00ab0a                  sound_set_mic_stat
-                  0x00ab0e                  sound_new_sample
- .text            0x00ab58         0xb8 usb_uart.o
-                  0x00ab58                  usb_uart_init
-                  0x00ab5a                  usb_uart_configured
-                  0x00ab6a                  usb_uart_serial_port_open
-                  0x00ab80                  usb_uart_tick
-                  0x00abc0                  USBCBSuspend
-                  0x00abc4                  USBCBWakeFromSuspend
-                  0x00abc8                  USBCB_SOF_Handler
-                  0x00abca                  USBCBErrorHandler
-                  0x00abcc                  USBCBCheckOtherReq
-                  0x00abce                  USBCBStdSetDscHandler
-                  0x00abd0                  USBCBInitEP
-                  0x00abd2                  USER_USB_CALLBACK_EVENT_HANDLER
- .text            0x00ac10         0xb0 tone.o
-                  0x00ac10                  tone_init
-                  0x00ac3a                  tone_setup
-                  0x00ac80                  tone_fill_buffer
- .text            0x00acc0         0x94 pid_motor.o
-                  0x00acc0                  pid_motor_tick
-                  0x00ad46                  pid_motor_init
- .text            0x00ad54         0x92 ntc.o
-                  0x00ad54                  ntc_init
-                  0x00adc0                  ntc_shutdown
-                  0x00add6                  ntc_mesure
- .text            0x00ade6         0x80 i2c.o
-                  0x00ade6                  i2c_init
- .text            0x00ae66         0x68 sensors.o
-                  0x00ae66                  new_sensors_value
- .text            0x00aece         0x62 clock.o
-                  0x00aece                  clock_set_speed
-                  0x00aed6                  clock_get_cycle_duration
-                  0x00aee0                  clock_get_cycle_frequency
-                  0x00aee6                  clock_get_target_bogomips
-                  0x00aeea                  clock_disable_idle
-                  0x00aefc                  clock_enable_idle
-                  0x00af0e                  clock_idle
-                  0x00af1a                  clock_delay_us
- .text            0x00af30         0x4a ground_ir.o
-                  0x00af30                  ground_ir_new
-                  0x00af74                  ground_ir_shutdown
- .text            0x00af7a         0x18 regulator.o
-                  0x00af7a                  va_get
-                  0x00af84                  va_put
+.text             0x00a71e        0x95a
+ .text            0x00a71e        0x132 ir_prox.o
+                  0x00a732                  ir_prox_mesure
+                  0x00a794                  prox_init
+                  0x00a81c                  prox_poweroff
+ .text            0x00a850        0x122 main.o
+                  0x00a850                  cb_1khz
+                  0x00a852                  main.o:_acc_cb
+                  0x00a866                  main.o:_ntc_callback
+                  0x00a870                  main.o:_rc5_callback
+                  0x00a87c                  main.o:_timer_ntc_callback
+                  0x00a880                  update_aseba_variables_write
+                  0x00a882                  switch_off
+                  0x00a8a8                  power_off
+                  0x00a8b4                  update_aseba_variables_read
+                  0x00a8ba                  main
+ .text            0x00a972        0x114 pmp.o
+                  0x00a972                  setup_io
+                  0x00a9d2                  setup_pps
+ .text            0x00aa86         0xe6 rc5.o
+                  0x00aa86                  rc5_init
+                  0x00aae2                  rc5_enable
+                  0x00aaf0                  m_flush_buffer
+                  0x00aafc                  m_reset_state_machine
+                  0x00ab0e                  m_throw_cb
+                  0x00ab3c                  rc5_disable
+                  0x00ab48                  rc5_shutdown
+                  0x00ab56                  rc5.o:_timer_cb
+ .text            0x00ab6c         0xd2 sound.o
+                  0x00ab6c                  sound_init
+                  0x00abb8                  sound_playback_enable
+                  0x00abd6                  sound_playback_disable
+                  0x00abe4                  sound_poweroff
+                  0x00abf0                  sound_set_mic_stat
+                  0x00abf4                  sound_new_sample
+ .text            0x00ac3e         0xb8 usb_uart.o
+                  0x00ac3e                  usb_uart_init
+                  0x00ac40                  usb_uart_configured
+                  0x00ac50                  usb_uart_serial_port_open
+                  0x00ac66                  usb_uart_tick
+                  0x00aca6                  USBCBSuspend
+                  0x00acaa                  USBCBWakeFromSuspend
+                  0x00acae                  USBCB_SOF_Handler
+                  0x00acb0                  USBCBErrorHandler
+                  0x00acb2                  USBCBCheckOtherReq
+                  0x00acb4                  USBCBStdSetDscHandler
+                  0x00acb6                  USBCBInitEP
+                  0x00acb8                  USER_USB_CALLBACK_EVENT_HANDLER
+ .text            0x00acf6         0xb0 tone.o
+                  0x00acf6                  tone_init
+                  0x00ad20                  tone_setup
+                  0x00ad66                  tone_fill_buffer
+ .text            0x00ada6         0x94 pid_motor.o
+                  0x00ada6                  pid_motor_tick
+                  0x00ae2c                  pid_motor_init
+ .text            0x00ae3a         0x92 ntc.o
+                  0x00ae3a                  ntc_init
+                  0x00aea6                  ntc_shutdown
+                  0x00aebc                  ntc_mesure
+ .text            0x00aecc         0x80 i2c.o
+                  0x00aecc                  i2c_init
+ .text            0x00af4c         0x68 sensors.o
+                  0x00af4c                  new_sensors_value
+ .text            0x00afb4         0x62 clock.o
+                  0x00afb4                  clock_set_speed
+                  0x00afbc                  clock_get_cycle_duration
+                  0x00afc6                  clock_get_cycle_frequency
+                  0x00afcc                  clock_get_target_bogomips
+                  0x00afd0                  clock_disable_idle
+                  0x00afe2                  clock_enable_idle
+                  0x00aff4                  clock_idle
+                  0x00b000                  clock_delay_us
+ .text            0x00b016         0x4a ground_ir.o
+                  0x00b016                  ground_ir_new
+                  0x00b05a                  ground_ir_shutdown
+ .text            0x00b060         0x18 regulator.o
+                  0x00b060                  va_get
+                  0x00b06a                  va_put
 
 .text             0x0023ec          0xc
  .text            0x0023ec          0xc error.o

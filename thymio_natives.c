@@ -26,7 +26,7 @@ void set_led(AsebaVMState *vm) {
 }
 
 AsebaNativeFunctionDescription AsebaNativeDescription_record = {
-	"_sound.record",
+	"sound.record",
 	"Start sound recording",
 	{
 		{1,"[0-9]"},
@@ -35,7 +35,7 @@ AsebaNativeFunctionDescription AsebaNativeDescription_record = {
 };
 
 AsebaNativeFunctionDescription AsebaNativeDescription_play = {
-	"_sound.play",
+	"sound.play",
 	"Start sound playback",
 	{
 		{1,"[0-9]"},

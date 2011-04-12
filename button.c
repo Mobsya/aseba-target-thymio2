@@ -104,7 +104,7 @@ void button_process(unsigned int b, unsigned int i) {
 	vmVariables.buttons_mean[i] = sum_filtered[i] / (64*16);
 	vmVariables.buttons_noise[i] = noise[i] / 256;
 		
-	tresh = __builtin_divsd(noise[i],320);
+	tresh = __builtin_divsd(noise[i],256);
 	if(tresh < MIN_TRESHOLD)
 		tresh = MIN_TRESHOLD;
 	

@@ -23,7 +23,7 @@ const AsebaVMDescription vmDescription = {
 		{2, "prox.ground.delta"},
 		
 		{2, "motor.target"},
-		{2, "vbat"},
+		{2, "_vbat"},
 		{2, "motor.speed"},
 		{2, "motor.pwm"},
 		

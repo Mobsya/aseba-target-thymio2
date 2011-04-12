@@ -32,6 +32,12 @@ enum mode {
 };
 
 static enum mode current_mode;
+static unsigned int vm_active;
+
+	
+static int rc5_speed_l;
+static int rc5_speed_t;
+
 
 static void set_body_rgb(unsigned int r, unsigned int g, unsigned int b) {
 	leds_set_top(r,g,b);
@@ -169,6 +175,8 @@ static void init_mode(enum mode m) {
 			behavior_start(B_LEDS_PROX);
 			break;
 		case MODE_RC5:
+			rc5_speed_l = 0;
+			rc5_speed_t = 0;
 			behavior_start(B_LEDS_PROX);
 			break;
 		case MODE_SIDE:
@@ -275,10 +283,20 @@ static void tick_follow(void) {
 }
 static void tick_explorer(void) {
 	static unsigned char led_state;
-	static  int speed = 250;
+	static char led_pulse;
+	static  int speed = 200;
 	
 	unsigned char l[8] = {0,0,0,0,0,0,0,0};
 	unsigned char fixed;
+	
+	
+	led_pulse = led_pulse + 1;
+	if(led_pulse > 0) { 
+		leds_set_top(led_pulse, led_pulse, 0);
+		if(led_pulse > 40)
+			led_pulse = -64;
+	} else 
+		leds_set_top(-led_pulse / 2, -led_pulse / 2, 0);
 
 	/* circle led managment */
 	led_state += 2;
@@ -345,6 +363,7 @@ static void tick_explorer(void) {
 
 static void tick_acc(void) {
 	static unsigned int acc = 32;
+	static char led_pulse;
 	static int counter;
 	acc = acc + acc + acc + abs(vmVariables.acc[0]) + abs(vmVariables.acc[1]) + abs(vmVariables.acc[2]);
 	acc >>= 2;
@@ -366,7 +385,15 @@ static void tick_acc(void) {
 		} else {
 			set_body_rgb(0,0,0);
 		}
-	}
+	} else {
+		led_pulse = led_pulse + 1;
+		if(led_pulse > 0) { 
+			set_body_rgb(led_pulse, 0, 0);
+			if(led_pulse > 40)
+				led_pulse = -64;
+		} else 
+			set_body_rgb(-led_pulse / 2,0, 0);
+	}	
 	
 	if(vmVariables.acc_tap) {
 		vmVariables.acc_tap = 0;
@@ -383,6 +410,7 @@ static void tick_music(void) {
 static void tick_line(void) {
 	static unsigned int black_level = 200;
 	static unsigned int white_level = 400;
+	static char led_pulse;
 #define STATE_BLACK 0
 #define STATE_WHITE 1
 	static unsigned char s[2];
@@ -396,7 +424,14 @@ static void tick_line(void) {
 #define DIR_FRONT (0)
 
 #define SPEED_LINE 300
-	
+
+	led_pulse = led_pulse + 1;
+	if(led_pulse > 0) { 
+		leds_set_top(0, led_pulse, led_pulse);
+		if(led_pulse > 40)
+			led_pulse = -64;
+	} else 
+		leds_set_top(0, -led_pulse / 2, -led_pulse / 2);
 	
 // Calibration feature
 	if(buttons_state[0] && buttons_state[3]) {
@@ -467,84 +502,95 @@ static void tick_line(void) {
 
 }
 static void tick_rc5(void) {
-	
-	static int s_l;
-	static int s_t;
+	static char led_pulse;
+
+
+	led_pulse = led_pulse + 1;
+	if(led_pulse > 0) { 
+		leds_set_top(led_pulse, 0, led_pulse);
+		if(led_pulse > 40)
+			led_pulse = -64;
+	} else 
+		leds_set_top(-led_pulse / 2, 0, -led_pulse / 2);
 
 	when(buttons_state[1]) {
-		s_t = -200;
+		rc5_speed_t = -200;
 	}
 	
 	when(buttons_state[4]) {
-		s_t = 200;
+		rc5_speed_t = 200;
 	}
 	
 	when(buttons_state[0]) {
-		if(s_t)
-			s_t = 0;
+		if(rc5_speed_t)
+			rc5_speed_t = 0;
 		else
-			s_l -= 200;
+			rc5_speed_l -= 200;
 	}
 	
 	when(buttons_state[3]) {
-		if(s_t)
-			s_t = 0;
+		if(rc5_speed_t)
+			rc5_speed_t = 0;
 		else
-			s_l += 200;
+			rc5_speed_l += 200;
 	}
 
 	when(buttons_state[0] && buttons_state[3]) 
-		s_l = 0;
+		rc5_speed_l = 0;
 	when(buttons_state[4] && buttons_state[1])
-		s_t = 0;
+		rc5_speed_t = 0;
 		
 	if(vmVariables.rc5_command) {
 		switch(vmVariables.rc5_command) {
 			case 2:
-				if(s_t)
-					s_t = 0;
+				if(rc5_speed_t)
+					rc5_speed_t = 0;
 				else
-					s_l += 200;
+					rc5_speed_l += 200;
 				break;
 			case 4:
-				s_t = -200;
+				rc5_speed_t = -200;
 				break;
 			case 8:
-				if(s_t)
-					s_t = 0;
+				if(rc5_speed_t)
+					rc5_speed_t = 0;
 				else
-					s_l -= 200;
+					rc5_speed_l -= 200;
 				break;
 			case 6:
-				s_t = 200;
+				rc5_speed_t = 200;
 				break;
 		}
 		vmVariables.rc5_command = 0;
 	}
 	
 	
-	if(s_l > 600) 
-		s_l = 600;
-	if(s_l < -600)
-		s_l = -600;
-	if(s_t > 600)
-		s_t = 600;
-	if(s_t < -600)
-		s_t = -600;
+	if(rc5_speed_l > 600) 
+		rc5_speed_l = 600;
+	if(rc5_speed_l < -600)
+		rc5_speed_l = -600;
+	if(rc5_speed_t > 600)
+		rc5_speed_t = 600;
+	if(rc5_speed_t < -600)
+		rc5_speed_t = -600;
 		
-	vmVariables.target[0] = s_l + s_t;
-	vmVariables.target[1] = s_l - s_t;
+	vmVariables.target[0] = rc5_speed_l + rc5_speed_t;
+	vmVariables.target[1] = rc5_speed_l - rc5_speed_t;
 	
 }
-static void tick_side(void) {
+static void tick_side(void) { 
 	
 }	
 
 static int mode_enabled(int temp) {
 	if(	temp == MODE_DRAW || 
 		temp == MODE_MUSIC ||
-		temp == MODE_SIDE )
+		temp == MODE_SIDE)
 			return 0;
+			
+	if(temp == MODE_MENU && !vm_active) // Here mode menu == VM mode
+		return 0;
+		
 	return 1;
 }
 
@@ -563,9 +609,9 @@ static enum mode next_mode(enum mode m, int i) {
 	
 	return temp;
 }
-
+static enum mode _selecting;
 void mode_tick(void) {
-	static enum mode _selecting;
+	
 	static unsigned char ignore;
 	
 	ignore++;
@@ -643,11 +689,20 @@ void mode_tick(void) {
 	}	
 }
 
-void mode_init(void) {
+void mode_init(int vm_enabled) {
 	// Init the defaults behaviors + our behavior.
 	
-	// TODO: Check that SD card is present, if not disable "Music" mode.
+	vm_active = vm_enabled;
+	
 	init_mode(MODE_MENU);
+	
+	if(vm_active) 
+		_selecting = 0;
+	else {
+		_selecting = MODE_FOLLOW; // Bypass the "VM exit mode"
+		set_mode_color(_selecting);
+	}
+	
 	behavior_start(B_ALWAYS | B_MODE);
 
 }

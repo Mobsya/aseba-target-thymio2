@@ -12,6 +12,8 @@
 #define LED_BANK 5
 #define MAX_BRIGHTNESS 32
 
+#define LEDS_WAIT 40
+
 static unsigned char leds_off[LED_BANK] = {0x3,0x80,0xf,0xf,0xf};
 static unsigned char led[MAX_BRIGHTNESS * LED_BANK];
 static unsigned char index;
@@ -118,10 +120,11 @@ void leds_init(void) {
 	SPI1CON1bits.SMP = 0;
 	SPI1CON1bits.CKE = 0;
 	SPI1CON1bits.SSEN = 0;
-	SPI1CON1bits.CKP = 1;
+	SPI1CON1bits.CKP = 0;
 	SPI1CON1bits.MSTEN = 1;
-	SPI1CON1bits.SPRE = 0x6; // SPI clock, 8Mhz
-	SPI1CON1bits.PPRE = 0x3;
+	SPI1CON1bits.SPRE = 4; // SPI clock, 1Mhz
+	SPI1CON1bits.PPRE = 0x2;
+	
 	
 	SPI1CON2 = 1; // bufferized mode
 	
@@ -135,7 +138,7 @@ void leds_init(void) {
 	SPI1BUF = leds_off[3];
 	SPI1BUF = leds_off[4];
 	
-	clock_delay_us(5);
+	clock_delay_us(LEDS_WAIT);
 	
 	LED_CS = 1;
 	
@@ -149,16 +152,15 @@ void leds_init(void) {
 	}
 }
 
-
 void leds_poweroff(void) {
 	LED_CS = 0;
-	clock_delay_us(5);
+	clock_delay_us(LEDS_WAIT);
 	SPI1BUF = leds_off[0];
 	SPI1BUF = leds_off[1];
 	SPI1BUF = leds_off[2];
 	SPI1BUF = leds_off[3];
 	SPI1BUF = leds_off[4];
-	clock_delay_us(5);
+	clock_delay_us(LEDS_WAIT);
 	LED_CS = 1;
 	clock_delay_us(1);
 	LED_CS = 0; 
