@@ -113,9 +113,9 @@ section                    address   length (PC units)   length (bytes) (dec)
 .text                       0x3c00              0x44d2          0x673b  (26427)
 .dinit                      0x80d2               0x35a           0x507  (1287)
 .text                       0x842c              0x22f2          0x346b  (13419)
-.text                       0xa71e               0x95a           0xe07  (3591)
+.text                       0xa71e               0x950           0xdf8  (3576)
 
-                     Total program memory used (bytes):        0x105ab  (66987) 53%
+                     Total program memory used (bytes):        0x1059c  (66972) 53%
 
 
 Data Memory  [Origin = 0x800, Length = 0x4000]
@@ -178,18 +178,18 @@ _019324604da400dc           0x1c94                   0            0xb4  (180)
 .ndata                      0x1e80                   0            0x52  (82)
 .nbss                       0x1ed2                   0            0x56  (86)
 when                        0x1f28                   0            0x12  (18)
-.nbss                       0x1f3a                   0            0x20  (32)
-when                        0x1f5a                   0            0x10  (16)
-.nbss                       0x1f6a                   0            0x1a  (26)
-.ndata                      0x1f84                   0            0x12  (18)
-.nbss                       0x1f96                   0            0x10  (16)
-.ndata                      0x1fa6                   0             0x6  (6)
-.nbss                       0x1fac                   0            0x1e  (30)
-.nbss                       0x1fca                   0             0x2  (2)
-.ndata                      0x1fcc                   0             0x6  (6)
-.bss                        0x1fd2                   0          0x1052  (4178)
+.nbss                       0x1f3a                   0            0x10  (16)
+when                        0x1f4a                   0            0x10  (16)
+.nbss                       0x1f5a                   0            0x28  (40)
+.ndata                      0x1f82                   0            0x12  (18)
+.nbss                       0x1f94                   0            0x10  (16)
+.ndata                      0x1fa4                   0             0x6  (6)
+.nbss                       0x1faa                   0            0x1e  (30)
+.nbss                       0x1fc8                   0             0x2  (2)
+.ndata                      0x1fca                   0             0x6  (6)
+.bss                        0x1fd0                   0          0x1052  (4178)
 
-                        Total data memory used (bytes):         0x2824  (10276) 62%
+                        Total data memory used (bytes):         0x2822  (10274) 62%
 
 
 Dynamic Memory Usage
@@ -197,9 +197,9 @@ Dynamic Memory Usage
 region                     address                      maximum length  (dec)
 ------                     -------                      ---------------------
 heap                             0                                   0  (0)
-stack                       0x3024                              0x17dc  (6108)
+stack                       0x3022                              0x17de  (6110)
 
-                        Maximum dynamic memory (bytes):         0x17dc  (6108)
+                        Maximum dynamic memory (bytes):         0x17de  (6110)
 
 
 External Symbols in Data Memory (by address):
@@ -272,13 +272,13 @@ External Symbols in Data Memory (by address):
                     0x1c94                  _settings
                     0x1dea                  _wave
                     0x1f3c                  _rc5_valid_flag
-                    0x1f8e                  _AsebaNativeDescription_poweroff
+                    0x1f8c                  _AsebaNativeDescription_poweroff
 
 External Symbols in Data Memory (by name):
 
                     0x0f5e                  _AsebaNativeDescription_play
                     0x0e72                  _AsebaNativeDescription_play_freq
-                    0x1f8e                  _AsebaNativeDescription_poweroff
+                    0x1f8c                  _AsebaNativeDescription_poweroff
                     0x0f6a                  _AsebaNativeDescription_record
                     0x0eba                  _AsebaNativeDescription_set_hprox_leds
                     0x0f76                  _AsebaNativeDescription_set_led
@@ -668,19 +668,19 @@ External Symbols in Program Memory (by address):
                   0x00aea6                  _ntc_shutdown
                   0x00aebc                  _ntc_mesure
                   0x00aecc                  _i2c_init
-                  0x00af4c                  _new_sensors_value
-                  0x00afb4                  _clock_set_speed
-                  0x00afbc                  _clock_get_cycle_duration
-                  0x00afc6                  _clock_get_cycle_frequency
-                  0x00afcc                  _clock_get_target_bogomips
-                  0x00afd0                  _clock_disable_idle
-                  0x00afe2                  _clock_enable_idle
-                  0x00aff4                  _clock_idle
-                  0x00b000                  _clock_delay_us
-                  0x00b016                  _ground_ir_new
-                  0x00b05a                  _ground_ir_shutdown
-                  0x00b060                  _va_get
-                  0x00b06a                  _va_put
+                  0x00af4c                  _clock_set_speed
+                  0x00af54                  _clock_get_cycle_duration
+                  0x00af5e                  _clock_get_cycle_frequency
+                  0x00af64                  _clock_get_target_bogomips
+                  0x00af68                  _clock_disable_idle
+                  0x00af7a                  _clock_enable_idle
+                  0x00af8c                  _clock_idle
+                  0x00af98                  _clock_delay_us
+                  0x00afae                  _new_sensors_value
+                  0x00b00c                  _ground_ir_new
+                  0x00b050                  _ground_ir_shutdown
+                  0x00b056                  _va_get
+                  0x00b060                  _va_put
                   0x014800                  _aseba_settings_flash
 
 External Symbols in Program Memory (by name):
@@ -832,14 +832,14 @@ External Symbols in Program Memory (by name):
                   0x007662                  _behavior_stop
                   0x009d6e                  _button_process
                   0x00a850                  _cb_1khz
-                  0x00b000                  _clock_delay_us
-                  0x00afd0                  _clock_disable_idle
-                  0x00afe2                  _clock_enable_idle
-                  0x00afbc                  _clock_get_cycle_duration
-                  0x00afc6                  _clock_get_cycle_frequency
-                  0x00afcc                  _clock_get_target_bogomips
-                  0x00aff4                  _clock_idle
-                  0x00afb4                  _clock_set_speed
+                  0x00af98                  _clock_delay_us
+                  0x00af68                  _clock_disable_idle
+                  0x00af7a                  _clock_enable_idle
+                  0x00af54                  _clock_get_cycle_duration
+                  0x00af5e                  _clock_get_cycle_frequency
+                  0x00af64                  _clock_get_target_bogomips
+                  0x00af8c                  _clock_idle
+                  0x00af4c                  _clock_set_speed
                   0x003ca6                  _clust2sect
                   0x0077dc                  _disk_initialize
                   0x007a18                  _disk_ioctl
@@ -868,8 +868,8 @@ External Symbols in Program Memory (by name):
                   0x009642                  _flash_write_instruction
                   0x003cd6                  _get_fat
                   0x00a10a                  _get_fattime
-                  0x00b016                  _ground_ir_new
-                  0x00b05a                  _ground_ir_shutdown
+                  0x00b00c                  _ground_ir_new
+                  0x00b050                  _ground_ir_shutdown
                   0x00a34e                  _handle_rx_urb
                   0x00a37e                  _handle_tx_urb
                   0x00aecc                  _i2c_init
@@ -906,7 +906,7 @@ External Symbols in Program Memory (by name):
                   0x006344                  _mode_init
                   0x005bd8                  _mode_tick
                   0x00a44e                  _motor_new_analog
-                  0x00af4c                  _new_sensors_value
+                  0x00afae                  _new_sensors_value
                   0x00ae3a                  _ntc_init
                   0x00aebc                  _ntc_mesure
                   0x00aea6                  _ntc_shutdown
@@ -1001,8 +1001,8 @@ External Symbols in Program Memory (by name):
                   0x00ac3e                  _usb_uart_init
                   0x00ac50                  _usb_uart_serial_port_open
                   0x00ac66                  _usb_uart_tick
-                  0x00b060                  _va_get
-                  0x00b06a                  _va_put
+                  0x00b056                  _va_get
+                  0x00b060                  _va_put
                   0x001b9a                  _vmDescription
                   0x008fe6                  analog.o:_timer_cb
                   0x0070d0                  behavior.o:_timer_cb
@@ -2996,51 +2996,51 @@ _019324604da400dc
 when                0x1f28         0x12
  when               0x1f28         0x12 mode.o
 
-.nbss               0x1f3a         0x20
+.nbss               0x1f3a         0x10
  .nbss              0x1f3a         0x10 rc5.o
                     0x1f3c                  rc5_valid_flag
- .nbss              0x1f4a         0x10 sensors.o
 
-when                0x1f5a         0x10
- when               0x1f5a         0x10 behavior.o
+when                0x1f4a         0x10
+ when               0x1f4a         0x10 behavior.o
 
-.nbss               0x1f6a         0x1a
- .nbss              0x1f6a          0xe mma7660.o
- .nbss              0x1f78          0xc pid_motor.o
+.nbss               0x1f5a         0x28
+ .nbss              0x1f5a          0xe mma7660.o
+ .nbss              0x1f68          0xe sensors.o
+ .nbss              0x1f76          0xc pid_motor.o
 
-.ndata              0x1f84         0x12
- .ndata             0x1f84          0xa mode.o
- .ndata             0x1f8e          0x8 main.o
-                    0x1f8e                  AsebaNativeDescription_poweroff
+.ndata              0x1f82         0x12
+ .ndata             0x1f82          0xa mode.o
+ .ndata             0x1f8c          0x8 main.o
+                    0x1f8c                  AsebaNativeDescription_poweroff
 
-.nbss               0x1f96         0x10
- .nbss              0x1f96          0x8 playback.o
- .nbss              0x1f9e          0x8 pwm_motor.o
+.nbss               0x1f94         0x10
+ .nbss              0x1f94          0x8 playback.o
+ .nbss              0x1f9c          0x8 pwm_motor.o
 
-.ndata              0x1fa6          0x6
- .ndata             0x1fa6          0x6 leds.o
+.ndata              0x1fa4          0x6
+ .ndata             0x1fa4          0x6 leds.o
 
-.nbss               0x1fac         0x1e
- .nbss              0x1fac          0x6 mmc.o
- .nbss              0x1fb2          0x6 clock.o
- .nbss              0x1fb8          0x6 test_mode.o
- .nbss              0x1fbe          0x4 analog.o
- .nbss              0x1fc2          0x4 ntc.o
- .nbss              0x1fc6          0x4 ff.o
+.nbss               0x1faa         0x1e
+ .nbss              0x1faa          0x6 mmc.o
+ .nbss              0x1fb0          0x6 clock.o
+ .nbss              0x1fb6          0x6 test_mode.o
+ .nbss              0x1fbc          0x4 analog.o
+ .nbss              0x1fc0          0x4 ntc.o
+ .nbss              0x1fc4          0x4 ff.o
 
 .nbss               0x0ffe          0x2
  .nbss              0x0ffe          0x2 ground_ir.o
 
-.nbss               0x1fca          0x2
- .nbss              0x1fca          0x2 regulator.o
+.nbss               0x1fc8          0x2
+ .nbss              0x1fc8          0x2 regulator.o
 
-.ndata              0x1fcc          0x6
- .ndata             0x1fcc          0x2 mmc.o
- .ndata             0x1fce          0x2 clock.o
- .ndata             0x1fd0          0x2 error.o
+.ndata              0x1fca          0x6
+ .ndata             0x1fca          0x2 mmc.o
+ .ndata             0x1fcc          0x2 clock.o
+ .ndata             0x1fce          0x2 error.o
 
-.bss                0x1fd2       0x1052
- .bss               0x1fd2       0x1052 skel-usb.o
+.bss                0x1fd0       0x1052
+ .bss               0x1fd0       0x1052 skel-usb.o
 
 .aseba_settings
                   0x014800        0x400
@@ -3333,7 +3333,7 @@ when                0x1f5a         0x10
                   0x002376                  mma7660_set_mode
                   0x0023e2                  mma7660_suspend
 
-.text             0x00a71e        0x95a
+.text             0x00a71e        0x950
  .text            0x00a71e        0x132 ir_prox.o
                   0x00a732                  ir_prox_mesure
                   0x00a794                  prox_init
@@ -3394,23 +3394,23 @@ when                0x1f5a         0x10
                   0x00aebc                  ntc_mesure
  .text            0x00aecc         0x80 i2c.o
                   0x00aecc                  i2c_init
- .text            0x00af4c         0x68 sensors.o
-                  0x00af4c                  new_sensors_value
- .text            0x00afb4         0x62 clock.o
-                  0x00afb4                  clock_set_speed
-                  0x00afbc                  clock_get_cycle_duration
-                  0x00afc6                  clock_get_cycle_frequency
-                  0x00afcc                  clock_get_target_bogomips
-                  0x00afd0                  clock_disable_idle
-                  0x00afe2                  clock_enable_idle
-                  0x00aff4                  clock_idle
-                  0x00b000                  clock_delay_us
- .text            0x00b016         0x4a ground_ir.o
-                  0x00b016                  ground_ir_new
-                  0x00b05a                  ground_ir_shutdown
- .text            0x00b060         0x18 regulator.o
-                  0x00b060                  va_get
-                  0x00b06a                  va_put
+ .text            0x00af4c         0x62 clock.o
+                  0x00af4c                  clock_set_speed
+                  0x00af54                  clock_get_cycle_duration
+                  0x00af5e                  clock_get_cycle_frequency
+                  0x00af64                  clock_get_target_bogomips
+                  0x00af68                  clock_disable_idle
+                  0x00af7a                  clock_enable_idle
+                  0x00af8c                  clock_idle
+                  0x00af98                  clock_delay_us
+ .text            0x00afae         0x5e sensors.o
+                  0x00afae                  new_sensors_value
+ .text            0x00b00c         0x4a ground_ir.o
+                  0x00b00c                  ground_ir_new
+                  0x00b050                  ground_ir_shutdown
+ .text            0x00b056         0x18 regulator.o
+                  0x00b056                  va_get
+                  0x00b060                  va_put
 
 .text             0x0023ec          0xc
  .text            0x0023ec          0xc error.o

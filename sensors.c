@@ -28,9 +28,8 @@ void new_sensors_value(unsigned int * val, int b) {
 	/* IR sensors ... */
 	ground_ir_new(val[1], val[2]);
 	
-	/* Call leds cb at half rate */
-	if((leds_timer ^= 1)) 
-		leds_tick_cb();
+
+	leds_tick_cb();
 
 	/* ~1Khz timer */
 	if(timer++ == 7) {
