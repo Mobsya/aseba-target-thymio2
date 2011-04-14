@@ -16,8 +16,6 @@ static int count;
 
 static int timer;
 
-static char leds_timer;
-
 void new_sensors_value(unsigned int * val, int b) {
 	/* Sound ... */
 	sound_new_sample(val[3]);

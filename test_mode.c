@@ -264,6 +264,8 @@ void test_mode_start(void) {
 	leds_set(LED_GROUND_IR_0,32);
 	leds_set(LED_GROUND_IR_1,32);
 	leds_set(LED_R_BOT_L,32);
+	leds_set(LED_B_BOT_R,32);
+	leds_set(LED_SD_CARD, 32);
 	
 	
 	behavior_start(B_TEST);
@@ -296,7 +298,7 @@ static unsigned long checked;
 
 void test_mode_tick(void) {
 	static unsigned int counter = 0;
-	if(vmVariables.ntc > 200 && vmVariables.ntc < 400) {
+	if(vmVariables.ntc > 200 && vmVariables.ntc < 500) {
 		checked |= C_NTC;
 		leds_set(LED_TEMP_BLUE,0);
 	}
@@ -305,8 +307,10 @@ void test_mode_tick(void) {
 	unsigned long temp = __builtin_mulss(bat,1000);
 	bat = __builtin_divud(temp,3978);
 	
-	if(bat > 395 && bat < 430)
+	if(bat > 395 && bat < 430) {
+		leds_set(LED_B_BOT_R,0);
 		checked |= C_VIN;
+	}
 	
 	if(vmVariables.prox[0] > 900 && vmVariables.prox[0] < 4000) {
 		leds_set(LED_FRONT_IR_0,0);
@@ -378,8 +382,10 @@ void test_mode_tick(void) {
 		checked |= C_BUT4;
 	}
 
-	if(usb_uart_configured())
+	if(usb_uart_configured()) {
+		leds_set(LED_SD_CARD, 0);
 		checked |= C_USB;
+	}
 		
 	if(abs(vmVariables.acc[0]) < 2 && abs(vmVariables.acc[1]) < 2 && vmVariables.acc[2] > 20) {
 		leds_set(LED_R_BOT_L,0);

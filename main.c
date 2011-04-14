@@ -1,3 +1,20 @@
+/* Firmware version. Increment at every major change */
+
+/* 
+History:
+0: First production firmware
+1: Wallsocket charger off mode fix.
+*/
+#define FW_VERSION 1
+
+/* Firmware variant. Each variant of the firmware has it own number */
+
+/* Variant list:
+0: Standard one
+
+*/
+#define FW_VARIANT 0
+
 #include <p24fxxxx.h>
 #include <clock/clock.h>
 #include <timer/timer.h>
@@ -134,7 +151,15 @@ void power_off(AsebaVMState *vm) {
 	switch_off();
 	
 	// Switch off USB
-	USBDeviceDetach();
+	// If we are connected to a PC, disconnect.
+	// If we are NOT connected to a PC but 5V is present
+	// ( == charger ) we need to keep the transciever on
+	if(usb_uart_configured())
+		USBDeviceDetach();
+		
+	// In any case, disable the usb interrupt. It's safer
+	_USB1IE = 0;
+	
 	
 	CHARGE_ENABLE_DIR = 1;
 	
@@ -248,6 +273,9 @@ int main(void)
 		
 	mma7660_set_mode(MMA7660_16HZ, 0);
 		
+	vmVariables.fwversion[0] = FW_VERSION;
+	vmVariables.fwversion[1] = FW_VARIANT;
+	
 	// Give full control to aseba. No way out (except reset).
 	run_aseba_main_loop();
 }

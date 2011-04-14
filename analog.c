@@ -246,13 +246,19 @@ void __attribute__((noreturn)) analog_enter_poweroff_mode(void) {
 	
 	was_connected = U1OTGSTATbits.SESVD;
 	
+	if(was_connected) {
+		// Keep USB powered (to keep the pull-up/down).
+		PMD4 = 0xFFFE;
+	} else {
+		PMD4 = 0xFFFF;
+	}
 	// Switch off everything
 	PMD1 = 0xFFFF;
 	PMD2 = 0xFFFF;
 	PMD3 = 0xFFFF;
-	PMD4 = 0xFFFF;
 	PMD5 = 0xFFFF;
 	PMD6 = 0xFFFF;
+	
 	
 	// We don't want _any_ interrupt (if somebody forgot to disable one ...)
 	SET_IPL(7);
@@ -349,10 +355,16 @@ void __attribute__((noreturn)) analog_enter_poweroff_mode(void) {
 			// 5V present, wakeup ! 
 				if(!was_connected)
 					asm volatile("reset");
-			} else
+			} else {
+				// if usb unplug, reinit the button treshold as it will trigger suprious button activity
+				if(was_connected) 
+					button_max = BUTTON_TRESHOLD;
 				was_connected = 0;
+			}
 			// Switch off usb module
-			_USB1MD = 1; 
+			// Only if 5V is not present
+			if(!was_connected)
+				_USB1MD = 1; 
 		}
 		check_usb = !check_usb;
 	}
