@@ -54,6 +54,7 @@ void _ISR _IC8Interrupt(void) {
 
 	
 static void calibrate(void) {
+	int counter = 0;
 	mesure_mode();
 	
 	calib = 0;
@@ -64,7 +65,9 @@ static void calibrate(void) {
 				"bset IC8CON1, #0\n" 
 				"bset LATF, #3\n");
 	
-	while(!calib) barrier();
+	while(!calib && counter++ < 1000) {
+		clock_delay_us(10);
+	}
 }
 
 void ntc_init(ntc_cb mes_done, int prio) {
