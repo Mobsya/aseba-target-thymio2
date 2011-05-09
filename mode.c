@@ -367,10 +367,10 @@ static void tick_acc(void) {
 	static int counter;
 	acc = acc + acc + acc + abs(vmVariables.acc[0]) + abs(vmVariables.acc[1]) + abs(vmVariables.acc[2]);
 	acc >>= 2;
-	when(acc < 5) {
+	when(acc < 14) {
 		play_sound_loop(SOUND_FREEFALL);
 	}
-	when(acc > 5) {	
+	when(acc > 14) {	
 		play_sound_loop(SOUND_DISABLE);
 		set_body_rgb(15,0,0);
 	}
