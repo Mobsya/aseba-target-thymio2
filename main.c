@@ -187,6 +187,8 @@ int main(void)
 {   
 	int test_mode;
 	int flash_present;
+	int i;
+	unsigned int seed;
 	clock_set_speed(16000000UL,16);	
 	
 	setup_pps();
@@ -275,6 +277,23 @@ int main(void)
 		
 	vmVariables.fwversion[0] = FW_VERSION;
 	vmVariables.fwversion[1] = FW_VARIANT;
+	
+	// get the random seed
+	seed = 0;
+	for(i = 0; i < 5; i++) {
+		seed += vmVariables.buttons_mean[i];
+		seed += vmVariables.buttons_noise[i];
+	}
+	seed += vmVariables.vbat[0];
+	seed += vmVariables.vbat[1];
+	
+	for(i = 0; i < 3; i++) 
+		seed += vmVariables.acc[i];
+	
+	AsebaSetRandomSeed(seed);
+	
+	for(i = 0; i < 3; i++)
+		AsebaGetRandom();
 	
 	// Give full control to aseba. No way out (except reset).
 	run_aseba_main_loop();
