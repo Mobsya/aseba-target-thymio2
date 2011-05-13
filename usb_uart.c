@@ -1,3 +1,7 @@
+/* This file is not released under LGPLv3 as some Microchip code is used.
+ * See license.txt for more details
+ */
+
 
 /* This file do the link between my code and microchip code
  * So I avoid pollution as much as possible */

@@ -1,3 +1,26 @@
+/*
+        Thymio-II Firmware
+
+        Copyright (C) 2011 Philippe Retornaz <philippe dot retornaz at epfl dot ch>,
+        Mobots group (http://mobots.epfl.ch), Robotics system laboratory (http://lsro.epfl.ch)
+        EPFL Ecole polytechnique federale de Lausanne (http://www.epfl.ch)
+
+        See authors.txt for more details about other contributors.
+
+        This program is free software: you can redistribute it and/or modify
+        it under the terms of the GNU Lesser General Public License as published
+        by the Free Software Foundation, version 3 of the License.
+
+        This program is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU Lesser General Public License for more details.
+
+        You should have received a copy of the GNU Lesser General Public License
+        along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
 #include <timer/timer.h>
 
 #include "behavior.h"
@@ -218,12 +241,10 @@ static void behavior_leds_prox(void) {
 	static int min[9] = {900,900,900,900,900,900,900,0,0};
 	static unsigned char led[9] = {16,17,20,18,19,0,1,22,23};
 	
-	// 
 // Do some adaptative stuff, so first we have a "standard" model of the sensor
 // Then everytime we are called, we readapt the max&min value of the sensors
 // So we can get the real range and display it on the leds.
 
-	//first the 7 horizontal prox.
 	int i;
 	
 	// Todo: fixme: use vmVariables ? user can corrupt ... 
@@ -400,7 +421,7 @@ void behavior_stop(int b) {
 	DISABLE(b);
 	
 	if(!behavior) {
-		// TODO: Zero the when section
+		// TODO: Zero the when section ?
 		timer_disable(timer);
 	}
 }

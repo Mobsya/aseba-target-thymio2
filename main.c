@@ -1,11 +1,35 @@
+/*
+        Thymio-II Firmware
+
+        Copyright (C) 2011 Philippe Retornaz <philippe dot retornaz at epfl dot ch>,
+        Mobots group (http://mobots.epfl.ch), Robotics system laboratory (http://lsro.epfl.ch)
+        EPFL Ecole polytechnique federale de Lausanne (http://www.epfl.ch)
+
+        See authors.txt for more details about other contributors.
+
+        This program is free software: you can redistribute it and/or modify
+        it under the terms of the GNU Lesser General Public License as published
+        by the Free Software Foundation, version 3 of the License.
+
+        This program is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU Lesser General Public License for more details.
+
+        You should have received a copy of the GNU Lesser General Public License
+        along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
 /* Firmware version. Increment at every major change */
 
 /* 
 History:
 0: First production firmware
-1: Wallsocket charger off mode fix.
+1: Wallsocket charger off mode fix. This version is the production firmware.
+2: Add rand() support and first public release, fix playback-recoreded sound, fix ground detection in explorer mode
 */
-#define FW_VERSION 1
+#define FW_VERSION 2
 
 /* Firmware variant. Each variant of the firmware has it own number */
 
@@ -44,7 +68,7 @@ History:
 
 #include <skel-usb.h>
 
-//#error CHECK THIS !
+// The real configuration bits are set by the bootloader
    _CONFIG1 (0x3F69)
    _CONFIG2 (0x134D)
    _CONFIG3 (0x6000)
@@ -196,7 +220,7 @@ int main(void)
 	
 	leds_init();
 
-	_LATF0 = 0; // Switch back to 100mA charge.
+	CHARGE_500MA = 0; // Switch back to 100mA charge.
 	
 	// Switch on one led to say we are powered on
 	leds_set(LED_BATTERY_0, 32);

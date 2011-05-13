@@ -1,3 +1,25 @@
+/*
+        Thymio-II Firmware
+
+        Copyright (C) 2011 Philippe Retornaz <philippe dot retornaz at epfl dot ch>,
+        Mobots group (http://mobots.epfl.ch), Robotics system laboratory (http://lsro.epfl.ch)
+        EPFL Ecole polytechnique federale de Lausanne (http://www.epfl.ch)
+
+        See authors.txt for more details about other contributors.
+
+        This program is free software: you can redistribute it and/or modify
+        it under the terms of the GNU Lesser General Public License as published
+        by the Free Software Foundation, version 3 of the License.
+
+        This program is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU Lesser General Public License for more details.
+
+        You should have received a copy of the GNU Lesser General Public License
+        along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <p24fxxxx.h>
 #include <clock/clock.h>
 #include <timer/timer.h>
@@ -24,7 +46,7 @@ static unsigned char index;
 #define atomic_orb(x,y) do { __asm__ volatile ("ior.b %[yy], [%[xx]], [%[xx]]" : : [xx] "r" (x), [yy] "r"(y): "cc","memory"); } while(0)
 
 void leds_clear_all(void) {
-	// Enable you to poweroff all leds, but keep the SOUND_ON as it is.	
+	// Enable to poweroff all leds, but keep the SOUND_ON as it is.	
 	unsigned char _l[LED_BANK];
 	int i;
 	memcpy(_l,leds_off,LED_BANK);
@@ -55,8 +77,6 @@ void leds_set(unsigned char l, unsigned char brightness) {
 	
 	if(p >= led + sizeof(led))
 		p -= sizeof(led);
-	
-	// FIXME: Disable timer here ? 
 	
 	if(brightness >= MAX_BRIGHTNESS)
 		brightness = MAX_BRIGHTNESS;
@@ -111,7 +131,7 @@ void leds_init(void) {
 	LED_CS = 0;
 	
 	va_get();
-	clock_delay_us(1000); // FIXME: Check this delay to be the minimal delay ! 
+	clock_delay_us(1000); // Wait until VA raise
 	
 	SPI1STAT = 0;
 	SPI1CON1bits.DISSCK = 0;

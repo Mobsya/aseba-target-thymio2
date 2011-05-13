@@ -1,3 +1,25 @@
+/*
+        Thymio-II Firmware
+
+        Copyright (C) 2011 Philippe Retornaz <philippe dot retornaz at epfl dot ch>,
+        Mobots group (http://mobots.epfl.ch), Robotics system laboratory (http://lsro.epfl.ch)
+        EPFL Ecole polytechnique federale de Lausanne (http://www.epfl.ch)
+
+        See authors.txt for more details about other contributors.
+
+        This program is free software: you can redistribute it and/or modify
+        it under the terms of the GNU Lesser General Public License as published
+        by the Free Software Foundation, version 3 of the License.
+
+        This program is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU Lesser General Public License for more details.
+
+        You should have received a copy of the GNU Lesser General Public License
+        along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #ifndef _BEHAVIOR_H_
 #define _BEHAVIOR_H_
 
@@ -16,12 +38,12 @@ void behavior_stop(int b);
 int behavior_enabled(int b);
 
 #define B_ALL 			0xFFFF
-#define B_SOUND_BUTTON 	(1 << 0)
-#define B_LEDS_BUTTON 	(1 << 1)
+#define B_SOUND_BUTTON 		(1 << 0)
+#define B_LEDS_BUTTON 		(1 << 1)
 #define B_LEDS_PROX		(1 << 2)
 #define B_LEDS_SD		(1 << 3)
 #define B_LEDS_MIC		(1 << 4)
-#define B_LEDS_BATTERY	(1 << 5)
+#define B_LEDS_BATTERY		(1 << 5)
 #define B_LEDS_RC5		(1 << 6)
 #define B_MOTORS		(1 << 7)
 #define B_LEDS_ACC		(1 << 8)

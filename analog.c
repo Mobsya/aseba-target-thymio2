@@ -1,3 +1,26 @@
+/*
+        Thymio-II Firmware
+
+        Copyright (C) 2011 Philippe Retornaz <philippe dot retornaz at epfl dot ch>,
+        Mobots group (http://mobots.epfl.ch), Robotics system laboratory (http://lsro.epfl.ch)
+        EPFL Ecole polytechnique federale de Lausanne (http://www.epfl.ch)
+
+        See authors.txt for more details about other contributors.
+
+        This program is free software: you can redistribute it and/or modify
+        it under the terms of the GNU Lesser General Public License as published
+        by the Free Software Foundation, version 3 of the License.
+
+        This program is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU Lesser General Public License for more details.
+
+        You should have received a copy of the GNU Lesser General Public License
+        along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
 #include <p24fxxxx.h>
 
 #include <timer/timer.h>
@@ -29,8 +52,6 @@ static void timer_cb(int timer_id) {
 	unsigned int sensors[6];
 	int a_state = analog_state;
 	
-	// Switch off ADC
-//	_ADON = 0;
 	AD1CON1bits.ASAM = 0;
 	
 	sensors[0] = ADC1BUF0;
@@ -48,42 +69,35 @@ static void timer_cb(int timer_id) {
 	CTMUCON = 0x8634; // Reset CTMU 
 	
 	// change sampling sequence
-	
 	// Put pin as input
-
 	switch(analog_state) {
 	case 0:
 		_TRISB0 = 0;
 		_TRISB1 = 1;
-//		_TRISB0 = 1;
 		analog_state = 1;
 		break;
 		
 	case 1:
 		_TRISB1 = 0;
 		_TRISB2 = 1;
-//		_TRISB1 = 1;
 		analog_state = 2;
 		break;
 		
 	case 2:
 		_TRISB2 = 0;
 		_TRISB3 = 1;
-//		_TRISB2 = 1;
 		analog_state = 3;
 		break;
 		
 	case 3:
 		_TRISB3 = 0;
 		_TRISB4 = 1;
-//		_TRISB3 = 1;
 		analog_state = 4;
 		break;
 		
 	case 4:
 		_TRISB4 = 0;
 		_TRISB0 = 1;
-//		_TRISB4 = 1;
 		analog_state = 0;
 		break;
 	}
@@ -97,23 +111,21 @@ static void timer_cb(int timer_id) {
 	// switch on ADC
 	
 	// FIXME: Between here and the OC start, we should disable all interrupt to get a better mesurment
+	// No interrupts have higher priority than us, so it's fine ...
 	adc_enable();
 	AD1CON1bits.ASAM = 1;
 	WAIT_ONE_ADC_CLOCK();
-//	_ADON = 1;	
-		// start OC (current pulse)
+
+	// start OC (current pulse)
 	_EDGEN = 1;
 	WAIT_ONE_ADC_CLOCK();
 	OC1CON1bits.OCM = 4;
 	
 	// Unground it
 	WAIT_ONE_ADC_CLOCK();
-	
 	_IDISSEN = 0;
-	// Enable edge detection
 
-
-	
+	// Let's process the datas
 	new_sensors_value(sensors, a_state);
 }
 
@@ -145,7 +157,7 @@ void analog_init(int t, int prio) {
 // Init the adc statemachine to:
 // convert micro, motor, IR and _ONE_ button at 8Khz (doing 1 or 16 conversion at xKhz cost the same ...)
 // It use:
-// 	- ADC
+//  - ADC
 //  - CTMU
 //  - OC1 (CTMU timing)
 	va_get();
@@ -172,7 +184,7 @@ void analog_init(int t, int prio) {
 	AD1PCFGL = 0xE380;
 	AD1PCFGH = 0x3; 	// Don't use bandgap referances.
 	
-// Add two others channels to slow down the ADC
+	// Add two others channels to slow down the ADC
 
 	AD1CSSL = 0x7c60 | (1<<0); // Scan first button and everything else
 	
@@ -182,7 +194,7 @@ void analog_init(int t, int prio) {
 	_AD1IP = prio;
 	
 /*** CTMU init */
-	CTMUCON = 0x0E34;	// Edge1: OC1, Edge2: OC1 (don't ask why ....) ! 
+	CTMUCON = 0x0E34;	// Edge1: OC1, Edge2: OC1 ! 
 	CTMUICON = 0x0200 | (0x1F << 10); 	// 0.55uAx100, trim = 0
 	CTMUCONbits.CTMUEN = 1;
 	
@@ -193,8 +205,8 @@ void analog_init(int t, int prio) {
 	OC1R = 1; // FIXME Delay to start the cpu clock
 	OC1RS = OC1R + 80; // FIXME recompute the delay .....
 	
-// To start the OC: OC1CON1bits.OCM = 4. 
-// We need to reset the module before output next pulse (async) ( by writing OC1CON2 to 0)
+	// To start the OC: OC1CON1bits.OCM = 4. 
+	// We need to reset the module before output next pulse (async) ( by writing OC1CON2 to 0)
 
 
 /*** Timer init */
@@ -252,7 +264,7 @@ void __attribute__((noreturn)) analog_enter_poweroff_mode(void) {
 	} else {
 		PMD4 = 0xFFFF;
 	}
-	// Switch off everything
+	// Switch off everything else
 	PMD1 = 0xFFFF;
 	PMD2 = 0xFFFF;
 	PMD3 = 0xFFFF;
@@ -282,7 +294,7 @@ void __attribute__((noreturn)) analog_enter_poweroff_mode(void) {
 	while(_OSWEN);
 	*/
 	
-// Enable watchdog to wake us in 200ms (or more ?)
+// Enable watchdog to wake us in 200ms (delay configured in configuration bits)
 	while(1) {
 		RCONbits.SWDTEN = 1;
 		asm volatile("pwrsav #0"); // Poweroff
@@ -303,11 +315,10 @@ void __attribute__((noreturn)) analog_enter_poweroff_mode(void) {
 		// No scanning.
 		// CTMU "Full manual" mode
 		
-		// FIXME !! 
 		CTMUICON = 0x0200 | (0x1F << 10);
 		CTMUCON = 0x8090;
 		
-		AD1CON3bits.ADRC = 1;		// RC clock Trc = 250ns		// 
+		AD1CON3bits.ADRC = 1;		// RC clock Trc = 250ns
 		AD1PCFGL = 0xE380;
 		AD1PCFGH = 0x3; 	// Don't use bandgap referances.	
 		_ADON = 1;
@@ -347,16 +358,16 @@ void __attribute__((noreturn)) analog_enter_poweroff_mode(void) {
 		_CTMUMD = 1;
 		
 		if(check_usb) {
-			// Fuck microchip ... 
+			// F*ck microchip ... 
 			_DOZEN = 1;
 			while(!(U1OTGSTATbits.SESEND || U1OTGSTATbits.SESVD)); 
 			_DOZEN = 0;
 			if(U1OTGSTATbits.SESVD) {
-			// 5V present, wakeup ! 
+				// 5V present, wakeup if was not present before ! 
 				if(!was_connected)
 					asm volatile("reset");
 			} else {
-				// if usb unplug, reinit the button treshold as it will trigger suprious button activity
+				// if usb unplug, reinit the button treshold as it will trigger spurious button activity
 				if(was_connected) 
 					button_max = BUTTON_TRESHOLD;
 				was_connected = 0;

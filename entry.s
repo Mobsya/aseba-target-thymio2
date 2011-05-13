@@ -2,7 +2,7 @@
 
 ;; Entry point from the bootloader ! we need to init everything but the usb variables
 
-;; In large copy,paste from the microchip crt0/crt1 startup code.
+;; In large copy,paste from the microchip crt0/crt1 startup code. This file is then NOT under LGPLv3.
 
 
 .text
@@ -15,7 +15,7 @@ __resetALT:
 	.weak    __user_init, __has_user_init
 
 ; Reset the stack
-	goto 0x14800 			;; DEBUG GO TO BOOTLOADER, to be replaced by a nop in non-debug mode
+	goto 0x14800 			;; go to bootloader
 	
 	
 

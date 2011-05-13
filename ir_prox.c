@@ -1,3 +1,25 @@
+/*
+        Thymio-II Firmware
+
+        Copyright (C) 2011 Philippe Retornaz <philippe dot retornaz at epfl dot ch>,
+        Mobots group (http://mobots.epfl.ch), Robotics system laboratory (http://lsro.epfl.ch)
+        EPFL Ecole polytechnique federale de Lausanne (http://www.epfl.ch)
+
+        See authors.txt for more details about other contributors.
+
+        This program is free software: you can redistribute it and/or modify
+        it under the terms of the GNU Lesser General Public License as published
+        by the Free Software Foundation, version 3 of the License.
+
+        This program is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU Lesser General Public License for more details.
+
+        You should have received a copy of the GNU Lesser General Public License
+        along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <types/types.h>
 
 #include "ir_prox.h"
@@ -51,7 +73,7 @@ void prox_init(void) {
 	va_get();
 	
 	
-	// IC configuration (example, to be used by all IC)
+	// IC configuration
 	
 	IC1CON1bits.ICSIDL = 0;
 	IC1CON1bits.ICTSEL = 7; // Fcy as clock source
@@ -84,13 +106,11 @@ void prox_init(void) {
 	
 	
 	// OC7 is used to generate the front pulse
-	// We just do the pin toggeling in soft ... 
-	
 	OC7CON1 = 0;
 	OC7CON2 = 0;
 	OC7CON1bits.OCTSEL = 0x7; // CPU clock
-	OC7R = 4; // FIXME Delay to start the cpu clock
-	OC7RS = OC7R + 960; // 60us FIXME recompute the delay .....
+	OC7R = 4; 
+	OC7RS = OC7R + 960; // 60us
 
 	OC8CON1 = OC7CON1;
 	OC8CON2 = OC7CON2;
