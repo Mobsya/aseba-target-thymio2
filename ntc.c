@@ -28,13 +28,13 @@
 #include "regulator.h"
 
 static ntc_cb cb;
-
 static unsigned int calib;
 
 #define calib_off() do {_LATF3 = 0; }while(0)
 #define ntc_off() do{_LATB13 = 0;  _LATF3 = 0;} while(0)
-#define discharge_mode() do{_TRISG6 = 0; } while(0)
+#define discharge_mode() do{_TRISG6 = 0; _TRISB13 = 0; } while(0)
 #define mesure_mode() do{_TRISG6 = 1; } while(0)
+#define calib_mode() do{_TRISG6 = 1; _TRISB13 = 1;} while(0)
 
 #define comparator_output_enable() do {_TRISG7 = 0; CM1CONbits.COE = 1;}while(0)
 #define comparator_output_disable() do{_TRISG7 = 1; CM1CONbits.COE = 0;}while(0)
@@ -55,21 +55,24 @@ void _ISR _IC8Interrupt(void) {
 	IC8CON1bits.ICM = 0x0;
 	comparator_output_disable();
 	
-	if(cb) {
+	if(!_TRISB13) {
 		temp = __udiv3216(__builtin_muluu(temp,R_CALIB),calib);
 		
 		// Temp = 250 - (Rm - 5000)/9
 		
 		temp = (250*9 - ((int) temp) + 5000) / 9;
 		
-		cb(temp);
-		
 		ntc_off();
 	} else {
-		// Calibration phase ...
-		calib = temp;		
+		// Calibration
+		if(calib)	
+			calib = (__builtin_muluu(calib, 15) + temp + 8) >> 4;
+		else
+			calib = temp;
 		calib_off();
 	}
+	if(cb)		
+		cb(temp);
 	
 	discharge_mode();
 }
@@ -91,6 +94,7 @@ static void calibrate(void) {
 		clock_delay_us(10);
 	}
 }
+
 
 void ntc_init(ntc_cb mes_done, int prio) {
 	va_get(); // We are going to put 3.3 on IR receiver ... need to power it up.
@@ -157,7 +161,21 @@ void ntc_shutdown(void) {
 }
 
 
+void ntc_calibrate(void) {
+	
+	calib_mode();
+	
+	comparator_output_enable();
+	
+	asm volatile("disi #2\n"
+				"bset IC8CON1, #0\n"
+				"bset LATF, #3\n");
+	
+}
+
+
 void ntc_mesure(void) {
+	
 	mesure_mode();
 	
 	comparator_output_enable();

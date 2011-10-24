@@ -31,6 +31,8 @@ void ntc_init(ntc_cb mes_done, int prio);
 
 void ntc_mesure(void);
 
+void ntc_calibrate(void);
+
 void ntc_shutdown(void);
 
 
