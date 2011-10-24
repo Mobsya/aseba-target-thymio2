@@ -371,7 +371,7 @@ static void tick_explorer(void) {
 		vmVariables.target[1] = speed  + __builtin_divsd(temp, -300);
 	} 
 	
-	if(vmVariables.ground_delta[0] < 130 || vmVariables.ground_delta[0] < 130) {
+	if(vmVariables.ground_delta[0] < 130 || vmVariables.ground_delta[1] < 130) {
 		vmVariables.target[0] = 0;
 		vmVariables.target[1] = 0;
 		leds_set(LED_R_BOT_L, 32);
@@ -383,20 +383,22 @@ static void tick_explorer(void) {
 }
 
 static void tick_acc(void) {
+	
+#define ACC_FREE_FALL 14
 	static unsigned int acc = 32;
 	static char led_pulse;
 	static int counter;
 	acc = acc + acc + acc + abs(vmVariables.acc[0]) + abs(vmVariables.acc[1]) + abs(vmVariables.acc[2]);
 	acc >>= 2;
-	when(acc < 14) {
+	when(acc < ACC_FREE_FALL) {
 		play_sound_loop(SOUND_FREEFALL);
 	}
-	when(acc > 14) {	
+	when(acc > ACC_FREE_FALL) {	
 		play_sound_loop(SOUND_DISABLE);
 		set_body_rgb(15,0,0);
 	}
 	
-	if(acc < 5) {
+	if(acc < ACC_FREE_FALL) {
 		counter++;
 		if(counter > 5) {
 			if (counter == 10)
