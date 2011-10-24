@@ -179,3 +179,19 @@ int sd_test_file_present(void) {
 	return ret;
 }
 
+int sd_load_aseba_code(void) {
+	unsigned int flags;
+	int ret;
+	RAISE_IPL(flags, SD_PRIO);
+	if(f_open(&read_file, "VMCODE.ABO", FA_READ) == FR_OK) {
+		// TODO 
+		ret = 0;
+		f_close(&read_file);
+	} else {
+		ret = 0;
+	}
+	
+	IRQ_ENABLE(flags);
+	return ret;
+}		
+

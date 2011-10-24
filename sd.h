@@ -31,4 +31,5 @@
 	void sd_stop_record(void);
 	
 	int sd_test_file_present(void);
+	int sd_load_aseba_code(void);
 #endif
