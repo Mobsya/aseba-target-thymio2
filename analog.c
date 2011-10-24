@@ -35,8 +35,8 @@
 #define adc_enable()  do { _ADON = 1; Nop(); Nop(); Nop(); Nop(); Nop(); } while(0)
 
 
-// 1 adc clock: 250ns: 4Cycles. So wait 5.. 
-#define WAIT_ONE_ADC_CLOCK() do { Nop(); Nop(); Nop(); Nop(); Nop(); } while(0)
+// 1 adc clock: 250ns: 4Cycles. So wait 6 (5 is not enough for some pics ... )  
+#define WAIT_ONE_ADC_CLOCK() do { Nop(); Nop(); Nop(); Nop(); Nop(); Nop();} while(0)
 
 static int analog_state; // 0-4, depending on which button is scanned ... 
 static int timer;
