@@ -37,6 +37,11 @@ static unsigned int __attribute((noinline)) ic_buf(int ic) {
 	return *((&IC1BUF) + ic*4);
 }
 
+static void __attribute((noinline)) ic_reset_timer(int ic) {
+	IC1CON2BITS * ic_ptr = (IC1CON2BITS *) &IC1CON2bits + 4 * ic;
+	ic_ptr->TRIGSTAT = 0;
+}	
+
 void ir_prox_mesure(void) {
 	int temp[2];
 	int i;	
@@ -45,15 +50,33 @@ void ir_prox_mesure(void) {
 			temp[0] = ic_buf(i);
 			if(ic_bufne(i)) {
 				temp[1] = ic_buf(i);
-				vmVariables.prox[i] = temp[1] - temp[0];
+							
+				// Validity check
+				switch (i) {
+				case 0 ... 4:
+					if(temp[0] < 1560 && temp[0] > 1100) 
+						vmVariables.prox[i] = temp[1] - temp[0];
+					else
+						vmVariables.prox[i] = 0;
+					break;
+				case 5 ... 6:
+					if(temp[0] < 2550 && temp[0] > 2080)
+						vmVariables.prox[i] = temp[1] - temp[0];
+					else
+						vmVariables.prox[i] = 0;
+					break;
+				}
+				
+				// Make sure we have an empty buffer ...
+				while(ic_bufne(i))
+					ic_buf(i);
 			} else 
 				vmVariables.prox[i] = 0;
 		} else {
 			vmVariables.prox[i] = 0;
 		}
-		// Make sure we have an empty buffer ...
-		while(ic_bufne(i))
-			ic_buf(i);
+		
+		ic_reset_timer(i);
 	}
 	
 	SET_EVENT(EVENT_PROX);
