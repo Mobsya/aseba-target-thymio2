@@ -62,8 +62,6 @@ static mma7660_cb cb;
 static char data[4];
 static unsigned char reg;
 
-static void mma7660_int_cb(void);
-
 static void mma7660_i2c_cb(int i2c_id, bool status) {
 	static int relaunched;
 	int tap;
@@ -74,7 +72,7 @@ static void mma7660_i2c_cb(int i2c_id, bool status) {
 		 (data[3] & ALERT_MASK)) {
 		// Don't fire the callback
 		if(!relaunched) {
-			mma7660_int_cb();
+			mma7660_read_async();
 			relaunched = 1;
 		}
 		return;
@@ -89,12 +87,11 @@ static void mma7660_i2c_cb(int i2c_id, bool status) {
 	data[1] = ((signed char) (((unsigned char) data[1]) << 2)) >> 2;
 	data[2] = ((signed char) (((unsigned char) data[2]) << 2)) >> 2;
 
-	if(cb)
-		cb(data[0],data[1],data[2],tap);
+	cb(data[0],data[1],data[2],tap);
 }
 
-static void mma7660_int_cb(void) {
-	// Safety: If i2c is busy, ignore this interrupt
+void mma7660_read_async(void) {
+	// Safety: If i2c is busy, ignore this
 	if(i2c_master_is_busy(i2c_bus))
 		return;
 	
@@ -122,21 +119,29 @@ void mma7660_init(int i2c, unsigned char address, mma7660_cb ucb, int prio) {
 	
 	/* Configure device */
 	write(MODE, MODE_CONFIG_OFF);		// Reset
-	write(INT_SETUP, 1 << GINT);		// Enable auto interrupt on update (GINT)
+	if(prio)
+		write(INT_SETUP, 1 << GINT);		// Enable auto interrupt on update (GINT)
+	else
+		write(INT_SETUP, 0);
 
 	/* Configure PIC */
 	TRISDbits.TRISD7 = 1;			// Set RD7 pin as input
 //	CNPU2bits.CN16PUE = 1;			// Enable internal pull-up resistor
 
 	/* Configure interrupts */
-	IPC4bits.CNIP = prio;			// CN interrupt priority
-	IFS1bits.CNIF = 0;			// Clear flag
-	CNEN2bits.CN16IE = 1;			// Enable CN16 interrupt
-	IEC1bits.CNIE = 1;			// Enable CN interrupt
+	if(prio) {
+		IPC4bits.CNIP = prio;			// CN interrupt priority
+		IFS1bits.CNIF = 0;			// Clear flag
+		CNEN2bits.CN16IE = 1;			// Enable CN16 interrupt
+		IEC1bits.CNIE = 1;			// Enable CN interrupt
+	}
 }
 
 void mma7660_set_mode(int hz, int tap_en) {
+	int flag = IEC1bits.CNIE;
+	
 	ERROR_CHECK_RANGE(hz, MMA7660_120HZ, MMA7660_0HZ, MMA7660_ERROR_INVALID_PARAM);
+
 
 	IEC1bits.CNIE = 0;
 
@@ -179,7 +184,7 @@ void mma7660_set_mode(int hz, int tap_en) {
 	// Enable the device
 	write(MODE, MODE_CONFIG_ON);
 	
-	IEC1bits.CNIE = 1;
+	IEC1bits.CNIE = flag;
 }
 
 
@@ -205,7 +210,7 @@ void _ISR _CNInterrupt(void)
 		return;
 
 	// Initiate the data transfer
-	mma7660_int_cb();
+	mma7660_read_async();
 
 }
 
