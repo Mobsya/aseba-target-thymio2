@@ -103,6 +103,7 @@ enum Event
 	EVENT_TEMPERATURE,
 	EVENT_RC5,
 	EVENT_PROX,
+	EVENT_TAP,
 	/****
 	---> PUT YOUR EVENT NUMBER HERE <---
 	Must be in the same order as in skel.c

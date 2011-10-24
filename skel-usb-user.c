@@ -79,6 +79,7 @@ static const AsebaLocalEventDescription localEvents[] = {
 	{ "temperature", "Temperature event"},
 	{ "rc5", "RC5 message event"},
 	{ "prox", "Proximity sensors"},
+	{ "tap", "A tap is detected"},
 	{ NULL, NULL }
 };
 

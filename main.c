@@ -28,8 +28,9 @@ History:
 0: First production firmware
 1: Wallsocket charger off mode fix. This version is the production firmware.
 2: Add rand() support and first public release, fix playback-recoreded sound, fix ground detection in explorer mode
+3: Second public release, see wiki for changelog
 */
-#define FW_VERSION 2
+#define FW_VERSION 3
 
 /* Firmware variant. Each variant of the firmware has it own number */
 
@@ -92,7 +93,7 @@ History:
 #define TIMER_ANALOG TIMER_2
 #define TIMER_RC5 TIMER_3
 #define TIMER_BEHAVIOR TIMER_1
-#define TIMER_NTC TIMER_45
+#define TIMER_SLOW TIMER_4
 
 
 void cb_1khz(void) {
@@ -104,15 +105,20 @@ static void acc_cb(int x, int y, int z, int tap) {
 	vmVariables.acc[0] = x;
 	vmVariables.acc[1] = y;
 	vmVariables.acc[2] = z;	
-	if(tap)
+	if(tap) {
+		SET_EVENT(EVENT_TAP);
 		vmVariables.acc_tap = tap; // set only variable.
+	}
 	
 	SET_EVENT(EVENT_ACC);
 }
 
+static int ntc_calib;
 static void ntc_callback(int temp) {
-	vmVariables.ntc = temp;
-	SET_EVENT(EVENT_TEMPERATURE);
+	if(!ntc_calib) {
+		vmVariables.ntc = temp;
+		SET_EVENT(EVENT_TEMPERATURE);
+	}
 	rc5_enable();
 }
 
@@ -122,9 +128,28 @@ static void rc5_callback(unsigned int address, unsigned int command) {
 	SET_EVENT(EVENT_RC5);
 }
 
-static void timer_ntc_callback(int timer) {
+static void ntc_tick(void) {
 	rc5_disable();
-	ntc_mesure();
+	
+	if(ntc_calib) {
+		ntc_calib = 0;
+		ntc_mesure();
+	} else {
+		ntc_calib = 1;
+		ntc_calibrate();
+	}	
+}
+
+static void timer_slow_callback(int timer) {
+	// timer_slow is at 16 Hz
+	static unsigned char ntc_prescaler = 0;
+	if(++ntc_prescaler >= 8) {
+		// We want a 2 Hz timer on the ntc
+		ntc_prescaler = 0;
+		ntc_tick();
+	}
+	
+	mma7660_read_async();
 }
 
 
@@ -140,6 +165,9 @@ void update_aseba_variables_write(void) {
 void switch_off(void) { 
 	behavior_stop(B_ALL);
 	
+	timer_disable(TIMER_SLOW);
+	timer_disable_interrupt(TIMER_SLOW);
+	
 	analog_disable();
 	pwm_motor_poweroff();
 	prox_poweroff();
@@ -150,8 +178,6 @@ void switch_off(void) {
 	I2C3CONbits.I2CEN = 0; // Disable i2c.
 	_MI2C3IE = 0;
 	
-	timer_disable(TIMER_NTC);
-	timer_disable_interrupt(TIMER_NTC);
 	
 	ntc_shutdown();
 	rc5_shutdown();
@@ -210,7 +236,7 @@ static void idle_without_aseba(void) {
 int main(void)
 {   
 	int test_mode;
-	int flash_present;
+	int vm_present;
 	int i;
 	unsigned int seed;
 	clock_set_speed(16000000UL,16);	
@@ -258,17 +284,21 @@ int main(void)
 	i2c_init(I2C_3);
 	i2c_init_master(I2C_3, 400000, PRIO_ACC);
 	
-	mma7660_init(I2C_3, MMA7660_DEFAULT_ADDRESS, acc_cb, PRIO_ACC);
+	mma7660_init(I2C_3, MMA7660_DEFAULT_ADDRESS, acc_cb, 0);
 	mma7660_set_mode(MMA7660_120HZ, 1);
 	
-	timer_init(TIMER_NTC, 1000, 3); // 32 bits timer
-	timer_enable_interrupt(TIMER_NTC, timer_ntc_callback, PRIO_ACC);
+	timer_init(TIMER_SLOW, 62500, 6);
+	timer_enable_interrupt(TIMER_SLOW, timer_slow_callback, PRIO_ACC);
 	
 	rc5_init(TIMER_RC5, rc5_callback, PRIO_RC5);
 	
-	timer_enable(TIMER_NTC);
+	timer_enable(TIMER_SLOW);
 	
-	flash_present = init_aseba_and_usb();
+	vm_present = init_aseba_and_usb();
+	
+	// SD file is more important than internal flash
+	if(sd_load_aseba_code())
+		vm_present = 1;
 
 	behavior_init(TIMER_BEHAVIOR, PRIO_BEHAVIOR);
 	
@@ -276,7 +306,7 @@ int main(void)
 	test_mode = sd_test_file_present();
 	
 	if(!test_mode)
-		mode_init(flash_present);
+		mode_init(vm_present);
 
 	
 	if( ! load_settings_from_flash()) {
@@ -285,9 +315,7 @@ int main(void)
 	
 	play_sound(SOUND_POWERON);
 	
-	if(test_mode) {
-		mma7660_set_mode(MMA7660_16HZ, 0);
-		
+	if(test_mode) {	
 		test_mode_start();
 		while(1) 
 			idle_without_aseba();
@@ -296,9 +324,7 @@ int main(void)
 	
 	while(behavior_enabled(B_MODE)) 
 		idle_without_aseba();
-		
-	mma7660_set_mode(MMA7660_16HZ, 0);
-		
+				
 	vmVariables.fwversion[0] = FW_VERSION;
 	vmVariables.fwversion[1] = FW_VARIANT;
 	
