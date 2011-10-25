@@ -19,6 +19,7 @@
         You should have received a copy of the GNU Lesser General Public License
         along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
+#include <stdlib.h>
 
 #include <types/types.h>
 
@@ -129,7 +130,9 @@ static int playback_buffer(unsigned char * b) {
 	return 1;
 }
 
-static void play_note(unsigned int freq, unsigned int duration) {
+void play_note(unsigned int freq, unsigned int duration) {
+	sound_playback_hold();
+	
 	m = 0;
 	// Duration in ~ 0.1s.
 	tone_setup(freq);
@@ -141,6 +144,8 @@ static void play_note(unsigned int freq, unsigned int duration) {
 }
 
 static void play_music(const struct music * p, int loop) {
+	sound_playback_hold();
+	
 	m_start = p;
 	m = p;
 	l = loop;
@@ -236,14 +241,12 @@ void play_sound_block(int number) {
 	while(m) barrier();
 }
 
-void play_frequency_block(int freq, int time) {
-	struct music temp[] = {{
-		freq, time
-	},
-		{0,0}
-	};
-	play_music(temp,0);
-	
-	while(m != NULL) barrier();
+void play_frequency(int freq, int time) {
+	if(time < 0) {
+		sound_playback_disable();
+	} else {
+		if(time > 0 && time < 4)
+			time = 4;
+		play_note(((unsigned int) abs(freq)) * 10, time);
+	}
 }
-

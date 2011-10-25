@@ -195,6 +195,8 @@ AsebaNativeFunctionDescription AsebaNativeDescription_poweroff = {
 };
 
 void power_off(AsebaVMState *vm) {
+	behavior_stop(B_ALL);
+	
  	play_sound_block(SOUND_POWEROFF);
 	
 	// Shutdown all peripherals ...

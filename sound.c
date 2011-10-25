@@ -30,6 +30,7 @@
 #include "leds.h"
 //#include "sound_recording.h"
 #include "playback.h"
+#include "behavior.h"
 
 // Reduce to 8 bits sound ... 
 static unsigned char input_buf[SOUND_IBUFSZ*2];
@@ -92,9 +93,18 @@ void sound_playback_enable(sound_cb cb) {
 	callback = cb;
 }
 
-void sound_playback_disable(void) {
+void sound_playback_hold(void){
+	// If we interrupt an SD read we need to
+	// tell the behavior that SD read is over.
+	behavior_notify_sd(BEHAVIOR_STOP | BEHAVIOR_SD_READ);
+	
 	callback = NULL;
 	barrier();
+};
+
+void sound_playback_disable(void) {
+	sound_playback_hold();
+	
 	leds_set(SOUND_ON, 0);
 	OC6R = 127;
 }

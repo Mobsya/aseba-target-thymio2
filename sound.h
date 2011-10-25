@@ -37,6 +37,7 @@ void sound_poweroff(void);
 
 void sound_playback_enable(sound_cb cb);
 void sound_playback_disable(void);
+void sound_playback_hold(void);
 
 void sound_set_mic_stat(int enabled);
 

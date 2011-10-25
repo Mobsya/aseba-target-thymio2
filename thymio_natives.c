@@ -20,6 +20,8 @@
         along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <types/types.h>
+
 #include <skel-usb.h>
 #include "leds.h"
 #include "sd.h"
@@ -325,11 +327,11 @@ void set_ntc_leds(AsebaVMState *vm) {
 
 
 AsebaNativeFunctionDescription AsebaNativeDescription_play_freq = {
-	"_sound.freq",
+	"sound.freq",
 	"Play frequency",
 	{
-		{1,"dHz"},
-		{1,"dS"},
+		{1,"Hz"},
+		{1,"ds"},
 		{0,0},
 	}
 };
@@ -337,7 +339,14 @@ AsebaNativeFunctionDescription AsebaNativeDescription_play_freq = {
 void play_freq(AsebaVMState * vm) {
 	int freq = vm->variables[AsebaNativePopArg(vm)];
 	int time = vm->variables[AsebaNativePopArg(vm)];
+	int flags;
 	
-	play_frequency_block(freq, time);
+	// In order to not race wrt behavior producing sound
+	// I need to rise my IPL to behavior IPL
+	RAISE_IPL(flags, 1);
+	
+	play_frequency(freq, time);
+	
+	IRQ_ENABLE(flags);
 }
 

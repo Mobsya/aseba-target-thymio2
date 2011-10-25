@@ -107,7 +107,7 @@ int sd_play_file(const char * file, int loop) {
 	
 	f_close(&read_file); // Close the last read file
 	if(f_open(&read_file, file, FA_READ) == FR_OK) {
-		sound_playback_disable();
+		sound_playback_hold();
 		
 		l = loop;
 		

@@ -43,6 +43,9 @@ void play_sound_loop(int number);
 
 void play_sound_block(int number);
 
-void play_frequency_block(int freq, int time);
+// Freq in Hz. from 55 to 3200.
+// time in ~1/10 sec. 0 mean infinite
+// -1 mean stop.
+void play_frequency(int freq, int time);
 
 #endif
