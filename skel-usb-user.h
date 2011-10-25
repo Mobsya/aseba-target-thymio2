@@ -104,6 +104,11 @@ enum Event
 	EVENT_RC5,
 	EVENT_PROX,
 	EVENT_TAP,
+	EVENT_B_LEFT,
+	EVENT_B_RIGHT,
+	EVENT_B_FORWARD,
+	EVENT_B_BACKWARD,
+	EVENT_B_CENTER,
 	/****
 	---> PUT YOUR EVENT NUMBER HERE <---
 	Must be in the same order as in skel.c

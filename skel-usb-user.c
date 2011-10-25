@@ -34,8 +34,12 @@ const AsebaVMDescription vmDescription = {
 		{1, "_productId"}, // Robot type
 		
 		{5, "buttons._raw"},
-		{5, "buttons.binary"},
-		
+		{1, "buttons.backward"},
+		{1, "buttons.right"},
+		{1, "buttons.center"},
+		{1, "buttons.forward"},
+		{1, "buttons.left"},
+			
 		{5, "buttons._mean"},
 		{5, "buttons._noise"},
 		
@@ -80,6 +84,11 @@ static const AsebaLocalEventDescription localEvents[] = {
 	{ "rc5", "RC5 message event"},
 	{ "prox", "Proximity sensors"},
 	{ "tap", "A tap is detected"},
+	{ "button.left", "Left button event"},
+	{ "button.right", "Right button event"},
+	{ "button.forward", "Forward button event"},
+	{ "button.backward", "Backward button event"},
+	{ "button.center", "Center button event"},
 	{ NULL, NULL }
 };
 

@@ -38,6 +38,33 @@ static int count;
 
 static int timer;
 
+static inline void manage_buttons_event(void) {
+	static int old_b;
+	// Periodic button event.
+	SET_EVENT(EVENT_BUTTONS);
+	 
+	if((old_b & 0b1) != vmVariables.buttons_state[0]) {
+		old_b ^= 0b1;
+		SET_EVENT(EVENT_B_BACKWARD);
+	}
+	if((old_b & 0b10) != vmVariables.buttons_state[1] << 1) {
+		old_b ^= 0b10;
+		SET_EVENT(EVENT_B_RIGHT);
+	}
+	if((old_b & 0b100) != vmVariables.buttons_state[2] << 2) {
+		old_b ^= 0b100;
+		SET_EVENT(EVENT_B_CENTER);
+	}
+	if((old_b & 0b1000) != vmVariables.buttons_state[3] << 3) {
+		old_b ^= 0b1000;
+		SET_EVENT(EVENT_B_FORWARD);
+	}
+	if((old_b & 0b10000) != vmVariables.buttons_state[4] << 4) {
+		old_b ^= 0b10000;
+		SET_EVENT(EVENT_B_LEFT);
+	}	
+}	
+
 void new_sensors_value(unsigned int * val, int b) {
 	/* Sound ... */
 	sound_new_sample(val[3]);
@@ -67,13 +94,15 @@ void new_sensors_value(unsigned int * val, int b) {
 	if(b == 4) {
 		count++;
 		if(count == 32) {
-			SET_EVENT(EVENT_BUTTONS);
+			manage_buttons_event();
 			count = 0;
 			button[0] = 0;
 			button[1] = 0;
 			button[2] = 0; 
 			button[3] = 0;
 			button[4] = 0;
+			
+			
 		}
 	}
 }	
