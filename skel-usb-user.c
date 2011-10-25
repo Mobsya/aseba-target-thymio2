@@ -77,18 +77,18 @@ static const AsebaLocalEventDescription localEvents[] = {
 	First value is event "name" (will be used as "onvent name" in asebastudio
 	second value is the event description)
 	*******/
-	{ "button", "Button event"},
+	{ "button", "Button values updated"},
 	{ "motor", "Motor timer"},
-	{ "acc", "Accelerometer event"},
-	{ "temperature", "Temperature event"},
-	{ "rc5", "RC5 message event"},
-	{ "prox", "Proximity sensors"},
+	{ "acc", "Accelerometer values updated"},
+	{ "temperature", "Temperature value updated"},
+	{ "rc5", "RC5 message received"},
+	{ "prox", "Proximity values updated"},
 	{ "tap", "A tap is detected"},
-	{ "button.left", "Left button event"},
-	{ "button.right", "Right button event"},
-	{ "button.forward", "Forward button event"},
-	{ "button.backward", "Backward button event"},
-	{ "button.center", "Center button event"},
+	{ "button.left", "Left button status changed"},
+	{ "button.right", "Right button status changed"},
+	{ "button.forward", "Forward button status changed"},
+	{ "button.backward", "Backward button status changed"},
+	{ "button.center", "Center button status changed"},
 	{ NULL, NULL }
 };
 

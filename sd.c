@@ -27,6 +27,7 @@
 #include "regulator.h"
 #include "sound.h"
 #include "behavior.h"
+#include "wav.h"
 
 static FATFS fs; // SD fat 
 static FIL read_file; // Read handle
@@ -83,7 +84,7 @@ static int sd_play_cb(unsigned char * buffer) {
 	// So next read, we stay aligned (loop case only).
 	if(read != SOUND_OBUFSZ && l) {
 		// If loop and EOF soon
-		f_lseek(&read_file, 0); // Move back to the start;
+		wav_rewind(&read_file);
 		read = SOUND_OBUFSZ;
 	}
 	
@@ -106,7 +107,7 @@ int sd_play_file(const char * file, int loop) {
 	RAISE_IPL(flags, SD_PRIO);
 	
 	f_close(&read_file); // Close the last read file
-	if(f_open(&read_file, file, FA_READ) == FR_OK) {
+	if(f_open(&read_file, file, FA_READ) == FR_OK && !wav_init(&read_file)) {
 		sound_playback_hold();
 		
 		l = loop;
@@ -125,16 +126,32 @@ int sd_play_file(const char * file, int loop) {
 }
 
 static int record;
+static unsigned long sample_count;
+
+static void close_write_file(void) {
+	record = 0;
+	behavior_notify_sd(BEHAVIOR_STOP | BEHAVIOR_SD_WRITE);
+	
+	// Check if the file is open
+	if(!write_file.fs)
+		return;
+		
+	// If we have writtend at least one sample
+	if(sample_count)
+		wav_finalize_header(&write_file, sample_count);
+		
+	sample_count = 0;
+	f_close(&write_file);
+}	
 
 void sound_mic_buffer(unsigned char *b) {
 	unsigned int written;
 	if(record) {
 		f_write(&write_file, b, SOUND_IBUFSZ, &written);
-		if(written != SOUND_IBUFSZ) {
-			record = 0;
-			behavior_notify_sd(BEHAVIOR_STOP | BEHAVIOR_SD_WRITE);
-			f_close(&write_file);
-		}
+		sample_count += written;
+		
+		if(written != SOUND_IBUFSZ) 
+			close_write_file();
 	}
 }
 void sd_start_record(const char * file) {
@@ -142,11 +159,15 @@ void sd_start_record(const char * file) {
 	RAISE_IPL(flags, SD_PRIO);
 	
 	// Make sure the file is closed
-	f_close(&write_file);
+	close_write_file();
 	
 	if(!f_open(&write_file, file, FA_WRITE | FA_CREATE_ALWAYS)) {
-		behavior_notify_sd(BEHAVIOR_START | BEHAVIOR_SD_WRITE);
-		record = 1;
+		sample_count = 0;
+		if(!wav_create_header(&write_file)) {			
+			behavior_notify_sd(BEHAVIOR_START | BEHAVIOR_SD_WRITE);
+			record = 1;
+		} else 
+			f_close(&write_file);
 	}
 	
 	IRQ_ENABLE(flags);
@@ -155,9 +176,7 @@ void sd_stop_record(void) {
 	unsigned int flags;
 	RAISE_IPL(flags, SD_PRIO);
 	
-	record = 0;
-	behavior_notify_sd(BEHAVIOR_STOP | BEHAVIOR_SD_WRITE);
-	f_close(&write_file);
+	close_write_file();
 	
 	IRQ_ENABLE(flags);
 }

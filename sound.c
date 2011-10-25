@@ -166,9 +166,14 @@ void _ISR _INT2Interrupt(void) {
 	else
 		sound_mic_buffer(&input_buf[SOUND_IBUFSZ]);
 }
-	
+
+static unsigned char mic_ign;
+void sound_ignore_next_sample(void) {
+	mic_ign = 2;
+}	
 
 void sound_new_sample(unsigned int sample) {
+	static unsigned int last_sample;
 	// Output new sample ...
 	if(callback) { 
 		OC6R = output_buf[obufp++];
@@ -180,9 +185,21 @@ void sound_new_sample(unsigned int sample) {
 			obufp = 0;
 		}
 	}
+	// I don't want that the compile optimize
+	// Between input and output
+	barrier();
 	
 	// Input
-	input_buf[ibufp++] = sample >> 2;
+	if(mic_ign == 1) {
+		input_buf[ibufp++] = last_sample >> 2;
+	} else {
+		input_buf[ibufp++] = sample >> 2;
+		last_sample = sample;
+	}
+	
+	if(mic_ign)
+		mic_ign--;
+	
 	if (ibufp == SOUND_IBUFSZ) 
 		_INT2IF = 1;
 		

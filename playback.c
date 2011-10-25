@@ -157,7 +157,7 @@ static void play_music(const struct music * p, int loop) {
 
 
 static void _play_sound(int number, int loop) {
-	char name[7] = {'p','0','.','r','a','w', 0};
+	char name[7] = {'p','0','.','w','a','v', 0};
 	
 	switch(number) {
 	case 0 ... 9:
@@ -175,16 +175,16 @@ static void _play_sound(int number, int loop) {
 		sd_play_file(name,loop);
 		break;
 	case 42:
-		sd_play_file("tujhe.raw",loop);
+		sd_play_file("tujhe.wav",loop);
 		break;
 	case 31415:
-		sd_play_file("koin.raw",loop);
+		sd_play_file("koin.wav",loop);
 		break;
 	case SOUND_DISABLE:
 		sound_playback_disable();
 		break;
 	case SOUND_POWERON:
-		if(!sd_play_file("poweron.raw",loop)) {
+		if(!sd_play_file("poweron.wav",loop)) {
 			play_music(m_poweron,loop);
 		}
 		break;
@@ -194,31 +194,31 @@ static void _play_sound(int number, int loop) {
 	//	}
 		break;
 	case SOUND_BUTTON:
-		if(!sd_play_file("button.raw",loop)) {
+		if(!sd_play_file("button.wav",loop)) {
 			play_music(m_button,loop);
 		}
 		break;
 	case SOUND_BUTTON_M:
-		if(!sd_play_file("button_m.raw",loop)) {
+		if(!sd_play_file("button_m.wav",loop)) {
 			play_music(m_button_m, loop);
 		}
 		break;	
 	case SOUND_FREEFALL:
-		if(!sd_play_file("freefall.raw",loop)) {
+		if(!sd_play_file("freefall.wav",loop)) {
 			play_music(m_freefall, loop);
 		}
 		break;
 	case SOUND_TAP:
-		if(!sd_play_file("tap.raw",loop)) {
+		if(!sd_play_file("tap.wav",loop)) {
 			play_music(m_tap,loop);
 		}
 	case SOUND_F_DETECT:
-		if(!sd_play_file("f_detect.raw",loop)) {
+		if(!sd_play_file("f_detect.wav",loop)) {
 			play_music(m_f_detect, loop);
 		}
 		break;
 	case SOUND_F_OK:
-		if(!sd_play_file("f_ok.raw",loop)) {
+		if(!sd_play_file("f_ok.wav",loop)) {
 			play_music(m_f_ok, loop);
 		}
 		break;

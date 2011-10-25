@@ -24,6 +24,7 @@
 
 #include "ir_prox.h"
 #include "regulator.h"
+#include "sound.h"
 
 #include <skel-usb.h>
 
@@ -89,6 +90,10 @@ void ir_prox_mesure(void) {
 	OC7CON1bits.OCM = 4;
 	
 	OC8CON1 = OC7CON1;
+	
+	// IR sensors are producing noise when switched on.
+	// tell the mic to ignore the next sample
+	sound_ignore_next_sample();
 }
 
 

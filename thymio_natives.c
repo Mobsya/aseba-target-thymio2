@@ -77,7 +77,7 @@ void sound_playback(AsebaVMState *vm) {
 
 void sound_record(AsebaVMState *vm) {
 	int number = vm->variables[AsebaNativePopArg(vm)];
-	char name[7] = {'r','0','.','r','a','w', 0};
+	char name[7] = {'r','0','.','w','a','v', 0};
 	if(number < 0) {
 		sd_stop_record();
 		return;
