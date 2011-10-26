@@ -23,11 +23,19 @@
 #ifndef _TONE_H_
 #define _TONE_H_
 
+
+// Tone generator optimized for the thymio 7812Hz sampling freq.
+// Base frequency: 55Hz, sampled at 7812Hz, 142 samples
+#define WAVEFORM_SIZE 142
+
 void tone_init(void);
 
 void tone_setup(unsigned int dHz);
 
 void tone_fill_buffer(unsigned char * buf, unsigned int c);
+
+// To be use by a aseba native function, thus int are used
+void tone_set_waveform(int * buf);
 
 #define A1	550
 #define Bb1	583

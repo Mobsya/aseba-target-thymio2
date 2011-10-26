@@ -27,7 +27,7 @@
 #include "sd.h"
 #include "playback.h"
 #include "behavior.h"
-
+#include "tone.h"
 
 AsebaNativeFunctionDescription AsebaNativeDescription_set_led = {
 	"_leds.set",
@@ -350,3 +350,25 @@ void play_freq(AsebaVMState * vm) {
 	IRQ_ENABLE(flags);
 }
 
+AsebaNativeFunctionDescription AsebaNativeDescription_set_wave = {
+	"sound.wave",
+	"Set the primary wave of the tone generator",
+	{
+		{WAVEFORM_SIZE, "wave"},
+		{0,0},
+	}
+};
+
+void set_wave(AsebaVMState * vm) {
+	int *wave = (int *) vm->variables + AsebaNativePopArg(vm);
+	
+	int i;
+	for(i = 0; i < WAVEFORM_SIZE; i++) {
+		if(wave[i] > 127 || wave[i] < -128) {
+			AsebaVMEmitNodeSpecificError(vm, "Error: samples must be in [-128,127] range");
+			return;
+		}
+	}
+	
+	tone_set_waveform(wave);
+}

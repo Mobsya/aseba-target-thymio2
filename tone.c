@@ -23,9 +23,7 @@
 #include "tone.h"
 #include "sound.h"
 
-// Tone generator optimized for the thymio 7812Hz sampling freq.
-// Base frequency: 55Hz, sampled at 7812Hz, 142 samples
-unsigned char wave[142];
+unsigned char wave[WAVEFORM_SIZE];
 
 static unsigned int ptr;
 
@@ -39,11 +37,11 @@ unsigned long __udiv3216(unsigned long, unsigned int);
 void tone_init(void) {
 	int i;
 
-	for(i = 0; i < 71; i++) 
-		wave[i] = (255*i)/71;
+	for(i = 0; i < WAVEFORM_SIZE/2; i++) 
+		wave[i] = (255*i)/(WAVEFORM_SIZE/2);
 		
-	for(i = 71; i < 142; i++) 
-		wave[i] = 255 - (255*(i-71))/71;
+	for(i = WAVEFORM_SIZE/2; i < WAVEFORM_SIZE; i++) 
+		wave[i] = 255 - (255*(i-WAVEFORM_SIZE/2))/(WAVEFORM_SIZE/2);
 }
 
 void tone_setup(unsigned int dHz) {
@@ -76,8 +74,15 @@ void tone_fill_buffer(unsigned char *b, unsigned int c) {
 			ptr++;
 		}
 	
-		if(ptr > 141)
-			ptr -= 142;
+		if(ptr > WAVEFORM_SIZE - 1)
+			ptr -= WAVEFORM_SIZE;
 	}
 }
+
+
+void tone_set_waveform(int * buf) {
+	int i;
+	for(i = 0; i < WAVEFORM_SIZE; i++)
+		wave[i] = buf[i] + 128;
+}	
 
