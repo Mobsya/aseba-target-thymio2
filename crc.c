@@ -1,0 +1,57 @@
+#include <p24fxxxx.h>
+
+#include "crc.h"
+
+void crc_init(unsigned int polylen, unsigned int poly, unsigned int initial) {
+	CRCCONbits.CRCGO = 0;
+	
+	CRCXOR = poly;
+	CRCCON = polylen - 1;
+	CRCWDAT = initial;
+}	
+
+static void crc_step(void) {
+	CRCCONbits.CRCGO = 1;
+	while(!CRCCONbits.CRCMPT);
+	Nop();
+	Nop();
+	Nop();
+	Nop();
+	Nop();
+	CRCCONbits.CRCGO = 0;
+}
+
+void crc_process_8(const void * data, unsigned int size) {
+	const unsigned char * p = (const unsigned char *) data;
+	while(size--) {
+		if(CRCCONbits.CRCFUL)
+			crc_step();
+		*((volatile unsigned char *) &CRCDAT) = *p++;
+	};	
+}
+
+void crc_process_16(const unsigned int * data, unsigned int count) {
+	while(count--) {
+		if(CRCCONbits.CRCFUL)
+			crc_step();
+		CRCDAT = *data++;
+	};
+}	
+
+unsigned int crc_finish(void) {
+
+	if(CRCCONbits.CRCFUL)
+		crc_step();
+
+	if(CRCCONbits.PLEN > 8-1)
+		 CRCDAT = 0x0;
+	else
+		*((volatile unsigned char *) &CRCDAT) = 0x0;
+	crc_step();
+	
+	Nop();
+	Nop();
+	
+	return CRCWDAT;
+}	
+

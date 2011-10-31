@@ -86,6 +86,10 @@ struct _vmVariables {
 	sint16 rc5_address;
 	sint16 rc5_command;
 	
+	sint16 sound_level;
+	sint16 sound_tresh;
+	sint16 sound_mean;
+	
 	sint16 acc_tap;
 	
 	/*****
@@ -109,6 +113,7 @@ enum Event
 	EVENT_B_FORWARD,
 	EVENT_B_BACKWARD,
 	EVENT_B_CENTER,
+	EVENT_MIC,
 	/****
 	---> PUT YOUR EVENT NUMBER HERE <---
 	Must be in the same order as in skel.c

@@ -60,6 +60,11 @@ const AsebaVMDescription vmDescription = {
 		{1, "rc5.address"},
 		{1, "rc5.command"},
 		
+		{1, "mic.intensity"},
+		{1, "mic.threshold"},
+		{1, "mic._mean"},
+		
+		
 		{1, "acc._tap"},
 		/******
 		 ---> PUT YOUR VARIABLES DESCRIPTIONS HERE <---
@@ -89,6 +94,7 @@ static const AsebaLocalEventDescription localEvents[] = {
 	{ "button.forward", "Forward button status changed"},
 	{ "button.backward", "Backward button status changed"},
 	{ "button.center", "Center button status changed"},
+	{ "mic", "Fired when microphone intensity is above threshold"},
 	{ NULL, NULL }
 };
 

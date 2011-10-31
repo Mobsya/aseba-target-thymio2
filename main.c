@@ -297,9 +297,12 @@ int main(void)
 	timer_enable(TIMER_SLOW);
 	
 	vm_present = init_aseba_and_usb();
+
+	vmVariables.fwversion[0] = FW_VERSION;
+	vmVariables.fwversion[1] = FW_VARIANT;
 	
 	// SD file is more important than internal flash
-	if(sd_load_aseba_code())
+	if(!sd_load_aseba_code())
 		vm_present = 1;
 
 	behavior_init(TIMER_BEHAVIOR, PRIO_BEHAVIOR);
@@ -326,9 +329,6 @@ int main(void)
 	
 	while(behavior_enabled(B_MODE)) 
 		idle_without_aseba();
-				
-	vmVariables.fwversion[0] = FW_VERSION;
-	vmVariables.fwversion[1] = FW_VARIANT;
 	
 	// get the random seed
 	seed = 0;

@@ -28,6 +28,7 @@
 #include "sound.h"
 #include "behavior.h"
 #include "wav.h"
+#include "abo.h"
 
 static FATFS fs; // SD fat 
 static FIL read_file; // Read handle
@@ -203,11 +204,10 @@ int sd_load_aseba_code(void) {
 	int ret;
 	RAISE_IPL(flags, SD_PRIO);
 	if(f_open(&read_file, "VMCODE.ABO", FA_READ) == FR_OK) {
-		// TODO 
-		ret = 0;
+		ret = abo_load(&read_file);
 		f_close(&read_file);
 	} else {
-		ret = 0;
+		ret = -1;
 	}
 	
 	IRQ_ENABLE(flags);
