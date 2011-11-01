@@ -192,6 +192,9 @@ void switch_off(void) {
 	timer_disable(TIMER_SLOW);
 	timer_disable_interrupt(TIMER_SLOW);
 	
+	timer_disable(TIMER_1KHZ);
+	timer_disable_interrupt(TIMER_1KHZ);
+	
 	analog_disable();
 	pwm_motor_poweroff();
 	prox_poweroff();
