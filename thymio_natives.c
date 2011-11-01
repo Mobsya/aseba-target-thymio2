@@ -111,6 +111,7 @@ void sound_playback(AsebaVMState *vm) {
 	int number = vm->variables[AsebaNativePopArg(vm)];
 	
 	behavior_stop(B_SOUND_BUTTON);
+	playback_enable_event();
 	
 	if(number == -1) 
 		play_user_sound(NULL);
@@ -138,6 +139,7 @@ void sound_replay(AsebaVMState *vm) {
 	int number = vm->variables[AsebaNativePopArg(vm)];
 	
 	behavior_stop(B_SOUND_BUTTON);
+	playback_enable_event();
 	
 	if(number == -1) 
 		play_user_sound(NULL);
@@ -152,6 +154,7 @@ void sound_system(AsebaVMState *vm) {
 	int number = vm->variables[AsebaNativePopArg(vm)];
 	
 	behavior_stop(B_SOUND_BUTTON);
+	playback_enable_event();
 	
 	if(play_sound(number)) {
 		prepare_name(number,&name[1]);

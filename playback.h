@@ -48,4 +48,8 @@ void play_user_sound(char * name);
 // -1 mean stop.
 void play_frequency(int freq, int time);
 
+void playback_notify_eop(void);
+
+void playback_enable_event(void);
+
 #endif

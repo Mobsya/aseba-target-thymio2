@@ -23,6 +23,8 @@
 
 #include <types/types.h>
 
+#include <skel-usb.h>
+
 #include "playback.h"
 #include "sound.h"
 #include "tone.h"
@@ -33,6 +35,7 @@ static int time;
 static const struct music * m;
 static const struct music * m_start;
 static unsigned char l;
+static unsigned char generate_events;
 
 // Last note is 0
 struct music {
@@ -103,6 +106,16 @@ static const struct music m_f_ok[] =
 		{0,0}
 	};
 
+
+void playback_enable_event(void) {
+	generate_events = 1;
+}
+
+void playback_notify_eop(void) {
+	if(generate_events) 
+		SET_EVENT(EVENT_SOUND_FINISHED);
+}
+
 static int playback_buffer(unsigned char * b) {
 	
 	if(time >= 0)
@@ -115,6 +128,7 @@ static int playback_buffer(unsigned char * b) {
 				} else if(!l){
 					time = 0;
 					m = 0;
+					playback_notify_eop();
 					return 0;
 				} else {
 					m = m_start;
@@ -123,6 +137,7 @@ static int playback_buffer(unsigned char * b) {
 				}
 			} else {
 				time = 0;
+				playback_notify_eop();
 				return 0;
 			}
 		}

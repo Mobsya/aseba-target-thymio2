@@ -29,6 +29,7 @@
 #include "behavior.h"
 #include "wav.h"
 #include "abo.h"
+#include "playback.h"
 
 static FATFS fs; // SD fat 
 static FIL read_file; // Read handle
@@ -91,6 +92,7 @@ static int sd_play_cb(unsigned char * buffer) {
 	
 	if(read == 0) {
 		behavior_notify_sd(BEHAVIOR_STOP | BEHAVIOR_SD_READ);
+		playback_notify_eop();
 		return 0; // End of playback	
 	} else
 		return 1; // Still some data ... 			
