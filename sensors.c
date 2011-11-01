@@ -49,7 +49,7 @@ static inline void manage_buttons_event(void) {
 	}
 	if((old_b & 0b10) != vmVariables.buttons_state[1] << 1) {
 		old_b ^= 0b10;
-		SET_EVENT(EVENT_B_RIGHT);
+		SET_EVENT(EVENT_B_LEFT);
 	}
 	if((old_b & 0b100) != vmVariables.buttons_state[2] << 2) {
 		old_b ^= 0b100;
@@ -61,7 +61,7 @@ static inline void manage_buttons_event(void) {
 	}
 	if((old_b & 0b10000) != vmVariables.buttons_state[4] << 4) {
 		old_b ^= 0b10000;
-		SET_EVENT(EVENT_B_LEFT);
+		SET_EVENT(EVENT_B_RIGHT);
 	}	
 }	
 

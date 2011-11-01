@@ -35,10 +35,10 @@ const AsebaVMDescription vmDescription = {
 		
 		{5, "buttons._raw"},
 		{1, "buttons.backward"},
-		{1, "buttons.right"},
+		{1, "buttons.left"},
 		{1, "buttons.center"},
 		{1, "buttons.forward"},
-		{1, "buttons.left"},
+		{1, "buttons.right"},
 			
 		{5, "buttons._mean"},
 		{5, "buttons._noise"},
