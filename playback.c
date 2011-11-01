@@ -154,80 +154,73 @@ static void play_music(const struct music * p, int loop) {
 	sound_playback_enable(playback_buffer);
 }
 
+void play_user_sound(char * name) {
+	if(!name) {
+		sound_playback_disable();
+		return;
+	}
 
+	if(!sd_play_file(name, 0))
+		play_note(A4, 10);
+}
 
-static void _play_sound(int number, int loop) {
-	char name[7] = {'p','0','.','w','a','v', 0};
+static int _play_sound(int number, int loop) {
+	int ret = 0;	
 	
 	switch(number) {
-	case 0 ... 9:
-		name[1] += number;
-		if(!sd_play_file(name,loop)) {
-			if(loop) 
-				play_note(A4,0);
-			else
-				play_note(A4, 10);	
-		}
-		break;
-	case 10 ... 19:
-		name[1] += number - 10;
-		name[0] = 'r';
-		sd_play_file(name,loop);
-		break;
-	case 42:
-		sd_play_file("tujhe.wav",loop);
-		break;
-	case 31415:
-		sd_play_file("koin.wav",loop);
-		break;
 	case SOUND_DISABLE:
 		sound_playback_disable();
 		break;
 	case SOUND_POWERON:
-		if(!sd_play_file("poweron.wav",loop)) {
+		if(!sd_play_file("s0.wav",loop)) {
 			play_music(m_poweron,loop);
 		}
 		break;
 	case SOUND_POWEROFF:
-	//	if(!sd_play_file("poweroff.raw",loop)) {
+		// Poweroff is a special case, we don't want to have it
+		// user configurable as the user could mess with the poweroff
+	//	if(!sd_play_file("s1.raw",loop)) {
 			play_music(m_poweroff,loop);
 	//	}
 		break;
 	case SOUND_BUTTON:
-		if(!sd_play_file("button.wav",loop)) {
+		if(!sd_play_file("s2.wav",loop)) {
 			play_music(m_button,loop);
 		}
 		break;
 	case SOUND_BUTTON_M:
-		if(!sd_play_file("button_m.wav",loop)) {
+		if(!sd_play_file("s3.wav",loop)) {
 			play_music(m_button_m, loop);
 		}
 		break;	
 	case SOUND_FREEFALL:
-		if(!sd_play_file("freefall.wav",loop)) {
+		if(!sd_play_file("s4.wav",loop)) {
 			play_music(m_freefall, loop);
 		}
 		break;
 	case SOUND_TAP:
-		if(!sd_play_file("tap.wav",loop)) {
+		if(!sd_play_file("s5.wav",loop)) {
 			play_music(m_tap,loop);
 		}
 	case SOUND_F_DETECT:
-		if(!sd_play_file("f_detect.wav",loop)) {
+		if(!sd_play_file("s6.wav",loop)) {
 			play_music(m_f_detect, loop);
 		}
 		break;
 	case SOUND_F_OK:
-		if(!sd_play_file("f_ok.wav",loop)) {
+		if(!sd_play_file("s7.wav",loop)) {
 			play_music(m_f_ok, loop);
 		}
 		break;
+	default:
+		ret = -1;
 	}
+	return ret;
 	
 }	
 
-void play_sound(int number) {
-	_play_sound(number, 0);
+int play_sound(int number) {
+	return _play_sound(number, 0);
 }
 
 void play_sound_loop(int number) {

@@ -99,6 +99,7 @@ static const AsebaLocalEventDescription localEvents[] = {
 	{ "button.backward", "Backward button status changed"},
 	{ "button.center", "Center button status changed"},
 	{ "mic", "Fired when microphone intensity is above threshold"},
+	{ "sound.finished", "Fired when the playback of a user initiated sound is finished"},
 	{ "timer0", "Timer 0"},
 	{ "timer1", "Timer 1"},
 	{ NULL, NULL }

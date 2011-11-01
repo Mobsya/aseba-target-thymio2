@@ -25,23 +25,23 @@
 
 #define SOUND_DISABLE	(-1) /* Special case: immediatly stop playback */
 
-#define SOUND_POWERON 	(-2)
-#define SOUND_POWEROFF 	(-3)
-#define SOUND_BUTTON	(-4)
-#define SOUND_FREEFALL 	(-5)
-#define SOUND_TAP	(-6)
-#define SOUND_BUTTON_M	(-7)
-#define SOUND_F_DETECT	(-8)
-#define SOUND_F_OK	(-9)
+#define SOUND_POWERON 	(0)
+#define SOUND_POWEROFF 	(1)
+#define SOUND_BUTTON	(2)
+#define SOUND_BUTTON_M	(3)
+#define SOUND_FREEFALL 	(4)
+#define SOUND_TAP		(5)
+#define SOUND_F_DETECT	(6)
+#define SOUND_F_OK		(7)
 
 
-// Negative: system sound
-// Positive: user sound
-void play_sound(int number);
+int play_sound(int number);
 
 void play_sound_loop(int number);
 
 void play_sound_block(int number);
+
+void play_user_sound(char * name);
 
 // Freq in Hz. from 55 to 3200.
 // time in ~1/10 sec. 0 mean infinite

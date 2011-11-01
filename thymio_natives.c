@@ -51,45 +51,112 @@ void set_led(AsebaVMState *vm) {
 
 AsebaNativeFunctionDescription AsebaNativeDescription_record = {
 	"sound.record",
-	"Start sound recording",
+	"Start recording of rN.wav",
 	{
-		{1,"[0-9]"},
+		{1,"N"},
 		{0,0},
 	}
 };
 
 AsebaNativeFunctionDescription AsebaNativeDescription_play = {
 	"sound.play",
-	"Start sound playback",
+	"Start playback of pN.wav",
 	{
-		{1,"[0-9]"},
+		{1,"N"},
 		{0,0},
 	}
 };
 
+
+AsebaNativeFunctionDescription AsebaNativeDescription_replay = {
+	"sound.replay",
+	"Start playback of rN.wav",
+	{
+		{1,"N"},
+		{0,0},
+	}
+};
+
+AsebaNativeFunctionDescription AsebaNativeDescription_sound_system = {
+	"sound.system",
+	"Start playback of system sound N",
+	{
+		{1,"N"},
+		{0,0},
+	}
+};
+
+
+static void prepare_name(unsigned int n, char * buf) {
+	unsigned int div;
+	unsigned int z = 0;
+	for(div=10000; div > 0; div /= 10) {
+		unsigned int disp = n / div;
+		n %=div;
+		if((disp != 0) || (z) || (div == 1)) {
+			z = 1;
+			*buf++ = '0' + disp;
+		}
+	}
+	
+	*buf++ = '.';
+	*buf++ = 'w';
+	*buf++ = 'a';
+	*buf++ = 'v';
+	*buf++ = 0;
+}
+
 void sound_playback(AsebaVMState *vm) {
+	char name[13] = {'p'};
 	int number = vm->variables[AsebaNativePopArg(vm)];
 	
 	behavior_stop(B_SOUND_BUTTON);
 	
-	play_sound(number);
+	if(number == -1) 
+		play_user_sound(NULL);
+	else {
+		prepare_name(number, &name[1]);
+		play_user_sound(name);
+	}
 }
 
 void sound_record(AsebaVMState *vm) {
+	char name[13] = {'r'};
 	int number = vm->variables[AsebaNativePopArg(vm)];
-	char name[7] = {'r','0','.','w','a','v', 0};
-	if(number < 0) {
+	if(number == -1) {
 		sd_stop_record();
 		return;
 	}
-		
-	if(number > 9)
-		number = 9;
-	name[1] += number;
+	behavior_stop(B_SOUND_BUTTON);
+	
+	prepare_name(number, &name[1]);
+	sd_start_record(name);
+}
+
+void sound_replay(AsebaVMState *vm) {
+	char name[13] = {'r'};
+	int number = vm->variables[AsebaNativePopArg(vm)];
 	
 	behavior_stop(B_SOUND_BUTTON);
 	
-	sd_start_record(name);
+	if(number == -1) 
+		play_user_sound(NULL);
+	else {
+		prepare_name(number, &name[1]);
+		play_user_sound(name);
+	}
+}
+
+void sound_system(AsebaVMState *vm) {
+	char name[13] = {'s'};
+	int number = vm->variables[AsebaNativePopArg(vm)];
+	
+	behavior_stop(B_SOUND_BUTTON);
+	
+	if(play_sound(number)) {
+		prepare_name(number,&name[1]);
+		play_user_sound(name);
+	}
 }
 
 AsebaNativeFunctionDescription AsebaNativeDescription_set_led_circle = {
