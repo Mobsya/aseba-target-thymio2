@@ -56,11 +56,11 @@
 #define MODE_CONFIG_OFF	((1 << IPP) | (1 << IAH))
 #define MODE_CONFIG_ON	(MODE_CONFIG_OFF | (1 << ON))
 
-static int i2c_bus;
-static int i2c_address;
-static mma7660_cb cb;
-static char data[4];
-static unsigned char reg;
+static __attribute((far)) int i2c_bus;
+static __attribute((far)) int i2c_address;
+static __attribute((far)) mma7660_cb cb;
+static __attribute((far)) char data[4];
+static __attribute((far)) unsigned char reg;
 
 static void mma7660_i2c_cb(int i2c_id, bool status) {
 	static int relaunched;
