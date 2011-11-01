@@ -83,6 +83,7 @@ History:
 #define PRIO_RC5 4
 #define PRIO_ACC 3
 #define PRIO_NTC 3
+#define PRIO_1KHZ 3
 // SD PRIO: 2 
 #define PRIO_BEHAVIOR 1
 
@@ -94,10 +95,24 @@ History:
 #define TIMER_RC5 TIMER_3
 #define TIMER_BEHAVIOR TIMER_1
 #define TIMER_SLOW TIMER_4
+#define TIMER_1KHZ TIMER_5
 
+static unsigned int timer[2];
 
-void cb_1khz(void) {
-	disk_timerproc();		
+static void timer_1khz(int timer_id) {
+	int i;
+	
+	disk_timerproc();
+	
+	for(i = 0; i < 2; i++) {
+		if(vmVariables.timers[i]) {
+			if(++timer[i] >= vmVariables.timers[i]) {
+				timer[i] = 0;
+				SET_EVENT(EVENT_TIMER0 + i);
+			}
+		}
+	}
+	
 }
 
 static void acc_cb(int x, int y, int z, int tap) {
@@ -156,6 +171,15 @@ static void timer_slow_callback(int timer) {
 
 
 void update_aseba_variables_write(void) {
+	static unsigned int old_timer[2];
+	int i;
+	
+	for(i = 0; i < 2; i++) {
+		if(vmVariables.timers[i] != old_timer[i]) {
+			old_timer[i] = vmVariables.timers[i];
+			timer[i] = 0;
+		}
+	}
 }	
 
 // This function is used to shutdown everything exept USB
@@ -267,9 +291,6 @@ int main(void)
 	pwm_motor_init();
 	pid_motor_init();
 	
-	// We have to init sd statemachine before analog as analog irq is used for 1khz timer
-	sd_init();
-	
 	// This is the horizontal prox. Vertical one are handled by the ADC
 	// but ADC sync the motor mesurment with the prox, so we don't pullute it with noise ... 
 	prox_init();
@@ -295,6 +316,11 @@ int main(void)
 	rc5_init(TIMER_RC5, rc5_callback, PRIO_RC5);
 	
 	timer_enable(TIMER_SLOW);
+	
+	sd_init();
+	timer_init(TIMER_1KHZ, 1000, 6);
+	timer_enable_interrupt(TIMER_1KHZ, timer_1khz, PRIO_1KHZ);
+	timer_enable(TIMER_1KHZ);
 	
 	vm_present = init_aseba_and_usb();
 

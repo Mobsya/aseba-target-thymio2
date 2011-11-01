@@ -90,6 +90,8 @@ struct _vmVariables {
 	sint16 sound_tresh;
 	sint16 sound_mean;
 	
+	sint16 timers[2];
+	
 	sint16 acc_tap;
 	
 	/*****
@@ -114,6 +116,9 @@ enum Event
 	EVENT_B_BACKWARD,
 	EVENT_B_CENTER,
 	EVENT_MIC,
+	// Must be consecutive
+	EVENT_TIMER0,
+	EVENT_TIMER1,
 	/****
 	---> PUT YOUR EVENT NUMBER HERE <---
 	Must be in the same order as in skel.c

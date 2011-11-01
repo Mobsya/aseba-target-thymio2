@@ -43,7 +43,4 @@ void __attribute__((noreturn)) analog_enter_poweroff_mode(void);
 // Disable the analog sampling
 void analog_disable(void);
 
-// Some callback at 1khz synchronized over the analog timer interrupt
-void cb_1khz(void);
-
 #endif

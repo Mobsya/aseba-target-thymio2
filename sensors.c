@@ -36,8 +36,6 @@
 static int button[5];
 static int count;
 
-static int timer;
-
 static inline void manage_buttons_event(void) {
 	static int old_b;
 	// Periodic button event.
@@ -77,12 +75,6 @@ void new_sensors_value(unsigned int * val, int b) {
 	
 
 	leds_tick_cb();
-
-	/* ~1Khz timer */
-	if(timer++ == 7) {
-		timer = 0;
-		cb_1khz();
-	}
 	
 /* Capacitive button first stage filtering ... */
 	button[b] += val[0];

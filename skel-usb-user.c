@@ -48,10 +48,13 @@ const AsebaVMDescription vmDescription = {
 		{2, "prox.ground.reflected"},
 		{2, "prox.ground.delta"},
 		
-		{2, "motor.target"},
+		{1, "motor.left.target"},
+		{1, "motor.right.target"},
 		{2, "_vbat"},
-		{2, "motor.speed"},
-		{2, "motor.pwm"},
+		{1, "motor.left.speed"},
+		{1, "motor.right.speed"},
+		{1, "motor.left.pwm"},
+		{1, "motor.right.pwm"},
 		
 		{3, "acc"},
 		
@@ -64,6 +67,7 @@ const AsebaVMDescription vmDescription = {
 		{1, "mic.threshold"},
 		{1, "mic._mean"},
 		
+		{2, "timer.period"},
 		
 		{1, "acc._tap"},
 		/******
@@ -95,6 +99,8 @@ static const AsebaLocalEventDescription localEvents[] = {
 	{ "button.backward", "Backward button status changed"},
 	{ "button.center", "Center button status changed"},
 	{ "mic", "Fired when microphone intensity is above threshold"},
+	{ "timer0", "Timer 0"},
+	{ "timer1", "Timer 1"},
 	{ NULL, NULL }
 };
 
