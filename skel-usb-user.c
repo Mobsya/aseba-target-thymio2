@@ -82,7 +82,7 @@ static const AsebaLocalEventDescription localEvents[] = {
 	First value is event "name" (will be used as "onvent name" in asebastudio
 	second value is the event description)
 	*******/
-	{ "button", "Button values updated"},
+	{ "buttons", "Buttons values updated"},
 	{ "motor", "Motor timer"},
 	{ "acc", "Accelerometer values updated"},
 	{ "temperature", "Temperature value updated"},
