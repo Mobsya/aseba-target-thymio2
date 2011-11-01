@@ -32,7 +32,7 @@ char buttons_state[5]; // duplicate with vmVariables.buttons_state, but we don't
 
 
 // last 16 buttons values
-static unsigned int old_b[5][16];
+static __attribute((far)) unsigned int old_b[5][16];
 // Insertion index
 static unsigned char insert[5]; 
 // Maximum value of the 16 
@@ -40,11 +40,11 @@ static unsigned int max[5];
 // Minimum value of the 16
 static unsigned int min[5];
 // sum of the 16
-static unsigned long sum[5];
+static __attribute((far)) unsigned long sum[5];
 // Mean IIR filter. 
-static unsigned  long sum_filtered[5];
+static __attribute((far)) unsigned  long sum_filtered[5];
 // IIR filter for the "noise".
-static unsigned long noise[5];
+static __attribute((far)) unsigned long noise[5];
 
 // Some statemachine variables
 static unsigned char inhibit[5];
