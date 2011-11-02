@@ -103,27 +103,26 @@ struct _vmVariables {
 
 enum Event
 {
-	EVENT_BUTTONS = 0,
-	EVENT_MOTOR,
-	EVENT_ACC,
-	EVENT_TEMPERATURE,
-	EVENT_RC5,
-	EVENT_PROX,
-	EVENT_TAP,
-	EVENT_B_LEFT,
+	EVENT_B_LEFT = 0,
 	EVENT_B_RIGHT,
 	EVENT_B_FORWARD,
 	EVENT_B_BACKWARD,
 	EVENT_B_CENTER,
+	EVENT_BUTTONS,
+	EVENT_PROX,
+	EVENT_TAP,
+	EVENT_ACC,
 	EVENT_MIC,
 	EVENT_SOUND_FINISHED,
+	EVENT_TEMPERATURE,
+	EVENT_RC5,
+	EVENT_MOTOR,
 	// Must be consecutive
 	EVENT_TIMER0,
 	EVENT_TIMER1,
-	/****
-	---> PUT YOUR EVENT NUMBER HERE <---
-	Must be in the same order as in skel.c
-	*****/
+	// We have now 16 events.
+	// this is the maximum. if you want to increase it
+	// you have to change skel-usb.c 
 	EVENT_COUNT // Do not touch
 };
 
