@@ -34,11 +34,11 @@ const AsebaVMDescription vmDescription = {
 		{1, "_productId"}, // Robot type
 		
 		{5, "buttons._raw"},
-		{1, "buttons.backward"},
-		{1, "buttons.left"},
-		{1, "buttons.center"},
-		{1, "buttons.forward"},
-		{1, "buttons.right"},
+		{1, "button.backward"},
+		{1, "button.left"},
+		{1, "button.center"},
+		{1, "button.forward"},
+		{1, "button.right"},
 			
 		{5, "buttons._mean"},
 		{5, "buttons._noise"},
