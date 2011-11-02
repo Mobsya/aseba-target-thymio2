@@ -86,11 +86,11 @@ static const AsebaLocalEventDescription localEvents[] = {
 	First value is event "name" (will be used as "onvent name" in asebastudio
 	second value is the event description)
 	*******/
-	{ "button.left", "Left button status changed"},
-	{ "button.right", "Right button status changed"},
-	{ "button.forward", "Forward button status changed"},
 	{ "button.backward", "Backward button status changed"},
+	{ "button.left", "Left button status changed"},
 	{ "button.center", "Center button status changed"},
+	{ "button.forward", "Forward button status changed"},
+	{ "button.right", "Right button status changed"},	
 	{ "buttons", "Buttons values updated"},
 	{ "prox", "Proximity values updated"},
 	{ "tap", "A tap is detected"},
