@@ -165,6 +165,7 @@ static void init_vm_mode(void) {
 	behavior_start(B_LEDS_MIC);
 	behavior_start(B_LEDS_PROX);
 	behavior_start(B_SOUND_BUTTON);
+	behavior_start(B_LEDS_MIC);
 }
 
 static void init_mode(enum mode m) {

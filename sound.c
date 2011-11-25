@@ -154,6 +154,9 @@ void static compute_stats(unsigned char * buf) {
 	
 	vmVariables.sound_level = max - min;
 	vmVariables.sound_mean = max + min;
+
+	behavior_sound_mic(vmVariables.sound_level);
+
 	if(vmVariables.sound_tresh && vmVariables.sound_level > vmVariables.sound_tresh)
 		SET_EVENT(EVENT_MIC);
 }	

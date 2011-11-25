@@ -426,6 +426,29 @@ void behavior_stop(int b) {
 	}
 }
 
+static unsigned char sound_led = 0;
+void behavior_sound_mic(unsigned char level) {
+	unsigned char pl = sound_led;
+	unsigned char nl = level >> 3;
+
+	if(!ENABLED(B_LEDS_MIC))
+		return;
+
+	if(vmVariables.sound_tresh) {
+		if(level > vmVariables.sound_tresh && nl > sound_led)
+			sound_led = nl;
+		else {
+			if(sound_led)
+				sound_led-- ;
+		}
+			
+	} else
+		sound_led = 0;
+	
+	if(pl != sound_led) 
+		leds_set(LED_SOUND, sound_led);
+}
+
 // Some helper for the SD card, special case because 
 // of no real & proper way to do a refcounting in the SD code
 void behavior_notify_sd(unsigned int rw) {

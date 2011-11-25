@@ -33,6 +33,8 @@ void behavior_init(int timer, int prio);
 #define BEHAVIOR_STOP 0x0000
 void behavior_notify_sd(unsigned int rw);
 
+void behavior_sound_mic(unsigned char level);
+
 void behavior_start(int b);
 void behavior_stop(int b);
 int behavior_enabled(int b);
