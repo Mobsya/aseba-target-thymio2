@@ -131,6 +131,8 @@ static void exit_mode(enum mode m) {
 		case MODE_ACC:
 			behavior_stop(B_LEDS_ACC);
 			behavior_stop(B_LEDS_PROX);
+			vmVariables.target[0] = 0;
+			vmVariables.target[1] = 0;
 			// TODO: Stop playing sound
 			// we don't need as the button to switch the mode 
 			// has been pressed, so generated a sound.
@@ -306,7 +308,7 @@ static void tick_follow(void) {
 static void tick_explorer(void) {
 	static unsigned char led_state;
 	static char led_pulse;
-	static  int speed = 200;
+	static  int speed = 150;
 	
 	unsigned char l[8] = {0,0,0,0,0,0,0,0};
 	unsigned char fixed;
@@ -384,19 +386,19 @@ static void tick_explorer(void) {
 }
 
 static void tick_acc(void) {
-	
+#define ACC_OBSTACLE 1000
 #define ACC_FREE_FALL 14
 	static unsigned int acc = 32;
 	static char led_pulse;
 	static int counter;
+	int play = 0;
 	acc = acc + acc + acc + abs(vmVariables.acc[0]) + abs(vmVariables.acc[1]) + abs(vmVariables.acc[2]);
 	acc >>= 2;
-	when(acc < ACC_FREE_FALL) {
-		play_sound_loop(SOUND_FREEFALL);
+	if(acc < ACC_FREE_FALL) {
+		play = 1;
 	}
 	when(acc > ACC_FREE_FALL) {	
-		play_sound_loop(SOUND_DISABLE);
-		set_body_rgb(15,0,0);
+		leds_set_top(15,0,0);
 	}
 	
 	if(acc < ACC_FREE_FALL) {
@@ -405,9 +407,9 @@ static void tick_acc(void) {
 			if (counter == 10)
 				counter = 0;
 			
-			set_body_rgb(32,0,0);
+			leds_set_top(32,0,0);
 		} else {
-			set_body_rgb(0,0,0);
+			leds_set_top(0,0,0);
 		}
 	} else {
 		led_pulse = led_pulse + 1;
@@ -416,12 +418,65 @@ static void tick_acc(void) {
 			if(led_pulse > 40)
 				led_pulse = -64;
 		} else 
-			set_body_rgb(-led_pulse / 2,0, 0);
+			leds_set_top(-led_pulse / 2,0, 0);
 	}	
 	
 	if(vmVariables.acc_tap) {
 		vmVariables.acc_tap = 0;
 		play_sound(SOUND_TAP);
+	}
+	
+	// Moving part.
+	if(vmVariables.prox[1] > ACC_OBSTACLE && vmVariables.prox[2] > ACC_OBSTACLE && vmVariables.prox[3] > ACC_OBSTACLE &&
+			(vmVariables.prox[5] > ACC_OBSTACLE || vmVariables.prox[6] > ACC_OBSTACLE) && 
+			(vmVariables.ground_delta[0] > 130 && vmVariables.ground_delta[1] > 130)) {
+		vmVariables.target[0] = 0;
+		vmVariables.target[1] = 0;
+		play = 1;
+	} else if(vmVariables.prox[0] > ACC_OBSTACLE || vmVariables.prox[1] > ACC_OBSTACLE
+				|| vmVariables.prox[2] > ACC_OBSTACLE || vmVariables.prox[3] > ACC_OBSTACLE
+				|| vmVariables.prox[4] > ACC_OBSTACLE) {
+		int temp = vmVariables.prox[0]/5 + vmVariables.prox[1]/4 + vmVariables.prox[2]/4;
+		temp += vmVariables.prox[3]/4 + vmVariables.prox[4]/5;
+		
+		int temp2 = vmVariables.prox[0]/6 + vmVariables.prox[1]/5;
+		temp2 -= vmVariables.prox[3]/5 + vmVariables.prox[4]/6;
+		
+		vmVariables.target[0] = -(temp + temp2);
+		vmVariables.target[1] = temp2 - temp;
+	} else if(vmVariables.prox[5] > ACC_OBSTACLE || vmVariables.prox[6] > ACC_OBSTACLE) {
+		vmVariables.target[0] = vmVariables.prox[5]/4;
+		vmVariables.target[1] = vmVariables.prox[6]/4;
+	} else {
+		vmVariables.target[0] = 0;
+		vmVariables.target[1] = 0;
+	}
+	
+	if(vmVariables.ground_delta[0] < 130 || vmVariables.ground_delta[1] < 130) {
+		vmVariables.target[0] = 0;
+		vmVariables.target[1] = 0;
+		leds_set_br(32,0,0);
+		leds_set_bl(32,0,0);
+	} else {
+		leds_set_br(0,0,0);
+		leds_set_bl(0,0,0);
+	}
+	
+	
+	if(vmVariables.target[0] < -600) 
+		vmVariables.target[0] = -600;
+	if(vmVariables.target[1] < -600)
+		vmVariables.target[1]= -600;
+	if(vmVariables.target[0] > 600)
+		vmVariables.target[0] = 600;
+	if(vmVariables.target[1] > 600)
+		vmVariables.target[1] = 600;
+		
+	when(play) {
+		play_sound_loop(SOUND_FREEFALL);
+	}
+	when(!play) {
+		play_sound(SOUND_DISABLE);
 	}
 }
 static void tick_draw(void) {
