@@ -45,34 +45,34 @@ struct music {
 
 static const struct music m_poweron[] = 
 	{
-	{3400,12},
-	{4400,6},
-	{5100,6},
-	{6400,6},
-	{7800,6},
+	{3400,13},
+	{4400,7},
+	{5100,7},
+	{6400,7},
+	{7800,7},
 	{0,0}
 	};
 static const struct music m_poweroff[] = 
 	{
-	{7800,12},
-	{6400,6},
-	{5100,6},
-	{4400,6},
-	{3400,6},
+	{7800,13},
+	{6400,7},
+	{5100,7},
+	{4400,7},
+	{3400,7},
 	{0,0}
 	};
 
 static const struct music m_button[] =
 	{
-		{1100,6},
-		{2200,6},
+		{1100,7},
+		{2200,7},
 		{0,0},
 	};
 static const struct music m_button_m[] = 
 	{
-		{3300,6},
-		{4400,12},
-		{6600,6},
+		{3300,7},
+		{4400,13},
+		{6600,7},
 		{0,0},
 	};
 	
@@ -106,16 +106,16 @@ static const struct music m_tap[] =
 
 static const struct music m_f_detect [] =
 	{
-		{4400,6},
-		{5500,6},
+		{4400,7},
+		{5500,7},
 		{0,0}
 	};
 
 static const struct music m_f_ok[] = 
 	{
-		{4400,6},
-		{5500,6},
-		{6600,6},
+		{4400,7},
+		{5500,7},
+		{6600,7},
 		{0,0}
 	};
 
@@ -131,8 +131,8 @@ void playback_notify_eop(void) {
 
 static int playback_buffer(unsigned char * b) {
 	
-	if(time >= 0)
-		if(time-- == 0) {
+	if(time > 0)
+		if(--time == 0) {
 			if(m) {
 				m++;
 				if(m->duration) {
