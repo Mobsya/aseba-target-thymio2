@@ -230,6 +230,7 @@ static int _play_sound(int number, int loop) {
 		if(!sd_play_file("s5.wav",loop)) {
 			play_music(m_tap,loop);
 		}
+		break;
 	case SOUND_F_DETECT:
 		if(!sd_play_file("s6.wav",loop)) {
 			play_music(m_f_detect, loop);
