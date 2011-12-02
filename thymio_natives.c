@@ -409,15 +409,12 @@ AsebaNativeFunctionDescription AsebaNativeDescription_play_freq = {
 void play_freq(AsebaVMState * vm) {
 	int freq = vm->variables[AsebaNativePopArg(vm)];
 	int time = vm->variables[AsebaNativePopArg(vm)];
-	int flags;
 	
-	// In order to not race wrt behavior producing sound
-	// I need to rise my IPL to behavior IPL
-	RAISE_IPL(flags, 1);
+	behavior_stop(B_SOUND_BUTTON);
 	
+	playback_enable_event();
+
 	play_frequency(freq, time);
-	
-	IRQ_ENABLE(flags);
 }
 
 AsebaNativeFunctionDescription AsebaNativeDescription_set_wave = {
