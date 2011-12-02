@@ -77,6 +77,8 @@ void pid_motor_tick(int *u) {
 		
 		prev[i] += output[i];
 		prev[i] /= 2;	
+		
+		vmVariables.pwm[i] = prev[i];
 	}
 	
 	pwm_motor_left(prev[0]);
