@@ -175,7 +175,7 @@ _019200704eaeb59f           0x11be                   0             0x2  (2)
 _019203104eaeb59f           0x11c0                   0             0x6  (6)
 .nbss                       0x11c6                   0           0x8d0  (2256)
 .ndata                      0x1a96                   0           0x10e  (270)
-_0192f0e04ecfa763           0x1ba4                   0            0xb4  (180)
+_0192f0e04ed91987           0x1ba4                   0            0xb4  (180)
 .nbss                       0x1c58                   0           0x138  (312)
 .nbss                       0x1d90                   0            0x60  (96)
 .ndata                      0x1df0                   0            0x52  (82)
@@ -3033,9 +3033,9 @@ _018d03104eaeb59f
                     0x1a96                  vmState
                     0x1acc                  events_flags
 
-_0192f0e04ecfa763
+_0192f0e04ed91987
                     0x1ba4         0xb4
- _0192f0e04ecfa763
+ _0192f0e04ed91987
                     0x1ba4         0xb4 skel-usb.o
                     0x1ba4                  settings
 
