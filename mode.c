@@ -40,18 +40,7 @@
 						p = c; \
 						r;}))
 
-enum mode {
-	MODE_MENU = 0, // It's also the entry point for the user mode
-	MODE_FOLLOW,
-	MODE_EXPLORER,
-	MODE_ACC,
-	MODE_DRAW,
-	MODE_MUSIC,
-	MODE_LINE,
-	MODE_RC5,
-	MODE_SIDE,
-	MODE_MAX = MODE_SIDE,
-};
+
 
 static enum mode current_mode;
 static unsigned int vm_active;
@@ -84,7 +73,7 @@ static void set_mode_color(enum mode m) {
 		case MODE_DRAW:
 			leds_set_top(32,32,32);	
 			break;
-		case MODE_MUSIC:
+		case MODE_SOUND:
 			leds_set_top(0,0,32);
 			break;
 		case MODE_LINE:
@@ -141,7 +130,7 @@ static void exit_mode(enum mode m) {
 		case MODE_DRAW:
 			behavior_stop(B_LEDS_PROX);
 			break;
-		case MODE_MUSIC:
+		case MODE_SOUND:
 			behavior_stop(B_LEDS_PROX);
 			break;
 		case MODE_LINE:
@@ -192,7 +181,7 @@ static void init_mode(enum mode m) {
 		case MODE_DRAW:
 			behavior_start(B_LEDS_PROX);
 			break;
-		case MODE_MUSIC:
+		case MODE_SOUND:
 			behavior_start(B_LEDS_PROX);
 			break;
 		case MODE_LINE:
@@ -482,7 +471,7 @@ static void tick_acc(void) {
 static void tick_draw(void) {
 	
 }
-static void tick_music(void) {
+static void tick_sound(void) {
 	
 }
 
@@ -663,7 +652,7 @@ static void tick_side(void) {
 
 static int mode_enabled(int temp) {
 	if(	temp == MODE_DRAW || 
-		temp == MODE_MUSIC ||
+		temp == MODE_SOUND ||
 		temp == MODE_SIDE)
 			return 0;
 			
@@ -753,8 +742,8 @@ void mode_tick(void) {
 		case MODE_DRAW:
 			tick_draw();
 			break;
-		case MODE_MUSIC:
-			tick_music();
+		case MODE_SOUND:
+			tick_sound();
 			break;
 		case MODE_LINE:
 			tick_line();
@@ -786,4 +775,10 @@ void mode_init(int vm_enabled) {
 
 }
 
+int mode_get(void) {
+	if(behavior_enabled(B_MODE))
+		return current_mode;
+	else
+		return -1;
+}
 

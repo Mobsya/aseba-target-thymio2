@@ -29,6 +29,7 @@
 #include "analog.h"
 #include "regulator.h"
 #include "ground_ir.h"
+#include "log.h"
 
 // Time for the adc to stabilize: 300ns
 // pic clock 16Mhz, so we need 4.8 cycles.
@@ -301,6 +302,8 @@ void __attribute__((noreturn)) analog_enter_poweroff_mode(void) {
 		// We got a wakeup from the watchdog ! 
 		RCONbits.SWDTEN = 0;
 		
+		log_poweroff_tick();
+		
 		if(check_usb) {
 			// Enable USB module
 			_USB1MD = 0;
@@ -345,6 +348,7 @@ void __attribute__((noreturn)) analog_enter_poweroff_mode(void) {
 			pressed = 0;
 			
 		if(pressed == 3) {
+			log_prepare_reset();
 			asm volatile("reset");
 		}
 		
@@ -364,8 +368,10 @@ void __attribute__((noreturn)) analog_enter_poweroff_mode(void) {
 			_DOZEN = 0;
 			if(U1OTGSTATbits.SESVD) {
 				// 5V present, wakeup if was not present before ! 
-				if(!was_connected)
+				if(!was_connected) {
+					log_prepare_reset();
 					asm volatile("reset");
+				}
 			} else {
 				// if usb unplug, reinit the button treshold as it will trigger spurious button activity
 				if(was_connected) 

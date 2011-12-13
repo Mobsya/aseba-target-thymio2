@@ -25,6 +25,23 @@
 
 void mode_init(int vm_enabled);
 
+enum mode {
+	MODE_MENU = 0, // It's also the entry point for the user mode
+	MODE_FOLLOW,
+	MODE_EXPLORER,
+	MODE_ACC,
+	MODE_DRAW,
+	MODE_SOUND,
+	MODE_LINE,
+	MODE_RC5,
+	MODE_SIDE,
+	MODE_MAX = MODE_SIDE,
+};
+
+// Return the current mode.
+// -1 mean we are in VM mode
+int mode_get(void);
+
 // Mode is in fact a behavior, but a special one 
 // Which manage other behavior. So it has it's own tick 
 void mode_tick(void);

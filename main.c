@@ -66,6 +66,7 @@ History:
 #include "behavior.h"
 #include "mode.h"
 #include "test.h"
+#include "log.h"
 
 #include <skel-usb.h>
 
@@ -103,6 +104,9 @@ static void timer_1khz(int timer_id) {
 	int i;
 	
 	disk_timerproc();
+	
+	log_poweron_tick();
+
 	
 	for(i = 0; i < 2; i++) {
 		if(vmVariables.timers[i]) {
@@ -300,6 +304,10 @@ int main(void)
 	
 	
 	analog_init(TIMER_ANALOG, PRIO_SENSORS);
+
+
+	log_init(); // We will need to read vbat to be sure we can flash.
+
 	
 	// Warning: We cannot use the SD before the analog init as some pin are on the analog port.
 
