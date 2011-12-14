@@ -3,11 +3,12 @@
 #include <stddef.h>
 #include <skel-usb.h>
 #include <flash/flash.h>
+#include <vm/vm.h>
+#include <common/consts.h>
 #include "log.h"
 #include "crc.h"
 #include "mode.h"
 #include "usb_uart.h"
-
 
 // Run-time part
 
@@ -47,6 +48,7 @@ struct _ud {
 #define FLAG_ACCUSED		(14)
 #define FLAG_BUTTONUSED		(15)
 #define FLAG_SOUNDTRESH		(16)
+#define FLAG_RC5USED		(17)
 	unsigned char flags[3];
 	
 	
@@ -116,6 +118,150 @@ static int mem_valid(void) {
 	else
 		return 1;
 }
+#define A(c_name) (offsetof(struct _vmVariables, c_name)/sizeof(sint16))
+
+static void check_store(unsigned int i) {
+	switch(i) {
+	case A(target[0]):
+	case A(target[1]):
+		set_flag(FLAG_MOTORUSED);
+		break;
+		
+	case A(sound_tresh):
+		set_flag(FLAG_SOUNDTRESH);
+		break;
+	}
+}
+
+static void check_load(unsigned int i) {
+	switch(i) {
+	case A(buttons_state[0]) ... A(buttons_state[4]):
+		set_flag(FLAG_BUTTONUSED);
+		break;
+		
+	case A(prox[0]) ... A(prox[6]):
+	case A(ground_ambiant[0]) ... A(ground_ambiant[1]):
+	case A(ground_reflected[0]) ... A(ground_reflected[1]):
+	case A(ground_delta[0]) ... A(ground_delta[1]):
+		set_flag(FLAG_IRUSED);
+		break;
+		
+	case A(acc[0]) ... A(acc[2]):
+		set_flag(FLAG_ACCUSED);
+		break;
+		
+	case A(ntc):
+		set_flag(FLAG_NTCUSED);
+		break;
+		
+	case A(rc5_address):
+	case A(rc5_command):
+		set_flag(FLAG_RC5USED);
+		break;
+		
+	case A(sound_level):
+		set_flag(FLAG_SOUNDTRESH);
+		break;
+	}
+}
+#undef A
+
+void AsebaVMRunCB(AsebaVMState *vm) {
+	unsigned int i;
+	unsigned int max_start = 0;
+
+	// Event scanning
+	if(vm->bytecode[0] > vm->bytecodeSize)
+		return; //Invalid bytecode.
+		
+	for(i = 0; i < vm->bytecode[0]; i+=2) {
+		switch(vm->bytecode[i]) {
+		case EVENT_B_BACKWARD:
+		case EVENT_B_LEFT:
+		case EVENT_B_CENTER:
+		case EVENT_B_FORWARD:
+		case EVENT_B_RIGHT:
+		case EVENT_BUTTONS:
+			set_flag(FLAG_BUTTONUSED);
+			break;
+		case EVENT_PROX:
+			set_flag(FLAG_IRUSED);
+			break;
+		case EVENT_TAP:
+		case EVENT_ACC:
+			set_flag(FLAG_ACCUSED);
+			break;
+		case EVENT_MIC:
+			set_flag(FLAG_SOUNDTRESH);
+			break;
+		case EVENT_RC5:
+			set_flag(FLAG_RC5USED);
+			break;
+		case EVENT_MOTOR:
+			set_flag(FLAG_MOTORUSED);
+			break;
+		}
+		
+		if(vm->bytecode[i+1] > max_start)
+			max_start = vm->bytecode[i+1];
+	}
+	
+	
+	// Now, the fun part: parse the bytecode... 
+	while(i < vm->bytecodeSize) {
+		switch(vm->bytecode[i] >> 12) {
+			case ASEBA_BYTECODE_STOP:
+				if(i > max_start)
+				// We are at the end of the bytecode.
+					return;
+				i++;
+				break;
+			case ASEBA_BYTECODE_CONDITIONAL_BRANCH:
+			case ASEBA_BYTECODE_LARGE_IMMEDIATE:
+				i+=2;
+				break;
+			case ASEBA_BYTECODE_LOAD:
+				check_load(vm->bytecode[i] & 0xFFF);
+				i++;
+				break;
+			case ASEBA_BYTECODE_STORE:
+				check_store(vm->bytecode[i] & 0xFFF);
+				i++;
+				break;
+			case ASEBA_BYTECODE_LOAD_INDIRECT:
+				// We give only the base address of the array.
+				check_load(vm->bytecode[i] & 0xFFF);
+				i+=2;
+				break;
+			case ASEBA_BYTECODE_STORE_INDIRECT:
+				// We give only the base address of the array.
+				check_store(vm->bytecode[i] & 0xFFF);
+				i+=2;
+				break;
+			case ASEBA_BYTECODE_JUMP:
+			{
+				unsigned int t = i + ((int)(vm->bytecode[i] << 4) >> 4);
+				if(t > max_start)
+					max_start = t;
+				i++;
+			}
+				break;
+			case ASEBA_BYTECODE_EMIT:
+				check_load(vm->bytecode[i+1]);
+				i+=3;
+				break;
+			case ASEBA_BYTECODE_SUB_CALL:
+				if((vm->bytecode[i] & 0xFFF) > max_start)
+					max_start = vm->bytecode[i] & 0xFFF;
+				i++;
+				break;
+			default:
+				i++;
+				break;	
+		}
+	}
+}
+
 
 // Flash write/read part
 
