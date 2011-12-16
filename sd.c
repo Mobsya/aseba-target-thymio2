@@ -30,6 +30,7 @@
 #include "wav.h"
 #include "abo.h"
 #include "playback.h"
+#include "log.h"
 
 static FATFS fs; // SD fat 
 static FIL read_file; // Read handle
@@ -117,6 +118,9 @@ int sd_play_file(const char * file, int loop) {
 		
 		sound_playback_enable(sd_play_cb);
 		behavior_notify_sd(BEHAVIOR_START | BEHAVIOR_SD_READ);
+		
+		log_set_flag(LOG_FLAG_PLAYBACKSD);
+		
 		ret = 1;
 	} else {
 		behavior_notify_sd(BEHAVIOR_STOP | BEHAVIOR_SD_READ);
@@ -160,13 +164,13 @@ void sound_mic_buffer(unsigned char *b) {
 void sd_start_record(const char * file) {
 	unsigned int flags;
 	RAISE_IPL(flags, SD_PRIO);
-	
 	// Make sure the file is closed
 	close_write_file();
 	
 	if(!f_open(&write_file, file, FA_WRITE | FA_CREATE_ALWAYS)) {
 		sample_count = 0;
-		if(!wav_create_header(&write_file)) {			
+		if(!wav_create_header(&write_file)) {	
+			log_set_flag(LOG_FLAG_RECORDSD);		
 			behavior_notify_sd(BEHAVIOR_START | BEHAVIOR_SD_WRITE);
 			record = 1;
 		} else 
@@ -180,6 +184,19 @@ void sd_stop_record(void) {
 	RAISE_IPL(flags, SD_PRIO);
 	
 	close_write_file();
+	
+	IRQ_ENABLE(flags);
+}
+
+void sd_log_file(void) {
+	unsigned int flags;
+	
+	RAISE_IPL(flags,SD_PRIO);
+	
+	if(f_open(&write_file, "_LOGDUMP.#@!", FA_WRITE | FA_OPEN_EXISTING) == FR_OK){
+		log_dump(&write_file);
+		f_close(&write_file);
+	}
 	
 	IRQ_ENABLE(flags);
 }

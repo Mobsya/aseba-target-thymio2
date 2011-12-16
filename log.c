@@ -9,6 +9,7 @@
 #include "crc.h"
 #include "mode.h"
 #include "usb_uart.h"
+#include "sd/ff.h"
 
 // Run-time part
 
@@ -31,24 +32,7 @@ struct _ud {
 	unsigned char mode_m[MODE_MAX+2];
 	unsigned char poweroff_d;
 
-#define FLAG_INTERNAL		(0) // always not set
-#define FLAG_BATTERY 		(1)
-#define FLAG_ASEBABUG 		(2)
-#define FLAG_VMCODESD		(3)
-#define FLAG_PLAYBACKSD		(4)
-#define FLAG_FLASHVMCODE	(5)
-#define FLAG_RECORDSD		(6)
-#define FLAG_MOTORUSED		(7)
-#define FLAG_IRUSED			(8)
-#define FLAG_NTCUSED		(9)
-#define FLAG_SOUND			(10)
-#define FLAG_LEDIR			(11)
-#define FLAG_LEDRGB			(12)
-#define FLAG_LEDCIRCLE		(13)
-#define FLAG_ACCUSED		(14)
-#define FLAG_BUTTONUSED		(15)
-#define FLAG_SOUNDTRESH		(16)
-#define FLAG_RC5USED		(17)
+
 	unsigned char flags[3];
 	
 	
@@ -60,7 +44,7 @@ struct _ud {
 // This address is not used by the bootloader.
 static struct _ud __attribute((address(0x4800-sizeof(struct _ud)), noload)) ud;
 
-static void set_flag(unsigned char f) {
+void log_set_flag(unsigned char f) {
 	unsigned int p = f / 8;
 	_set_bit(ud.flags[p], 1 << (f - 8*p));
 }
@@ -101,6 +85,10 @@ static void _tick(void) {
 	}	
 }
 
+void AsebaVMErrorCB(AsebaVMState *vm, const char * msg) {
+	log_set_flag(LOG_FLAG_ASEBABUG);
+}
+
 void log_poweron_tick(void) {
 	static unsigned int poweron_tick;
 	poweron_tick++;
@@ -118,17 +106,18 @@ static int mem_valid(void) {
 	else
 		return 1;
 }
+
 #define A(c_name) (offsetof(struct _vmVariables, c_name)/sizeof(sint16))
 
 static void check_store(unsigned int i) {
 	switch(i) {
 	case A(target[0]):
 	case A(target[1]):
-		set_flag(FLAG_MOTORUSED);
+		log_set_flag(LOG_FLAG_MOTORUSED);
 		break;
 		
 	case A(sound_tresh):
-		set_flag(FLAG_SOUNDTRESH);
+		log_set_flag(LOG_FLAG_SOUNDTRESH);
 		break;
 	}
 }
@@ -136,39 +125,87 @@ static void check_store(unsigned int i) {
 static void check_load(unsigned int i) {
 	switch(i) {
 	case A(buttons_state[0]) ... A(buttons_state[4]):
-		set_flag(FLAG_BUTTONUSED);
+		log_set_flag(LOG_FLAG_BUTTONUSED);
 		break;
 		
 	case A(prox[0]) ... A(prox[6]):
 	case A(ground_ambiant[0]) ... A(ground_ambiant[1]):
 	case A(ground_reflected[0]) ... A(ground_reflected[1]):
 	case A(ground_delta[0]) ... A(ground_delta[1]):
-		set_flag(FLAG_IRUSED);
+		log_set_flag(LOG_FLAG_IRUSED);
 		break;
 		
 	case A(acc[0]) ... A(acc[2]):
-		set_flag(FLAG_ACCUSED);
+		log_set_flag(LOG_FLAG_ACCUSED);
 		break;
 		
 	case A(ntc):
-		set_flag(FLAG_NTCUSED);
+		log_set_flag(LOG_FLAG_NTCUSED);
 		break;
 		
 	case A(rc5_address):
 	case A(rc5_command):
-		set_flag(FLAG_RC5USED);
+		log_set_flag(LOG_FLAG_RC5USED);
 		break;
 		
 	case A(sound_level):
-		set_flag(FLAG_SOUNDTRESH);
+		log_set_flag(LOG_FLAG_SOUNDTRESH);
 		break;
 	}
 }
 #undef A
+#define FUNC_OFFSET (19+4)
+static void check_native(unsigned int i) {
+	switch(i) {
+	case FUNC_OFFSET + 2:
+		// Play
+	case FUNC_OFFSET + 3:
+		// replay
+	case FUNC_OFFSET + 4:
+		// Play system
+	case FUNC_OFFSET + 9:
+		// play freq
+		log_set_flag(LOG_FLAG_SOUND);
+		break;
+	case FUNC_OFFSET + 5:
+		// led circle
+		log_set_flag(LOG_FLAG_LEDCIRCLE);
+		break;
+	case FUNC_OFFSET + 6:
+		// led rgb top
+	case FUNC_OFFSET + 7:
+		// led rgb bl
+	case FUNC_OFFSET + 8:
+		// led rgb br
+		log_set_flag(LOG_FLAG_LEDRGB);
+		break;
+	case FUNC_OFFSET + 10:
+		// Led buttons
+		log_set_flag(LOG_FLAG_LEDBUTTON);
+		break;
+	case FUNC_OFFSET + 11:
+		// hprox led
+	case FUNC_OFFSET + 12:
+		// vprox led
+		log_set_flag(LOG_FLAG_LEDIR);
+		break;
+	case FUNC_OFFSET + 13:
+		// rc led
+	case FUNC_OFFSET + 14:
+		// sound led
+	case FUNC_OFFSET + 15:
+		// ntc led
+		log_set_flag(LOG_FLAG_LEDOTHER);
+		break;
+	}
+	
+}
 
 void AsebaVMRunCB(AsebaVMState *vm) {
 	unsigned int i;
 	unsigned int max_start = 0;
+	
+	incs_u8(ud.reprogram_c);
 
 	// Event scanning
 	if(vm->bytecode[0] > vm->bytecodeSize)
@@ -182,23 +219,23 @@ void AsebaVMRunCB(AsebaVMState *vm) {
 		case EVENT_B_FORWARD:
 		case EVENT_B_RIGHT:
 		case EVENT_BUTTONS:
-			set_flag(FLAG_BUTTONUSED);
+			log_set_flag(LOG_FLAG_BUTTONUSED);
 			break;
 		case EVENT_PROX:
-			set_flag(FLAG_IRUSED);
+			log_set_flag(LOG_FLAG_IRUSED);
 			break;
 		case EVENT_TAP:
 		case EVENT_ACC:
-			set_flag(FLAG_ACCUSED);
+			log_set_flag(LOG_FLAG_ACCUSED);
 			break;
 		case EVENT_MIC:
-			set_flag(FLAG_SOUNDTRESH);
+			log_set_flag(LOG_FLAG_SOUNDTRESH);
 			break;
 		case EVENT_RC5:
-			set_flag(FLAG_RC5USED);
+			log_set_flag(LOG_FLAG_RC5USED);
 			break;
 		case EVENT_MOTOR:
-			set_flag(FLAG_MOTORUSED);
+			log_set_flag(LOG_FLAG_MOTORUSED);
 			break;
 		}
 		
@@ -253,6 +290,10 @@ void AsebaVMRunCB(AsebaVMState *vm) {
 			case ASEBA_BYTECODE_SUB_CALL:
 				if((vm->bytecode[i] & 0xFFF) > max_start)
 					max_start = vm->bytecode[i] & 0xFFF;
+				i++;
+				break;
+			case ASEBA_BYTECODE_NATIVE_CALL:
+				check_native(vm->bytecode[i] &0xFFF);
 				i++;
 				break;
 			default:
@@ -392,7 +433,7 @@ static unsigned long _get_next_free(unsigned long addr) {
 			i < addr + INSTRUCTIONS_PER_PAGE * 2; i += RECORD_FLASH_SIZE) {
 		struct _record r;
 		flash_read_chunk(i, RECORD_SIZE, (unsigned char *) &r);
-		if(r.flags[0] & FLAG_INTERNAL)
+		if(r.flags[0] & LOG_FLAG_INTERNAL)
 			return i;
 	}
 	
@@ -492,7 +533,7 @@ void log_init(void) {
  		memset(&ud,0,sizeof(ud));
  		
  	if(_BOR) {
-		set_flag(FLAG_BATTERY);
+		log_set_flag(LOG_FLAG_BATTERY);
 	 	_BOR = 0;
 	 }
 	 
@@ -504,5 +545,25 @@ void log_init(void) {
 	 }
 	 
 	 incs_u8(ud.poweron_c);
+}
+
+void log_dump(void * _f) {
+	FIL * f = (FIL *) _f;
+	unsigned long i;
+	unsigned long data;
+	unsigned int written;
+	// Put ourself at the end of the file
+	f_lseek(f, f_size(f));
+	
+	for(i = PAGE_0; i < PAGE_1 + INSTRUCTIONS_PER_PAGE*2; i+=2) {
+		data = flash_read_instr(i);
+		f_write(f, &data, 3, &written);
+		if(written != 3)
+			// Full !
+			return;
+	}
+	
+	flash_erase_page(PAGE_0);
+	flash_erase_page(PAGE_1);
 }
 

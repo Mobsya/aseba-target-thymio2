@@ -109,6 +109,7 @@ static const AsebaLocalEventDescription localEvents[] = {
 extern AsebaNativeFunctionDescription AsebaNativeDescription_poweroff;
 void power_off(AsebaVMState *vm);
 
+
 static const AsebaNativeFunctionDescription* nativeFunctionsDescription[] = {
 	&AsebaNativeDescription__system_reboot,
 	&AsebaNativeDescription__system_settings_read,

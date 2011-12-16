@@ -109,6 +109,7 @@ file_081=.
 file_082=.
 file_083=.
 file_084=.
+file_085=.
 [GENERATED_FILES]
 file_000=no
 file_001=no
@@ -195,6 +196,7 @@ file_081=no
 file_082=no
 file_083=no
 file_084=no
+file_085=no
 [OTHER_FILES]
 file_000=no
 file_001=no
@@ -279,8 +281,9 @@ file_079=no
 file_080=no
 file_081=no
 file_082=no
-file_083=yes
+file_083=no
 file_084=yes
+file_085=yes
 [FILE_INFO]
 file_000=Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c
 file_001=analog.c
@@ -364,9 +367,10 @@ file_078=abo.h
 file_079=log.h
 file_080=Z:\molole\flash\flash.h
 file_081=Z:\aseba\trunk\vm\vm.h
-file_082=p24FJ128GB106.gld
-file_083=skel-usb-user.c
-file_084=skel-usb-user.h
+file_082=Z:\aseba\trunk\vm\natives.h
+file_083=p24FJ128GB106.gld
+file_084=skel-usb-user.c
+file_085=skel-usb-user.h
 [SUITE_INFO]
 suite_guid={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 suite_state=

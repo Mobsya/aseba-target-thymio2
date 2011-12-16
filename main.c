@@ -334,13 +334,19 @@ int main(void)
 	timer_enable(TIMER_1KHZ);
 	
 	vm_present = init_aseba_and_usb();
+	
+	if(vm_present) 
+		AsebaVMRunCB(&vmState);
 
 	vmVariables.fwversion[0] = FW_VERSION;
 	vmVariables.fwversion[1] = FW_VARIANT;
 	
 	// SD file is more important than internal flash
-	if(!sd_load_aseba_code())
+	if(!sd_load_aseba_code()) {
+		log_set_flag(LOG_FLAG_VMCODESD);
 		vm_present = 1;
+		AsebaVMRunCB(&vmState);
+	}
 
 	behavior_init(TIMER_BEHAVIOR, PRIO_BEHAVIOR);
 	
