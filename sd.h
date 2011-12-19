@@ -32,4 +32,6 @@
 	
 	int sd_test_file_present(void);
 	int sd_load_aseba_code(void);
+	
+	void sd_log_file(void);
 #endif

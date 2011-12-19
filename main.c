@@ -329,6 +329,9 @@ int main(void)
 	timer_enable(TIMER_SLOW);
 	
 	sd_init();
+
+	sd_log_file();
+
 	timer_init(TIMER_1KHZ, 1000, 6);
 	timer_enable_interrupt(TIMER_1KHZ, timer_1khz, PRIO_1KHZ);
 	timer_enable(TIMER_1KHZ);

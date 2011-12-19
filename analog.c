@@ -249,6 +249,13 @@ void analog_init(int t, int prio) {
 
 #define BUTTON_TRESHOLD 500
 
+static void do_reset(void) {
+// Switch on the CRC module.
+	_CRCMD = 0;
+	log_prepare_reset();
+	asm volatile("reset");
+}	
+
 void __attribute__((noreturn)) analog_enter_poweroff_mode(void) {
 	unsigned int button_max = BUTTON_TRESHOLD;
 	unsigned int temp;
@@ -348,8 +355,7 @@ void __attribute__((noreturn)) analog_enter_poweroff_mode(void) {
 			pressed = 0;
 			
 		if(pressed == 3) {
-			log_prepare_reset();
-			asm volatile("reset");
+			do_reset();
 		}
 		
 		if (temp < BUTTON_TRESHOLD)
@@ -369,8 +375,7 @@ void __attribute__((noreturn)) analog_enter_poweroff_mode(void) {
 			if(U1OTGSTATbits.SESVD) {
 				// 5V present, wakeup if was not present before ! 
 				if(!was_connected) {
-					log_prepare_reset();
-					asm volatile("reset");
+					do_reset();
 				}
 			} else {
 				// if usb unplug, reinit the button treshold as it will trigger spurious button activity
