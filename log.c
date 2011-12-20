@@ -476,6 +476,26 @@ static unsigned long get_next_free(void) {
 	return record_addr;
 }
 
+static void create_record(struct _record * r) {
+	r->poweron = ud.poweron_m;
+	r->studio = ud.studio_m;
+	r->usb = ud.usb_m;
+	r->flags[0] = ud.flags[0];
+	r->flags[1] = ud.flags[1];
+	r->flags[2] = ud.flags[2];
+	r->switchon = ud.poweron_c;
+	r->reprogram = ud.reprogram_c;
+	r->mmenu = ud.mode_m[MODE_MENU];
+	r->mfollow = ud.mode_m[MODE_FOLLOW];
+	r->mexplorer = ud.mode_m[MODE_EXPLORER];
+	r->macc = ud.mode_m[MODE_ACC];
+	r->mline = ud.mode_m[MODE_LINE];
+	r->mrc5 = ud.mode_m[MODE_RC5];
+	r->msound = ud.mode_m[MODE_SOUND];
+	r->mvm = ud.mode_m[MODE_MAX+1];
+	r->poweroff = ud.poweroff_d;
+}
+
 static int write_record(void) {
 	unsigned long addr;
 	unsigned long data;
@@ -493,23 +513,7 @@ static int write_record(void) {
 	addr = get_next_free();
 	
 	// Fill the record data
-	r.poweron = ud.poweron_m;
-	r.studio = ud.studio_m;
-	r.usb = ud.usb_m;
-	r.flags[0] = ud.flags[0];
-	r.flags[1] = ud.flags[1];
-	r.flags[2] = ud.flags[2];
-	r.switchon = ud.poweron_c;
-	r.reprogram = ud.reprogram_c;
-	r.mmenu = ud.mode_m[MODE_MENU];
-	r.mfollow = ud.mode_m[MODE_FOLLOW];
-	r.mexplorer = ud.mode_m[MODE_EXPLORER];
-	r.macc = ud.mode_m[MODE_ACC];
-	r.mline = ud.mode_m[MODE_LINE];
-	r.mrc5 = ud.mode_m[MODE_RC5];
-	r.msound = ud.mode_m[MODE_SOUND];
-	r.mvm = ud.mode_m[MODE_MAX+1];
-	r.poweroff = ud.poweroff_d;
+	create_record(&r);
 	
 	// TODO: Check that any code running for now support that the cpu clock can be halted for several ms.
 	// Write the record into flash
@@ -552,6 +556,8 @@ void log_dump(void * _f) {
 	unsigned long i;
 	unsigned long data;
 	unsigned int written;
+	struct _record r;
+	
 	// Put ourself at the end of the file
 	f_lseek(f, f_size(f));
 	
@@ -562,6 +568,12 @@ void log_dump(void * _f) {
 			// Full !
 			return;
 	}
+	
+	create_record(&r);
+	f_write(f,&r,sizeof(r), &written);
+	
+	// Reset the statistics
+	memset(&ud,0,sizeof(ud));
 	
 	flash_erase_page(PAGE_0);
 	flash_erase_page(PAGE_1);
