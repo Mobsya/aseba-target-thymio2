@@ -19,6 +19,7 @@
         You should have received a copy of the GNU Lesser General Public License
         along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
+#include <types/types.h>
 
 #include "mode.h"
 #include "behavior.h"
@@ -132,6 +133,12 @@ static void exit_mode(enum mode m) {
 			break;
 		case MODE_SOUND:
 			behavior_stop(B_LEDS_PROX);
+			behavior_stop(B_LEDS_MIC);
+			leds_set(LED_SOUND, 0);
+			vmVariables.sound_tresh = 0;
+			CLEAR_EVENT(EVENT_MIC);
+			vmVariables.target[0] = 0;
+			vmVariables.target[1] = 0;
 			break;
 		case MODE_LINE:
 			vmVariables.target[0] = 0;
@@ -183,6 +190,8 @@ static void init_mode(enum mode m) {
 			break;
 		case MODE_SOUND:
 			behavior_start(B_LEDS_PROX);
+			behavior_start(B_LEDS_MIC);
+			vmVariables.sound_tresh = 250;
 			break;
 		case MODE_LINE:
 			behavior_start(B_LEDS_PROX);
@@ -471,7 +480,136 @@ static void tick_acc(void) {
 static void tick_draw(void) {
 	
 }
+
+static char rainbow_get(unsigned char i) {
+	if(i < 32) 
+		return i;
+	if( i < 64)
+		return 64-i;
+	return 0;
+}
+
+#define SOUND_TURN_SPEED 80
+#define SOUND_FRONT_SPEED 80
 static void tick_sound(void) {
+	static char led_pulse;
+	static char time;
+	static char clap;
+	static char disco;
+	static char led_i;
+#define SOUND_STOP 0
+#define SOUND_RUN 1
+#define SOUND_TURNRIGHT 2
+	static char direction;
+	static char claptime;
+	
+	if(IS_EVENT(EVENT_MIC)) {
+		CLEAR_EVENT(EVENT_MIC);
+		if(clap == 0) {
+			time = 0;
+			clap = 1;
+			leds_set_circle(32,0,0,0,0,0,0,0);
+		} else if(clap == 1 && 2 < time && time < 30) {
+			clap = 2;
+			claptime = time + 1;
+			leds_set_circle(32,32,0,0,0,0,0,32);
+		} else if(clap == 2 && claptime < time && time < 40) {
+			clap = 3;
+			leds_set_circle(32,32,32,0,0,0,32,32);
+			play_sound(SOUND_F_OK);
+			led_pulse = 0;
+		}
+	}
+	
+	if(time < 100)
+		time++;
+		
+	if(time > 50) {
+		clap = 0;
+		leds_set_circle(0,0,0,0,0,0,0,0);
+	}	
+	
+	if(time == 5) {
+		if(direction == SOUND_RUN && clap == 1) {
+			direction = SOUND_TURNRIGHT;
+			vmVariables.target[0] = SOUND_TURN_SPEED;
+			vmVariables.target[1] = -SOUND_TURN_SPEED;
+		} else if(direction == SOUND_TURNRIGHT && clap == 1) {
+			direction = SOUND_RUN;
+			vmVariables.target[0] = SOUND_FRONT_SPEED;
+			vmVariables.target[1] = SOUND_FRONT_SPEED;
+		}
+	}
+	if(time == 30) {
+		if(direction == SOUND_STOP && clap == 2) {
+			direction = SOUND_RUN;
+			vmVariables.target[0] = SOUND_FRONT_SPEED;
+			vmVariables.target[1] = SOUND_FRONT_SPEED;
+		} else if(clap == 2) {
+			direction = SOUND_STOP;
+			vmVariables.target[0] = 0;
+			vmVariables.target[1] = 0;
+		}
+	}
+	
+	if(time == 40) {
+		if(clap == 3) {
+			direction = SOUND_RUN;
+			vmVariables.target[0] = SOUND_TURN_SPEED;
+			vmVariables.target[1] = 0;
+			disco = 1;
+		}
+	}	
+	
+	if(vmVariables.ground_delta[0] < 130 || vmVariables.ground_delta[1] < 130) {
+		vmVariables.target[0] = 0;
+		vmVariables.target[1] = 0;
+		leds_set_br(32,0,0);
+		leds_set_bl(32,0,0);
+	} else {
+		leds_set_br(0,0,0);
+		leds_set_bl(0,0,0);
+	}
+	
+	/* Body led managment */
+	if(disco) {
+		unsigned char r,g,b;
+		
+		led_i = led_i + 1;
+		if(led_i > 96)
+			led_i = 0;
+		
+		r = led_i;
+		g = led_i + 32;
+		if(g > 96)
+			g -=96;
+		
+		b = led_i + 64;
+		if(b > 96)
+			b -=96;
+		r = rainbow_get(r);
+		g = rainbow_get(g);
+		b = rainbow_get(b);
+		leds_set_top(r,g,b);
+		leds_set_bl(b,r,g);
+		leds_set_br(g,b,r);
+		led_pulse++;
+		if(led_pulse == 127) {
+			disco = 0;
+			led_pulse = 0;
+			leds_set_bl(0,0,0);
+			leds_set_br(0,0,0);
+		}
+	} else {	
+		led_pulse = led_pulse + 1;
+		if(led_pulse > 0) { 
+			leds_set_top(0,0,led_pulse);
+			if(led_pulse > 40)
+				led_pulse = -128;
+		} else 
+			leds_set_top(0,0,-led_pulse / 4);
+	}	
+		
 	
 }
 
@@ -651,8 +789,7 @@ static void tick_side(void) {
 }	
 
 static int mode_enabled(int temp) {
-	if(	temp == MODE_DRAW || 
-		temp == MODE_SOUND ||
+	if(	temp == MODE_DRAW ||
 		temp == MODE_SIDE)
 			return 0;
 			

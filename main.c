@@ -302,14 +302,11 @@ int main(void)
 	// but ADC sync the motor mesurment with the prox, so we don't pullute it with noise ... 
 	prox_init();
 	
-	
+	// Warning: We cannot use the SD before the analog init as some pin are on the analog port.
 	analog_init(TIMER_ANALOG, PRIO_SENSORS);
 
 
 	log_init(); // We will need to read vbat to be sure we can flash.
-
-	
-	// Warning: We cannot use the SD before the analog init as some pin are on the analog port.
 
 	ntc_init(ntc_callback,PRIO_NTC);
 	
