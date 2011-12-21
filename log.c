@@ -66,7 +66,8 @@ void log_prepare_reset(void) {
 static void _tick(void) {
 	int t;
 	// poweron general counter
-	ud.poweron_m++;
+	if(ud.poweron_m != 65535)
+		ud.poweron_m++;
 	
 	// Mode counters
 	t = mode_get();
@@ -78,10 +79,13 @@ static void _tick(void) {
 	// Usb 5V present ? 
 	if(U1OTGSTATbits.SESVD) {
 		// Aseba Present ?
-		if(usb_uart_serial_port_open())
-			ud.studio_m++;
-		else
-			ud.usb_m++;
+		if(usb_uart_serial_port_open()) {
+			if(ud.studio_m != 65535)
+				ud.studio_m++;
+		} else {
+			if(ud.usb_m != 65535)
+				ud.usb_m++;
+		}	
 	}	
 }
 
@@ -336,8 +340,8 @@ struct _header {
 	unsigned int __attribute((packed)) version;	// binary format version.
 	unsigned int __attribute((packed)) switchon; // number of time it has been switched on
 	unsigned long __attribute((packed)) poweron;  // Poweron time in minutes
-	unsigned int __attribute((packed)) studio; // Studio use time in minutes
-	unsigned int __attribute((packed)) usb; // usb-non-studio time in minutes
+	unsigned long __attribute((packed)) studio; // Studio use time in minutes
+	unsigned long __attribute((packed)) usb; // usb-non-studio time in minutes
 	unsigned int __attribute((packed)) reprogram; // Number of time it has been reprogramed
 	unsigned int __attribute((packed)) mmenu;	// mode time, in minutes
 	unsigned int __attribute((packed)) mfollow; // ''
@@ -349,10 +353,10 @@ struct _header {
 	unsigned int __attribute((packed)) mvm;		// ''
 	unsigned int __attribute((packed)) poweroff;// poweroff time in days.
 	unsigned char __attribute((packed)) flags[3]; // flags, or-ed
-	unsigned char __attribute((packed)) _[10]; 	// padding, can be used for something else.
+	unsigned char __attribute((packed)) _[6]; 	// padding, can be used for something else.
 }; // sizeof(_header) == 45 == 15 instruction
 
-#define HEADER_VERSION 1
+#define HEADER_VERSION 2
 
 #define HEADER_SIZE (sizeof(struct _header))
 #define RECORD_SIZE (sizeof(struct _record))

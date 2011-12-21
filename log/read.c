@@ -34,8 +34,8 @@ struct __attribute((packed)) _header  {
         uint16 version;     // binary format version.
         uint16 switchon; // number of time it has been switched on
         uint32 poweron;  // Poweron time in minutes
-        uint16 studio; // Studio use time in minutes
-        uint16 usb; // usb-non-studio time in minutes
+        uint32 studio; // Studio use time in minutes
+        uint32 usb; // usb-non-studio time in minutes
         uint16 reprogram; // Number of time it has been reprogramed
         uint16 mmenu;       // mode time, in minutes
         uint16 mfollow; // ''
@@ -47,7 +47,7 @@ struct __attribute((packed)) _header  {
         uint16 mvm;         // ''
         uint16 poweroff;// poweroff time in days.
         uint8 flags[3]; // flags, or-ed
-        uint8 _[10];      // padding, can be used for something else.
+        uint8 _[6];      // padding, can be used for something else.
 }; // sizeof(_header) == 45 == 15 instruction
 
 #define RECORD_PER_PAGE 71
@@ -131,8 +131,8 @@ static void dump_header(struct _header * h) {
 	}
 		
 	
-	if(h->version != 1)
-		printf("/!\\ Warning: header version: %d while expecting version 1 /!\\ \n",h->version);
+	if(h->version != 2)
+		printf("/!\\ Warning: header version: %d while expecting version 2 /!\\ \n",h->version);
 	
 	printf("Poweron time: \t\t%d \tminutes\n",h->poweron);
 	printf("Asebastudio time: \t%d \tminutes\n",h->studio);
