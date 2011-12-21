@@ -194,7 +194,7 @@ when                        0x1ebc                   0            0x10  (16)
 .nbss                       0x1f42                   0             0x2  (2)
 .ndata                      0x1f44                   0             0x4  (4)
 .bss                        0x1f48                   0          0x1166  (4454)
-_0182a0704ef1e88c           0x47e8                   0            0x18  (24)
+_0182a0704ef1f072           0x47e8                   0            0x18  (24)
 
                         Total data memory used (bytes):         0x28c6  (10438) 63%
 
@@ -2795,9 +2795,9 @@ _01918ee04eaeb59f
                     0x1190         0x2e usb_descriptors.o
                     0x1190                  sd002
 
-_0182a0704ef1e88c
+_0182a0704ef1f072
                     0x47e8         0x18
- _0182a0704ef1e88c
+ _0182a0704ef1f072
                     0x47e8         0x18 log.o
 
 _01918b604eaeb59f
