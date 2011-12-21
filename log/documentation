@@ -1,0 +1,264 @@
+Hello
+
+J'ai fini l'implémentation du log sur le thymio. Voici les spécifications:
+
+Les log sont gardé en mémoire et en flash.
+La partie en mémoire sert à comptabiliser les différentes statistique pendant 
+un jours d'uilisation. 
+Il résiste au poweroff/poweron (c'est a dire que le contenu en mémoire est 
+gardé même si on éteind le robot).
+Le contenu ne résiste pas à un reset (bouton reset, ou call _system.reset()).
+Si un reset arrive, seul les statistiques du jours sont perdu, pas le reste.
+
+Un nouvel enregistrement est définit comme cela:
+        Au démarrage, si le temp off est > 0 jours, ou si le "poweron time" > 
+24heures et si la tension batterie est > 3.3V.
+
+
+Chaque enregistrement contient les information suivantes:
+Le (0),(1),(...) renvoie à la doc détaillée de chaque champ.
+- Temp total robot allumé en minutes (0)
+- Temp total asebastudio connecté au robot (1)
+- Temp total usb connecté sans asebastudio (2)
+- les flags (3)
+- nombre de foix que le robot a été allumé (4)
+- nombre de foix que le robot a été reprogrammé depuis studio (5)
+- Temp passé dans le menu (6)
+- Temp passé en mode follow (7)
+- Temp passé en mode explorer (8)
+- Temp passé en mode accéléromètre (9)
+- Temp passé en mode ligne (10)
+- Temp passé en mode rc5 (11)
+- Temp passé en mode son (12)
+- Temp passé en mode virtual machine (13)
+- Temp éteind (14)
+
+
+(0):
+Commence de compter dès l'initialisation du robot, ne compte pas le temp passé 
+en mode bootloader.
+Attête de compter dès le poweroff. Ne compte pas le temp passé à poller les 
+bouton en mode "off".
+Le temp est compté en minutes, arrondi à la minute du bas, 16 bits non signé saturé.
+Pécision: c'est sur le cristal 16Mhz, donc relativement précis (50ppm 
+normalement).
+
+(1):
+Compte lorsque:
+        - Le 5V USB est présent et valide
+        - L'usb est "configuré" (énuméré, driver windows actif).
+        - le port série USB est ouvert  (DTE actif)
+Le temp est compté en minutes, arrondi à la minute du bas, 16bits non signé 
+saturé.
+Précision: C'est sur le cristal 16Mhz, donc relativement précis (50ppm 
+normalement).
+
+(2):
+Compte lorsque:
+        - Le 5V est présent et !(1)
+Le temp est compté en minutes, arrondi à la minute du bas, 16bits non signé 
+saturé.
+Précision: C'est sur le cristal 16Mhz (50ppm).
+
+(3): 
+Les flags, les flags suivant sont disponnible, la doc détaillé est plus loin: 
+LOG_FLAG_INTERNAL               (0)
+LOG_FLAG_BATTERY                (1)
+LOG_FLAG_ASEBABUG               (2)
+LOG_FLAG_VMCODESD               (3)
+LOG_FLAG_PLAYBACKSD             (4)
+LOG_FLAG_FLASHVMCODE    (5)
+LOG_FLAG_RECORDSD               (6)
+LOG_FLAG_MOTORUSED              (7)
+LOG_FLAG_IRUSED                 (8)
+LOG_FLAG_NTCUSED                (9)
+LOG_FLAG_SOUND                  (10)
+LOG_FLAG_LEDIR                  (11)
+LOG_FLAG_LEDRGB                 (12)
+LOG_FLAG_LEDCIRCLE              (13)
+LOG_FLAG_ACCUSED                (14)
+LOG_FLAG_BUTTONUSED             (15)
+LOG_FLAG_SOUNDTRESH             (16)
+LOG_FLAG_RC5USED                (17)
+LOG_FLAG_LEDBUTTON              (18)
+LOG_FLAG_LEDOTHER               (19)
+
+Les flags sont setté en fonction d'une condition propre à chaqu'un, il ne sont 
+jamais "clearé" sauf lorsque un nouveau "Jour" commence.
+
+(4):
+Comptabilise le nombre de fois que le robot est allumé. S'incrémente à chaque 
+fois que on passe dans la routine d'initilisation du pic.
+C'est un compteur 8bit "saturé" (pas d'overflow).
+
+(5):
+S'incérmente chaque fois que la machine virtuelle reçoi un ordre "run". Je ne 
+peux pas comptabiliser exactement le nombre de fois que il y a le bouton 
+"charger" qui est pressé car le protocol aseba ne définit pas assez bien 
+l'opération de chargement du bytecode. Mais l'ordre run est donné à chaque 
+fois que on presse executer, ce qui est une opération indispensable après 
+chaque chargement.
+Compteur 8 bits "saturé".
+
+
+(6)-(12)
+Temp en minutes passé dans chaque mode. Le temp est un "snapshot" pris toutes 
+les minutes du mode actuel utilisé. C'est à dire que si à l'instant du 
+snapshot l'utilisateur est dans le mode accéléromète, la minute sera attirbuée 
+entièrement au mode accéléromètre, même si les 59 autres secondes il était 
+dans un autre mode. A part ca la précision est normalement assez bonne, c'est 
+sur le crystal 16Mhz.
+C'est un compteur 8bits "saturé".
+
+(13)
+Temp en minutes passé dans le mode VM, c'est a dire que c'est la VM qui est en 
+charge du robot, même si elle fait rien. 
+Compteur 8 bits "saturé", arrondi vers le bas sur le crystal 16Mhz 50ppm.
+
+(14)
+C'est le temps passé en mode "éteind". En jours, arrondi au jours du bas 
+(23heures 59 minutes 59.5 secondes = 0). Compteur 8bits saturé.
+La précision est assez mauvaise, on se trouve sur un RC interne 32Khz. 
+Microchip donne 20% d'erreur, j'ai mesuré 2.3% sur un échantillon très 
+représentatif de 1 PIC.
+
+Documentation des flags:
+Pour ce qui est des flags basé sur le bytecode de la VM, ils sont checké chaque 
+fois que l'uilisateur charge du code dans la vm et l'execute avec asebastudio, 
+ou chaque fois que du code est chargé depuis la SD ou depuis la flash interne 
+du microcontrôleur.
+Les flags basé sur des accès a des variables aseba sont mis à jours SEULEMENT 
+si c'est des accès directs depuis le bytecode. Ils ne sont pas mis à jours si 
+c'est des fonction natives qui modifient ces variables (math.*) ou si 
+l'utilisateur modifie ces variables directement depuis asebastudio.
+Le code est analysée "statiquement", c'est a dire que les flags sont mis à 
+jours seulement en analysant si le bytecode utilise une variable contient un 
+"handler" d'un évènement ou si il utilise une fonction native. 
+Si le code suivant est chargé:
+call math.stat(prox.horizontal, min,max,mean)
+if temperature == -1000 then
+        motor.left.target = 100
+endif
+le flag NTC et moteur sera mis même si la VM ne va jamais executer la ligne 
+motor.left.target car il est impossible que la température soit -1000°C.
+Le flag IR ne sera jamais mis car c'est une fonction native qui accède à la 
+variable prox.horizontal.
+
+f.0: Flag tout le temps mis à 0, utilisé en interne pour savoir si 
+l'emplacement en flash est utilisé ou pas.
+
+f.1: Flag mis à 1 si il y as eu un "Brown-out reset". C'est à dire que la 
+tension du PIC est descendu en dessous de 2.5V. Typiquement la batterie a 
+coupé. Ca veux dire que le temp "off" est faux.
+
+f.2: Flag mis à 1 si aseba a envoyé un "VM node specific error". C'est a dire 
+que une erreur de programmation de l'utilisateur d'aseba a eu lieu. 
+Typiquement:
+        - Division par 0
+        - Accès en dehors des bordes d'un tableau
+        - Utilisateur erronée d'une fonction native.
+
+f.3: Flag mis à un si un code valide a été chargé depuis la SD.
+
+f.4: Flag mis à un si un son a été lu depuis la SD (utilisateur ou système)
+
+f.5: Flag mis à un si l'utilisateur a utilisé la fonctionalité "Write into 
+flash" de asebastudio.
+
+f.6: Flag mis à un si l'utilisateur a réussi à utiliser la fonction 
+sound.record. Il faut que une carte SD soit présente dans le robot.
+
+f.7: Flag mis à un si l'évènement "motor" est présent dans le bytecode de la 
+VM ou si les variables motor.left.target/motor.right.target son utilisée en 
+écriture.
+
+f.8: Flag mis à un si l'évènement "prox" est présent dans le bytecode de la VM 
+ou si les variables suivantes sont utilisées en lecture:
+        - prox.horizontal
+        - prox.ground.ambiant
+        - prox.ground.reflected
+        - prox.ground.delta
+
+f.9: Flag mis à un si la variable "temperature" est utilisée en lecture.
+
+f.10: Flag mis à un si les fonctions natives suivantes sont présente dans le 
+code:
+        - sound.play
+        - sound.replay
+        - sound.system
+        - sound.freq
+
+f.11: Flag mis à un si les fonction natives suivantes sont présents dans le 
+code:
+        - leds.prox.h
+        - leds.prox.v
+
+f.12: Flag mis à un si les fonction natives suitantes sont présente dans le 
+code:
+        - leds.top
+        - leds.bottom.left
+        - leds.bottom.right
+
+f.13: Flag mi à un si la fonction native leds.circle est présente dans le 
+code.
+
+f.14: Flag mis à un si l'évènement acc est présent dans le code ou si la 
+variable acc est utilisée en lecture.
+
+f.15: Flag mis à un si les évènements suivant sont présent dans le code:
+        - button.*
+        - buttons
+        Ou si les variables button.* sont utilisée en lecture.
+
+f.16: Flag mis à un si l'évènement mic est utilisé ou si la variable 
+mic.intensity est utilisé en lecture ou si la variable mic.treshold est 
+utilisé en écriture.
+
+f.17: Flag mis à un si l'évènement rc5 est utilisé ou si les variables 
+suivantes sont utilisé en lecture:
+        - rc5.address
+        - rc5.command
+
+f.18: Flag mis à un si la fonction native leds.buttons est utilisé.
+
+f.19: Flag mis à un si les fonction natives suivantes sont présente dans le 
+code:
+        - leds.temperature
+        - leds.sound
+        - leds.rc
+
+On peux enregister 71 "jour" dans la flash par page. 
+Chaque page contien un "header" qui somme le contenu de la page précédente. 
+Les donnée sont les suivantes:
+- Version, 16 bits. pour l'instant fixé à 2. Permet d'assurer la compatibilité 
+binaire entre différent firmware.
+
+- Nombre de fois que le robot a été allumé sur 16 bits
+
+- Temps total en minute que le robot a été allumé sur 32bits
+
+- Temps usb sur 32bits
+
+- Temps aseba sur 32bits
+
+- Tous les autres temps enregistré chaque jours, mais sur 16 bits.
+
+- Les flags, or-é entre eux.
+
+
+Récupération des logs:
+Si le robot démarre avec une carte sd qui contient le fichier suivant 
+"_LOGDUMP.#@!", le robot va dumper à la fin de ce fichier 3072 octets qui 
+contient les donnée brut du log (les deux pages).
+
+
+Extensibilité:
+        - Il y a encore de l'espace pour 4 flags.
+        - Il y a de la place pour encore 8bits par "record" (par jours)
+        - Il y a de la place pour 10octets par "header".
+
+Voiiiilaaaaaaaaaaaaaa ... il reste plus qu'a tester ... 
+
+A+
+
+Philippe
