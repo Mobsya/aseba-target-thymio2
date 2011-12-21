@@ -216,7 +216,7 @@ void AsebaVMRunCB(AsebaVMState *vm) {
 	if(vm->bytecode[0] > vm->bytecodeSize)
 		return; //Invalid bytecode.
 		
-	for(i = 0; i < vm->bytecode[0]; i+=2) {
+	for(i = 1; i < vm->bytecode[0]; i+=2) {
 		switch(vm->bytecode[i]) {
 		case EVENT_B_BACKWARD:
 		case EVENT_B_LEFT:
@@ -411,6 +411,7 @@ static void init_page(unsigned long target, unsigned long source) {
 	}
 	h.version = HEADER_VERSION; // Force header version
 	
+	// TODO: CHeck that the page is not already erased
 	flash_erase_page(target);
 	
 	for(i = 0; i < HEADER_SIZE; i+=3) {
