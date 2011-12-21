@@ -106,6 +106,7 @@ static int dump_record(struct _record * r, int c) {
 	printf("\tMode time:\n");
 	printf("\t\tMenu\t\t%d\tminutes\n",r->mmenu);
 	printf("\t\tExplorer\t%d\tminutes\n",r->mexplorer);
+	printf("\t\tFollow\t\t%d\tminutes\n",r->mfollow);
 	printf("\t\tAcc\t\t%d\tminutes\n",r->macc);
 	printf("\t\tLine\t\t%d\tminutes\n",r->mline);
 	printf("\t\tRc5\t\t%d\tminutes\n",r->mrc5);
@@ -143,6 +144,7 @@ static void dump_header(struct _header * h) {
 	printf("Mode time:\n");
 	printf("\tMenu\t\t%d\tminutes\n",h->mmenu);
 	printf("\tExplorer\t%d\tminutes\n",h->mexplorer);
+	printf("\tFollow\t\t%d\tminutes\n",h->mfollow);
 	printf("\tAcc\t\t%d\tminutes\n",h->macc);
 	printf("\tLine\t\t%d\tminutes\n",h->mline);
 	printf("\tRc5\t\t%d\tminutes\n",h->mrc5);
