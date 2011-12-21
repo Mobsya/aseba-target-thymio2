@@ -5,6 +5,7 @@
 #include <flash/flash.h>
 #include <vm/vm.h>
 #include <common/consts.h>
+#include <clock/clock.h>
 #include "log.h"
 #include "crc.h"
 #include "mode.h"
@@ -437,7 +438,7 @@ static unsigned long _get_next_free(unsigned long addr) {
 			i < addr + INSTRUCTIONS_PER_PAGE * 2; i += RECORD_FLASH_SIZE) {
 		struct _record r;
 		flash_read_chunk(i, RECORD_SIZE, (unsigned char *) &r);
-		if(r.flags[0] & LOG_FLAG_INTERNAL)
+		if(r.flags[0] & 1)
 			return i;
 	}
 	
@@ -508,14 +509,20 @@ static int write_record(void) {
 
 	// First wait until we have a valid vbat
 	vmVariables.vbat[0] = 0;
-	while(!vmVariables.vbat[0]) barrier();
+	barrier();
 	
+	for(i = 0; i < 10000; i++) {
+		if(vmVariables.vbat[0])
+			break;
+		clock_delay_us(1);
+	}
+		
 	// Vbat < 3.3V, don't flash
 	if(vmVariables.vbat[0] < 656)
 		return 0;
 	
 	addr = get_next_free();
-	
+
 	// Fill the record data
 	create_record(&r);
 	
