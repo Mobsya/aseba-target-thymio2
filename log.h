@@ -33,6 +33,8 @@ void log_init(void);
 #define LOG_FLAG_RC5USED		(17)
 #define LOG_FLAG_LEDBUTTON		(18)
 #define LOG_FLAG_LEDOTHER		(19)
+#define LOG_FLAG_EVENTNTC		(20)
+#define LOG_FLAG_EVENTTIMER		(21)
 
 void log_set_flag(unsigned char flag);
 

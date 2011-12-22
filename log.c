@@ -242,6 +242,13 @@ void log_analyse_bytecode(void) {
 		case EVENT_MOTOR:
 			log_set_flag(LOG_FLAG_MOTORUSED);
 			break;
+		case EVENT_TEMPERATURE:
+			log_set_flag(LOG_FLAG_EVENTNTC);
+			break;
+		case EVENT_TIMER0:
+		case EVENT_TIMER1:
+			log_set_flag(LOG_FLAG_EVENTTIMER);
+			break;
 		}
 		
 		if(vm->bytecode[i+1] > max_start)
@@ -377,7 +384,7 @@ struct _header {
 static void sum_stats(struct _header * h, unsigned long source) {
 	unsigned long i;
 	struct _record r;
-	flash_read_chunk(source, HEADER_SIZE, (unsigned char *) &h); // Prefill with last sum
+	flash_read_chunk(source, HEADER_SIZE, (unsigned char *) h); // Prefill with last sum
 	
 	for(i = source + HEADER_FLASH_SIZE; 
 		i < source + INSTRUCTIONS_PER_PAGE*2; i += RECORD_FLASH_SIZE) {
@@ -603,8 +610,11 @@ void log_dump(void * _f) {
 	
 	// Reset the statistics
 	memset(&ud,0,sizeof(ud));
-	
-	flash_erase_page(PAGE_0);
-	flash_erase_page(PAGE_1);
+
+	if(should_erase(PAGE_0))
+		flash_erase_page(PAGE_0);
+	if(should_erase(PAGE_1))
+		flash_erase_page(PAGE_1);
+
 }
 
