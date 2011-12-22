@@ -206,18 +206,18 @@ static void check_native(unsigned int i) {
 	
 }
 
-void AsebaVMRunCB(AsebaVMState *vm) {
+void log_analyse_bytecode(void) {
 	unsigned int i;
 	unsigned int max_start = 0;
 	
-	incs_u8(ud.reprogram_c);
-
+	AsebaVMState *vm = &vmState;
+	
 	// Event scanning
 	if(vm->bytecode[0] > vm->bytecodeSize)
 		return; //Invalid bytecode.
 		
 	for(i = 1; i < vm->bytecode[0]; i+=2) {
-		switch(vm->bytecode[i]) {
+		switch(ASEBA_EVENT_LOCAL_EVENTS_START - vm->bytecode[i]) {
 		case EVENT_B_BACKWARD:
 		case EVENT_B_LEFT:
 		case EVENT_B_CENTER:
@@ -253,7 +253,7 @@ void AsebaVMRunCB(AsebaVMState *vm) {
 	while(i < vm->bytecodeSize) {
 		switch(vm->bytecode[i] >> 12) {
 			case ASEBA_BYTECODE_STOP:
-				if(i > max_start)
+				if(i >= max_start)
 				// We are at the end of the bytecode.
 					return;
 				i++;
@@ -305,7 +305,14 @@ void AsebaVMRunCB(AsebaVMState *vm) {
 				i++;
 				break;	
 		}
-	}
+	}	
+}
+
+void AsebaVMRunCB(AsebaVMState *vm) {
+
+	incs_u8(ud.reprogram_c);
+
+	log_analyse_bytecode();
 }
 
 
@@ -398,6 +405,16 @@ static void sum_stats(struct _header * h, unsigned long source) {
 	}
 }
 
+static int should_erase(unsigned long page) {
+	// If the page is full of 0xFFFFFF then it do not need to be ereased
+	unsigned long end = page + INSTRUCTIONS_PER_PAGE * 2;
+	for(; page < end; page += 2) {
+		if(flash_read_instr(page) != 0xFFFFFF)
+			return 1;
+	}
+	
+	return 0;
+}
 
 static void init_page(unsigned long target, unsigned long source) {
 	struct _header h;
@@ -410,9 +427,9 @@ static void init_page(unsigned long target, unsigned long source) {
 		sum_stats(&h,source);
 	}
 	h.version = HEADER_VERSION; // Force header version
-	
-	// TODO: CHeck that the page is not already erased
-	flash_erase_page(target);
+
+	if(should_erase(target))
+		flash_erase_page(target);
 	
 	for(i = 0; i < HEADER_SIZE; i+=3) {
 		memcpy(&data, ((char *) &h) + i, 3);

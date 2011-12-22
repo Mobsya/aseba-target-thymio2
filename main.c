@@ -336,7 +336,7 @@ int main(void)
 	vm_present = init_aseba_and_usb();
 	
 	if(vm_present) 
-		AsebaVMRunCB(&vmState);
+		log_analyse_bytecode();
 
 	vmVariables.fwversion[0] = FW_VERSION;
 	vmVariables.fwversion[1] = FW_VARIANT;
@@ -345,7 +345,7 @@ int main(void)
 	if(!sd_load_aseba_code()) {
 		log_set_flag(LOG_FLAG_VMCODESD);
 		vm_present = 1;
-		AsebaVMRunCB(&vmState);
+		log_analyse_bytecode();
 	}
 
 	behavior_init(TIMER_BEHAVIOR, PRIO_BEHAVIOR);

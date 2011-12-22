@@ -36,4 +36,6 @@ void log_init(void);
 
 void log_set_flag(unsigned char flag);
 
+void log_analyse_bytecode(void);
+
 #endif
