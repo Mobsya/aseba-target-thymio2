@@ -82,6 +82,8 @@ LOG_FLAG_SOUNDTRESH             (16)
 LOG_FLAG_RC5USED                (17)
 LOG_FLAG_LEDBUTTON              (18)
 LOG_FLAG_LEDOTHER               (19)
+LOG_FLAG_EVENTNTC		(20)
+LOG_FLAG_EVENTTIMER		(21)
 
 Les flags sont setté en fonction d'une condition propre à chaqu'un, il ne sont 
 jamais "clearé" sauf lorsque un nouveau "Jour" commence.
@@ -202,7 +204,7 @@ code:
 f.13: Flag mi à un si la fonction native leds.circle est présente dans le 
 code.
 
-f.14: Flag mis à un si l'évènement acc est présent dans le code ou si la 
+f.14: Flag mis à un si l'évènement acc out tap est présent dans le code ou si la 
 variable acc est utilisée en lecture.
 
 f.15: Flag mis à un si les évènements suivant sont présent dans le code:
@@ -226,6 +228,10 @@ code:
         - leds.temperature
         - leds.sound
         - leds.rc
+
+f.20 Flag mis à 1 si l'évènement temperature est utilisé
+
+f.21 Falg mis à 1 si les évèneemnt timer0 ou timer1 sont utilisé
 
 On peux enregister 71 "jour" dans la flash par page. 
 Chaque page contien un "header" qui somme le contenu de la page précédente. 

@@ -114,7 +114,7 @@ static int dump_record(struct _record * r, int c) {
 	printf("\t\tVirtual Machine\t%d\tminutes\n",r->mvm);
 	
 	printf("Flags: 0x%02x%02x%02x (", r->flags[0], r->flags[1], r->flags[2]);
-	for(i = 0; i < 20; i++) 
+	for(i = 0; i < 24; i++) 
 		if(flag_set(r->flags, i))
 			printf("%d ",i);
 	if(!r->flags[0] && !r->flags[1] && !r->flags[2])
@@ -152,7 +152,7 @@ static void dump_header(struct _header * h) {
 	printf("\tVirtual Machine\t%d\tminutes\n",h->mvm);
 	
 	printf("Flags: 0x%02x%02x%02x (", h->flags[0], h->flags[1], h->flags[2]);
-	for(i = 0; i < 20; i++) 
+	for(i = 0; i < 24; i++) 
 		if(flag_set(h->flags, i))
 			printf("%d ",i);
 	if(!h->flags[0] && !h->flags[1] && !h->flags[2])
