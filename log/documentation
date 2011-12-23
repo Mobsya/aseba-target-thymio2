@@ -259,12 +259,7 @@ contient les donnée brut du log (les deux pages).
 
 
 Extensibilité:
-        - Il y a encore de l'espace pour 4 flags.
+        - Il y a encore de l'espace pour 2 flags.
         - Il y a de la place pour encore 8bits par "record" (par jours)
-        - Il y a de la place pour 10octets par "header".
+        - Il y a de la place pour 6octets par "header".
 
-Voiiiilaaaaaaaaaaaaaa ... il reste plus qu'a tester ... 
-
-A+
-
-Philippe
