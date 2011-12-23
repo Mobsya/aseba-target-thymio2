@@ -47,6 +47,7 @@ struct __attribute((packed)) _header  {
         uint16 mvm;         // ''
         uint16 poweroff;// poweroff time in days.
         uint8 flags[3]; // flags, or-ed
+	uint8 page_count; // Number of flash
         uint8 _[6];      // padding, can be used for something else.
 }; // sizeof(_header) == 45 == 15 instruction
 
@@ -141,6 +142,7 @@ static void dump_header(struct _header * h) {
 	printf("Poweroff time: \t\t%d \tdays\n",h->poweroff);
 	printf("Switch-on count:\t%d\n",h->switchon);
 	printf("Reprogram count:\t%d\n",h->reprogram);
+	printf("Page ID:\t%d\n",h->page_count);
 	printf("Mode time:\n");
 	printf("\tMenu\t\t%d\tminutes\n",h->mmenu);
 	printf("\tExplorer\t%d\tminutes\n",h->mexplorer);
