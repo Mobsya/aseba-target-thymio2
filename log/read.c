@@ -48,7 +48,7 @@ struct __attribute((packed)) _header  {
         uint16 poweroff;// poweroff time in days.
         uint8 flags[3]; // flags, or-ed
 	uint8 page_count; // Number of flash
-        uint8 _[6];      // padding, can be used for something else.
+        uint8 _[5];      // padding, can be used for something else.
 }; // sizeof(_header) == 45 == 15 instruction
 
 #define RECORD_PER_PAGE 71
