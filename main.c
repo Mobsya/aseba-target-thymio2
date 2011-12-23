@@ -199,6 +199,8 @@ void switch_off(void) {
 	timer_disable(TIMER_1KHZ);
 	timer_disable_interrupt(TIMER_1KHZ);
 	
+	_LVDIE = 0;
+	
 	analog_disable();
 	pwm_motor_poweroff();
 	prox_poweroff();
@@ -249,6 +251,12 @@ void power_off(AsebaVMState *vm) {
 	analog_enter_poweroff_mode();
 }
 
+void _ISR _LVDInterrupt(void) {
+	_LVDIF = 0;
+	_LVDIE = 0;
+	_INT3IF = 1;
+}
+
 void _ISR _INT3Interrupt(void) {
 	_INT3IF = 0;
 	_INT3IE = 0; // ack & disable
@@ -288,6 +296,9 @@ int main(void)
 	_INT3IF = 0;
 	_INT3IP = 1;
 	_INT3IE = 1;
+	
+	// Enable the LVD interrupt
+	_LVDIE = 1;
 
 	// Sound must be enabled before analog, as 
 	// The analog interrupt callback into sound processing ... 

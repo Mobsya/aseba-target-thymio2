@@ -368,7 +368,8 @@ struct _header {
 	unsigned int __attribute((packed)) mvm;		// ''
 	unsigned int __attribute((packed)) poweroff;// poweroff time in days.
 	unsigned char __attribute((packed)) flags[3]; // flags, or-ed
-	unsigned char __attribute((packed)) _[6]; 	// padding, can be used for something else.
+	unsigned char __attribute((packed)) page_count;
+	unsigned char __attribute((packed)) _[5]; 	// padding, can be used for something else.
 }; // sizeof(_header) == 45 == 15 instruction
 
 #define HEADER_VERSION 2
@@ -385,6 +386,8 @@ static void sum_stats(struct _header * h, unsigned long source) {
 	unsigned long i;
 	struct _record r;
 	flash_read_chunk(source, HEADER_SIZE, (unsigned char *) h); // Prefill with last sum
+	
+	h->page_count++;
 	
 	for(i = source + HEADER_FLASH_SIZE; 
 		i < source + INSTRUCTIONS_PER_PAGE*2; i += RECORD_FLASH_SIZE) {

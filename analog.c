@@ -257,12 +257,17 @@ static void do_reset(void) {
 }	
 
 void __attribute__((noreturn)) analog_enter_poweroff_mode(void) {
-	unsigned int button_max = BUTTON_TRESHOLD;
 	unsigned int temp;
 	int check_usb = 0;
 	int pressed = 0;
 	int i;
 	int was_connected;
+	unsigned int boff[16];
+	unsigned int b = 0;
+	unsigned long bsum = 0;
+	unsigned int tresh;
+	int init_sum = 1;
+	
 	
 	was_connected = U1OTGSTATbits.SESVD;
 	
@@ -349,7 +354,23 @@ void __attribute__((noreturn)) analog_enter_poweroff_mode(void) {
 			temp += ADC1BUF0;
 		}
 		
-		if(temp < button_max - BUTTON_TRESHOLD) 
+		if(init_sum) {
+			init_sum = 0;
+			for(i = 0; i < 16; i++)
+				boff[i] = temp;
+			bsum = __builtin_muluu(16,temp);
+		} else {
+			bsum -= boff[b];
+			bsum += temp;
+			boff[b++] = temp;
+			if(b == 16)
+				b = 0;
+		}
+		tresh = __builtin_divud(bsum,16);
+		if(tresh < BUTTON_TRESHOLD)
+			tresh = BUTTON_TRESHOLD;
+		
+		if(temp < tresh - BUTTON_TRESHOLD) 
 			pressed++;
 		else
 			pressed = 0;
@@ -357,12 +378,6 @@ void __attribute__((noreturn)) analog_enter_poweroff_mode(void) {
 		if(pressed == 3) {
 			do_reset();
 		}
-		
-		if (temp < BUTTON_TRESHOLD)
-			temp = BUTTON_TRESHOLD;
-			
-		if(button_max < temp)
-			button_max = temp;
 		
 		_ADC1MD = 1;
 		_CTMUMD = 1;
@@ -379,8 +394,11 @@ void __attribute__((noreturn)) analog_enter_poweroff_mode(void) {
 				}
 			} else {
 				// if usb unplug, reinit the button treshold as it will trigger spurious button activity
-				if(was_connected) 
-					button_max = BUTTON_TRESHOLD;
+				if(was_connected)  {
+					bsum = __builtin_muluu(16,temp);
+					for(i = 0; i < 16; i++)
+						boff[i] = temp;
+				}
 				was_connected = 0;
 			}
 			// Switch off usb module
