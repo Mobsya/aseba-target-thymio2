@@ -201,7 +201,7 @@ int main(int argc, char ** argv) {
 		exit(-1);
 	}
 
-	f = fopen(argv[1],"r");
+	f = fopen(argv[1],"rb");
 	if(!f) {
 		perror("Unable to open log file");
 		exit(-2);
