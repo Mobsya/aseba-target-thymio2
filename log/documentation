@@ -251,6 +251,8 @@ binaire entre différent firmware.
 
 - Les flags, or-é entre eux.
 
+- Numéro de la page flash sur 8 bit.
+
 
 Récupération des logs:
 Si le robot démarre avec une carte sd qui contient le fichier suivant 
