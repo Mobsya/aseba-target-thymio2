@@ -80,8 +80,12 @@ void sound_init(void) {
 void sound_playback_enable(sound_cb cb) {
 	callback = NULL;
 	barrier();
-	
-	leds_set(SOUND_ON, 32);
+
+	if(settings.sound_shift < 8)	
+		leds_set(SOUND_ON, 32);
+	else
+		leds_set(SOUND_ON, 0);
+
 	// Prefill the buffers
 	cb(&output_buf[0]);
 	cb(&output_buf[SOUND_OBUFSZ]);
@@ -105,7 +109,7 @@ void sound_playback_disable(void) {
 	sound_playback_hold();
 	
 	leds_set(SOUND_ON, 0);
-	OC6R = 127;
+	OC6R = 127 >> settings.sound_shift;
 }
 
 void sound_poweroff(void) {
@@ -126,7 +130,7 @@ void _ISR _INT1Interrupt(void) {
 	int ret;
 	_INT1IF = 0;
 	
-	if(obufp >= SOUND_OBUFSZ) 
+	if(obufp >= SOUND_OBUFSZ)
 		ret = callback ? callback(&output_buf[0]) : 0;
 	else
 		ret = callback ? callback(&output_buf[SOUND_OBUFSZ]) : 0;
@@ -182,7 +186,9 @@ void sound_new_sample(unsigned int sample) {
 	static unsigned int last_sample;
 	// Output new sample ...
 	if(callback) { 
-		OC6R = output_buf[obufp++];
+// The shift changes the DC value of the signal, but we have a
+// High-pass filter before the power amp so it is not important
+		OC6R = output_buf[obufp++] >> settings.sound_shift;
 		if(obufp == SOUND_OBUFSZ)
 			_INT1IF = 1;
 			
@@ -191,7 +197,7 @@ void sound_new_sample(unsigned int sample) {
 			obufp = 0;
 		}
 	}
-	// I don't want that the compile optimize
+	// I don't want that the compiler optimize
 	// Between input and output
 	barrier();
 	

@@ -133,7 +133,8 @@ enum Event
 struct private_settings {
 	/* ADD here the settings to save into flash */
 	/* The minimum size is one integer, the maximum size is 95 integer (check done at compilation) */
-	int settings[90];
+	int sound_shift;
+	int settings[89];
 };
 	
 
