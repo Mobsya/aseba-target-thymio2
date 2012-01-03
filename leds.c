@@ -37,13 +37,12 @@
 #define LEDS_WAIT 40
 
 static unsigned char leds_off[LED_BANK] = {0x3,0x80,0xf,0xf,0xf};
-static unsigned char led[MAX_BRIGHTNESS * LED_BANK];
-static unsigned char index;
+unsigned char led[MAX_BRIGHTNESS * LED_BANK]; // Not static because used in assembly file
+unsigned char * __attribute((near)) led_index = led; // Not static because used in assembly file
 
-// Todo: check the constrains & qualifiers
-#define atomic_andb(x,y) do { __asm__ volatile ("and.b %[yy], [%[xx]], [%[xx]]": : [xx] "r" (x), [yy] "r"(y): "cc","memory"); } while(0)
-/** Atomic or operation to prevent race conditions inside interrupts: *x = (*x) | y */
-#define atomic_orb(x,y) do { __asm__ volatile ("ior.b %[yy], [%[xx]], [%[xx]]" : : [xx] "r" (x), [yy] "r"(y): "cc","memory"); } while(0)
+// count must be between 0 and 32
+void _leds_set(unsigned char * p, unsigned int count, unsigned char mask);
+void _leds_clr(unsigned char * p, unsigned int count, unsigned char mask);
 
 void leds_clear_all(void) {
 	// Enable to poweroff all leds, but keep the SOUND_ON as it is.	
@@ -57,74 +56,85 @@ void leds_clear_all(void) {
 		memcpy(led + i * LED_BANK, _l, LED_BANK);
 }
 
-void leds_set(unsigned char l, unsigned char brightness) {
-	unsigned char bank;
-	unsigned char pin;
-	unsigned char i;
-	unsigned char *p;
-	unsigned char inverted;
+static void _set(unsigned char bank, unsigned char offset, unsigned char pin, unsigned char count) {	
+	unsigned char c = count;
 	
-	// ~400 cycles to set a led... 
+	if(offset + c > MAX_BRIGHTNESS)
+		c = MAX_BRIGHTNESS - offset; 
 	
-	if(l >= LED_BANK * 8) 
-		return;
-		
-	bank = l >> 3;
-	pin = 1 << (l & 0x7);
-	inverted = leds_off[bank] & pin;
+	_leds_set(&led[bank + offset * LED_BANK], c, 1 << pin);
 	
-	p = led + ((((l & 0x7) * LED_BANK) + bank));
-	
-	if(p >= led + sizeof(led))
-		p -= sizeof(led);
-	
-	if(brightness >= MAX_BRIGHTNESS)
-		brightness = MAX_BRIGHTNESS;
-	
-	if(inverted) {
-		pin = ~pin;
-		for(i = 0; i < brightness; i++) {
-			atomic_andb(p, pin);
-			p = (p + LED_BANK);
-			if(p >= led + sizeof(led))
-				p -= sizeof(led);
-		}
-		pin = ~pin;
-		for(;i < MAX_BRIGHTNESS; i++) {
-			atomic_orb(p, pin);
-			p = (p + LED_BANK);
-			if(p >= led + sizeof(led))
-				p -= sizeof(led);
-		}
-	} else {
-		for(i = 0; i < brightness; i++) {
-			atomic_orb(p,pin);
-			p = (p + LED_BANK);
-			if(p >= led + sizeof(led))
-				p -= sizeof(led);
-		}
-		pin = ~pin;
-		for(; i < MAX_BRIGHTNESS; i++) {
-			atomic_andb(p,pin);
-			p = (p + LED_BANK);
-			if(p >= led + sizeof(led))
-				p -= sizeof(led);
-		}
+	if(c != count) {
+		c = count - c;
+		_leds_set(&led[bank], c, 1 << pin);
 	}
 }
 
-void leds_tick_cb(void) {
-	LED_CS = 1;
-	SPI1BUF = led[index++];
-	SPI1BUF = led[index++];
-	SPI1BUF = led[index++];
-	SPI1BUF = led[index++];
-	SPI1BUF = led[index++];
-	if(index == sizeof(led)) 
-		index = 0;
-	LED_CS = 0;
+static void _clr(unsigned char bank, unsigned char offset, unsigned char pin, unsigned char count) {
+	unsigned char c = count;
+	
+	if(offset + c > MAX_BRIGHTNESS)
+		c = MAX_BRIGHTNESS - offset; 
+	
+	_leds_clr(&led[bank + offset * LED_BANK], c, ~(1 << pin));
+	
+	if(c != count) {
+		c = count - c;
+		_leds_clr(&led[bank], c, ~(1 << pin));
+	}
 }
 
+static void _set_led(unsigned char bank, unsigned char pin, unsigned char inverted, unsigned char brightness) {
+	unsigned char start = pin;
+	
+	if(inverted) {
+		_clr(bank, start, pin, brightness);
+		start += brightness;
+		if(start >= MAX_BRIGHTNESS)
+			start -= MAX_BRIGHTNESS;
+		_set(bank, start, pin, MAX_BRIGHTNESS - brightness);
+	} else {
+		_set(bank, start, pin, brightness);
+		start += brightness;
+		if(start >= MAX_BRIGHTNESS)
+			start -= MAX_BRIGHTNESS;
+		_clr(bank, start, pin, MAX_BRIGHTNESS - brightness);
+	}
+}	
+
+
+// brightness == 0|32: about 150cycles
+// brightness != 0|32: about 260cycles
+void leds_set(unsigned char l, unsigned char brightness) {
+	unsigned char bank;
+	unsigned char pin;
+	unsigned char inverted;
+	
+	if(l >= LED_BANK * 8)
+		return;
+		
+	bank = l >> 3;
+	pin = l & 0x7;
+	inverted = leds_off[bank] & (1 << pin);
+		
+	if(brightness >= MAX_BRIGHTNESS)
+		brightness = MAX_BRIGHTNESS;
+		
+	// handle special cases (b == 0 or 32)
+	if(!brightness) {
+		if(inverted)
+			_leds_set(&led[bank], MAX_BRIGHTNESS, 1 << pin);
+		else
+			_leds_clr(&led[bank], MAX_BRIGHTNESS, ~(1 << pin));
+	} else if(brightness == MAX_BRIGHTNESS) {
+		if(inverted)
+			_leds_clr(&led[bank], MAX_BRIGHTNESS, ~(1 << pin));
+		else
+			_leds_set(&led[bank], MAX_BRIGHTNESS, 1 << pin);
+	} else {
+		_set_led(bank, pin, inverted, brightness);
+	}
+}	
 
 void leds_init(void) {
 	int i;
