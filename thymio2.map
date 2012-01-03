@@ -118,9 +118,10 @@ section                    address   length (PC units)   length (bytes) (dec)
 .dinit                      0x94a8               0x3a2           0x573  (1395)
 .text                       0x984a              0x26e6          0x3a59  (14937)
 .text                       0xbf30               0xa98           0xfe4  (4068)
-.log_flash                 0x14000               0x800           0xc00  (3072)
+.log_flash                 0x13c00               0x800           0xc00  (3072)
+.aseba_settings            0x14400               0x400           0x600  (1536)
 
-                     Total program memory used (bytes):        0x137ac  (79788) 63%
+                     Total program memory used (bytes):        0x13dac  (81324) 64%
 
 
 Data Memory  [Origin = 0x800, Length = 0x4000]
@@ -177,7 +178,7 @@ _019200704eaeb59f           0x11be                   0             0x2  (2)
 _019203104eaeb59f           0x11c0                   0             0x6  (6)
 .nbss                       0x11c6                   0           0x8d0  (2256)
 .ndata                      0x1a96                   0           0x10e  (270)
-_01934f504f01f916           0x1ba4                   0            0xb4  (180)
+_01934f504f02d451           0x1ba4                   0            0xb4  (180)
 .nbss                       0x1c58                   0           0x136  (310)
 .nbss                       0x1d8e                   0            0x60  (96)
 .ndata                      0x1dee                   0            0x52  (82)
@@ -193,7 +194,7 @@ when                        0x1eba                   0            0x10  (16)
 .nbss                       0x1f42                   0             0x2  (2)
 .ndata                      0x1f44                   0             0x4  (4)
 .bss                        0x1f48                   0          0x1166  (4454)
-_018422304f01f92a           0x47e8                   0            0x18  (24)
+_018422304f02d455           0x47e8                   0            0x18  (24)
 
                         Total data memory used (bytes):         0x28c6  (10438) 63%
 
@@ -733,8 +734,8 @@ External Symbols in Program Memory (by address):
                   0x00c9bc                  _error_report
                   0x00c9c0                  _error_register_callback
                   0x00c9c4                  __DefaultInterrupt
-                  0x014000                  _log_flash
-                  0x014800                  _aseba_settings_flash
+                  0x013c00                  _log_flash
+                  0x014400                  _aseba_settings_flash
 
 External Symbols in Program Memory (by name):
 
@@ -883,7 +884,7 @@ External Symbols in Program Memory (by name):
                   0x003800                  _aseba_flash
                   0x003000                  _aseba_flash1
                   0x002800                  _aseba_flash2
-                  0x014800                  _aseba_settings_flash
+                  0x014400                  _aseba_settings_flash
                   0x006bf2                  _aseba_sin
                   0x006c52                  _aseba_sqrt
                   0x0085d6                  _behavior_enabled
@@ -961,7 +962,7 @@ External Symbols in Program Memory (by name):
                   0x009a32                  _load_settings_from_flash
                   0x007418                  _log_analyse_bytecode
                   0x00799a                  _log_dump
-                  0x014000                  _log_flash
+                  0x013c00                  _log_flash
                   0x007880                  _log_init
                   0x00730a                  _log_poweroff_tick
                   0x007348                  _log_poweron_tick
@@ -2808,9 +2809,9 @@ _01918ee04eaeb59f
                     0x1190         0x2e usb_descriptors.o
                     0x1190                  sd002
 
-_018422304f01f92a
+_018422304f02d455
                     0x47e8         0x18
- _018422304f01f92a
+ _018422304f02d455
                     0x47e8         0x18 log.o
 
 _01918b604eaeb59f
@@ -3077,9 +3078,9 @@ _018d03104eaeb59f
                     0x1a96                  vmState
                     0x1acc                  events_flags
 
-_01934f504f01f916
+_01934f504f02d451
                     0x1ba4         0xb4
- _01934f504f01f916
+ _01934f504f02d451
                     0x1ba4         0xb4 skel-usb.o
                     0x1ba4                  settings
 
@@ -3166,15 +3167,15 @@ when                0x1eba         0x10
  .bss               0x3076         0x2c wav.o
  .bss               0x30a2          0xc mma7660.o
 
-.log_flash        0x014000        0x800
- .log_flash       0x014000        0x800 log.o
-                  0x014000                  log_flash
+.log_flash        0x013c00        0x800
+ .log_flash       0x013c00        0x800 log.o
+                  0x013c00                  log_flash
 
 .aseba_settings
-                  0x014800        0x400
+                  0x014400        0x400
  .aseba_settings
-                  0x014800        0x400 skel-usb.o
-                  0x014800                  aseba_settings_flash
+                  0x014400        0x400 skel-usb.o
+                  0x014400                  aseba_settings_flash
 
 .const              0x9254       0x145a load address 0x001254  
  .const             0x9254        0x888 natives.o
