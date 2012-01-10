@@ -375,7 +375,7 @@ void test_mode_tick(void) {
 		checked |= C_RC5;
 	}
 	
-	if(((vmVariables.sound_level - vmVariables.sound_level) > 40) && (vmVariables.sound_mean > 200) && (vmVariables.sound_mean < 300)) {
+	if((vmVariables.sound_level > 40) && (vmVariables.sound_mean > 200) && (vmVariables.sound_mean < 300)) {
 		checked |= C_MIC;
 		leds_set(LED_SOUND,0);
 	}
