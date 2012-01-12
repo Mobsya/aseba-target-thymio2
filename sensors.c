@@ -64,6 +64,8 @@ static inline void manage_buttons_event(void) {
 }	
 
 void new_sensors_value(unsigned int * val, int b) {
+	leds_tick_cb();
+	
 	/* Sound ... */
 	sound_new_sample(val[3]);
 	
@@ -72,9 +74,9 @@ void new_sensors_value(unsigned int * val, int b) {
 	
 	/* IR sensors ... */
 	ground_ir_new(val[1], val[2]);
-	
 
-	leds_tick_cb();
+	// Latch the leds ...
+	asm volatile ("	bset LATC,#13");
 	
 /* Capacitive button first stage filtering ... */
 	button[b] += val[0];
@@ -92,9 +94,7 @@ void new_sensors_value(unsigned int * val, int b) {
 			button[1] = 0;
 			button[2] = 0; 
 			button[3] = 0;
-			button[4] = 0;
-			
-			
+			button[4] = 0;	
 		}
 	}
 }	

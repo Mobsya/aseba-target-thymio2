@@ -266,7 +266,7 @@ void __attribute__((noreturn)) analog_enter_poweroff_mode(void) {
 	unsigned int b = 0;
 	unsigned long bsum = 0;
 	unsigned int tresh;
-	int init_sum = 1;
+	int init_sum = 2;
 	
 	
 	was_connected = U1OTGSTATbits.SESVD;
@@ -355,7 +355,7 @@ void __attribute__((noreturn)) analog_enter_poweroff_mode(void) {
 		}
 		
 		if(init_sum) {
-			init_sum = 0;
+			init_sum--;
 			for(i = 0; i < 16; i++)
 				boff[i] = temp;
 			bsum = __builtin_muluu(16,temp);
@@ -394,11 +394,11 @@ void __attribute__((noreturn)) analog_enter_poweroff_mode(void) {
 				}
 			} else {
 				// if usb unplug, reinit the button treshold as it will trigger spurious button activity
-				if(was_connected)  {
+			/*	if(was_connected)  {
 					bsum = __builtin_muluu(16,temp);
 					for(i = 0; i < 16; i++)
 						boff[i] = temp;
-				}
+				}*/
 				was_connected = 0;
 			}
 			// Switch off usb module

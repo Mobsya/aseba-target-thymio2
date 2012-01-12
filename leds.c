@@ -152,8 +152,8 @@ void leds_init(void) {
 	SPI1CON1bits.SSEN = 0;
 	SPI1CON1bits.CKP = 0;
 	SPI1CON1bits.MSTEN = 1;
-	SPI1CON1bits.SPRE = 4; // SPI clock, 1Mhz
-	SPI1CON1bits.PPRE = 0x2;
+	SPI1CON1bits.SPRE = 0b110; // Secondary 2:1. Spi clock 8Mhz
+	SPI1CON1bits.PPRE = 0x3; // Primary 1:1
 	
 	
 	SPI1CON2 = 1; // bufferized mode

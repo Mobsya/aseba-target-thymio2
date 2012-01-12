@@ -10,9 +10,9 @@
 .global _leds_tick_cb
 
 
-; void leds_tick_cb(void) (15 cycles) For comparaison, C version is 33 cycles. This save 8000*18 = 144'000 cycles/s.
+; void leds_tick_cb(void)
 _leds_tick_cb:
-	bset LATC,#13			; LED_CS = 1;
+	bclr LATC,#13			; LED_CS = 0;
 	mov _led_index,w0		; w0 = led_index
 	mov #SPI1BUF, w1		; w1 = &SPI1BUF
 	mov.b [w0++],[w1]		; SPI1BUF = *led_index++
@@ -26,7 +26,7 @@ _leds_tick_cb:
 	mov #_led,w0			;	w0 = &led[0]
 
 	mov w0, _led_index		; led_index = w0
-	bclr LATC,#13			; LED_CS = 0;
+	; The leds will be latched later in the interrupt
 	return
 	
 ; w0: pointer to leds array
