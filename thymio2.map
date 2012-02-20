@@ -133,52 +133,52 @@ section                    address      alignment gaps    total length  (dec)
 .nbss                        0xfae                   0            0x30  (48)
 .nbss                        0xfde                   0            0x1e  (30)
 .nbss                        0xffc                   0             0x4  (4)
-_0190d4d04eaeb59f           0x1000                   0            0x30  (48)
-_0190d5b04eaeb59f           0x1030                   0             0x8  (8)
-_0190d7704eaeb59f           0x1038                   0             0x8  (8)
-_018d68c04eaeb59f           0x1040                   0             0x2  (2)
-_018d69a04eaeb59f           0x1042                   0             0x2  (2)
-_0190da104eaeb59f           0x1044                   0             0x2  (2)
-_0190da804eaeb59f           0x1046                   0             0x2  (2)
-_0190daf04eaeb59f           0x1048                   0             0x2  (2)
-_019030004eaeb59f           0x104a                   0             0x6  (6)
-_018ffe704eaeb59f           0x1050                   0             0x6  (6)
-_0190de004eaeb59f           0x1056                   0             0x2  (2)
-_0190de704eaeb59f           0x1058                   0             0x2  (2)
-_018d3c404eaeb59f           0x105a                   0             0x6  (6)
-_018ffbd04eaeb59f           0x1060                   0             0x8  (8)
-_019132304eaeb59f           0x1068                   0             0x2  (2)
-_019132a04eaeb59f           0x106a                   0             0x2  (2)
-_019133804eaeb59f           0x106c                   0             0x2  (2)
-_019136204eaeb59f           0x106e                   0             0x4  (4)
-_019137704eaeb59f           0x1072                   0             0x4  (4)
-_018d03104eaeb59f           0x1076                   0             0x2  (2)
-_019138504eaeb59f           0x1078                   0             0x2  (2)
-_019138c04eaeb59f           0x107a                   0             0x2  (2)
-_018d09a04eaeb59f           0x107c                   0             0x2  (2)
-_018d06904eaeb59f           0x107e                   0             0x2  (2)
-_01913a104eaeb59f           0x1080                   0             0x2  (2)
-_018d67704eaeb59f           0x1082                   0             0x2  (2)
-_018d67e04eaeb59f           0x1084                   0             0x2  (2)
-_01913b604eaeb59f           0x1086                   0             0x2  (2)
-_01913cb04eaeb59f           0x1088                   0            0x40  (64)
-_01913e004eaeb59f           0x10c8                   0            0x40  (64)
-_01913e704eaeb59f           0x1108                   0             0x8  (8)
-_01913ee04eaeb59f           0x1110                   0             0x2  (2)
-_01913f504eaeb59f           0x1112                   0             0x2  (2)
-_019180004eaeb59f           0x1114                   0             0x2  (2)
-_019181c04eaeb59f           0x1116                   0             0x8  (8)
-_019182304eaeb59f           0x111e                   0             0x2  (2)
-_019182a04eaeb59f           0x1120                   0            0x12  (18)
-_019183804eaeb59f           0x1132                   0            0x44  (68)
-_019187e04eaeb59f           0x1176                   0             0x4  (4)
-_01918b604eaeb59f           0x117a                   0            0x16  (22)
-_01918ee04eaeb59f           0x1190                   0            0x2e  (46)
-_019200704eaeb59f           0x11be                   0             0x2  (2)
-_019203104eaeb59f           0x11c0                   0             0x6  (6)
+_0190d4d04f2ffb46           0x1000                   0            0x30  (48)
+_0190d5b04f2ffb46           0x1030                   0             0x8  (8)
+_0190d7704f2ffb46           0x1038                   0             0x8  (8)
+_018d68c04f2ffb46           0x1040                   0             0x2  (2)
+_018d69a04f2ffb46           0x1042                   0             0x2  (2)
+_0190da104f2ffb46           0x1044                   0             0x2  (2)
+_0190da804f2ffb46           0x1046                   0             0x2  (2)
+_0190daf04f2ffb46           0x1048                   0             0x2  (2)
+_019030004f2ffb46           0x104a                   0             0x6  (6)
+_018ffe704f2ffb46           0x1050                   0             0x6  (6)
+_0190de004f2ffb46           0x1056                   0             0x2  (2)
+_0190de704f2ffb46           0x1058                   0             0x2  (2)
+_018d3c404f2ffb46           0x105a                   0             0x6  (6)
+_018ffbd04f2ffb46           0x1060                   0             0x8  (8)
+_019132304f2ffb46           0x1068                   0             0x2  (2)
+_019132a04f2ffb46           0x106a                   0             0x2  (2)
+_019133804f2ffb46           0x106c                   0             0x2  (2)
+_019136204f2ffb46           0x106e                   0             0x4  (4)
+_019137704f2ffb46           0x1072                   0             0x4  (4)
+_018d03104f2ffb46           0x1076                   0             0x2  (2)
+_019138504f2ffb46           0x1078                   0             0x2  (2)
+_019138c04f2ffb46           0x107a                   0             0x2  (2)
+_018d09a04f2ffb46           0x107c                   0             0x2  (2)
+_018d06904f2ffb46           0x107e                   0             0x2  (2)
+_01913a104f2ffb46           0x1080                   0             0x2  (2)
+_018d67704f2ffb46           0x1082                   0             0x2  (2)
+_018d67e04f2ffb46           0x1084                   0             0x2  (2)
+_01913b604f2ffb46           0x1086                   0             0x2  (2)
+_01913cb04f2ffb46           0x1088                   0            0x40  (64)
+_01913e004f2ffb46           0x10c8                   0            0x40  (64)
+_01913e704f2ffb46           0x1108                   0             0x8  (8)
+_01913ee04f2ffb46           0x1110                   0             0x2  (2)
+_01913f504f2ffb46           0x1112                   0             0x2  (2)
+_019180004f2ffb46           0x1114                   0             0x2  (2)
+_019181c04f2ffb46           0x1116                   0             0x8  (8)
+_019182304f2ffb46           0x111e                   0             0x2  (2)
+_019182a04f2ffb46           0x1120                   0            0x12  (18)
+_019183804f2ffb46           0x1132                   0            0x44  (68)
+_019187e04f2ffb46           0x1176                   0             0x4  (4)
+_01918b604f2ffb46           0x117a                   0            0x16  (22)
+_01918ee04f2ffb46           0x1190                   0            0x2e  (46)
+_019200704f2ffb46           0x11be                   0             0x2  (2)
+_019203104f2ffb46           0x11c0                   0             0x6  (6)
 .nbss                       0x11c6                   0           0x8d0  (2256)
 .ndata                      0x1a96                   0           0x10e  (270)
-_01934f504f02d451           0x1ba4                   0            0xb4  (180)
+_01934f504f2ffb26           0x1ba4                   0            0xb4  (180)
 .nbss                       0x1c58                   0           0x136  (310)
 .nbss                       0x1d8e                   0            0x60  (96)
 .ndata                      0x1dee                   0            0x52  (82)
@@ -194,7 +194,7 @@ when                        0x1eba                   0            0x10  (16)
 .nbss                       0x1f42                   0             0x2  (2)
 .ndata                      0x1f44                   0             0x4  (4)
 .bss                        0x1f48                   0          0x1166  (4454)
-_018422304f02d455           0x47e8                   0            0x18  (24)
+_018422304f2ffb55           0x47e8                   0            0x18  (24)
 
                         Total data memory used (bytes):         0x28c6  (10438) 63%
 
@@ -2779,266 +2779,266 @@ __c30_signature
  __c30_signature
                   0x000156          0x6 c:/program files/microchip/mplabc30/v3.25/bin/bin/../../lib\libc-coff.a(memcpy.o)
 
-_019183804eaeb59f
+_019183804f2ffb46
                     0x1132         0x44
- _019183804eaeb59f
+ _019183804f2ffb46
                     0x1132         0x44 usb_descriptors.o
                     0x1132                  configDescriptor1
 
-_01913e004eaeb59f
+_01913e004f2ffb46
                     0x10c8         0x40
- _01913e004eaeb59f
+ _01913e004f2ffb46
                     0x10c8         0x40 usb_descriptors.o
                     0x10c8                  cdc_data_tx
 
-_01913cb04eaeb59f
+_01913cb04f2ffb46
                     0x1088         0x40
- _01913cb04eaeb59f
+ _01913cb04f2ffb46
                     0x1088         0x40 usb_descriptors.o
                     0x1088                  cdc_data_rx
 
-_0190d4d04eaeb59f
+_0190d4d04f2ffb46
                     0x1000         0x30
- _0190d4d04eaeb59f
+ _0190d4d04f2ffb46
                     0x1000         0x30 usb_descriptors.o
                     0x1000                  BDT
 
-_01918ee04eaeb59f
+_01918ee04f2ffb46
                     0x1190         0x2e
- _01918ee04eaeb59f
+ _01918ee04f2ffb46
                     0x1190         0x2e usb_descriptors.o
                     0x1190                  sd002
 
-_018422304f02d455
+_018422304f2ffb55
                     0x47e8         0x18
- _018422304f02d455
+ _018422304f2ffb55
                     0x47e8         0x18 log.o
 
-_01918b604eaeb59f
+_01918b604f2ffb46
                     0x117a         0x16
- _01918b604eaeb59f
+ _01918b604f2ffb46
                     0x117a         0x16 usb_descriptors.o
                     0x117a                  sd001
 
-_019182a04eaeb59f
+_019182a04f2ffb46
                     0x1120         0x12
- _019182a04eaeb59f
+ _019182a04f2ffb46
                     0x1120         0x12 usb_descriptors.o
                     0x1120                  device_dsc
 
-_019181c04eaeb59f
+_019181c04f2ffb46
                     0x1116          0x8
- _019181c04eaeb59f
+ _019181c04f2ffb46
                     0x1116          0x8 usb_descriptors.o
                     0x1116                  dummy_encapsulated_cmd_response
 
-_01913e704eaeb59f
+_01913e704f2ffb46
                     0x1108          0x8
- _01913e704eaeb59f
+ _01913e704f2ffb46
                     0x1108          0x8 usb_descriptors.o
                     0x1108                  line_coding
 
-_0190d7704eaeb59f
+_0190d7704f2ffb46
                     0x1038          0x8
- _0190d7704eaeb59f
+ _0190d7704f2ffb46
                     0x1038          0x8 usb_descriptors.o
                     0x1038                  CtrlTrfData
 
-_0190d5b04eaeb59f
+_0190d5b04f2ffb46
                     0x1030          0x8
- _0190d5b04eaeb59f
+ _0190d5b04f2ffb46
                     0x1030          0x8 usb_descriptors.o
                     0x1030                  SetupPkt
 
-_018ffbd04eaeb59f
+_018ffbd04f2ffb46
                     0x1060          0x8
- _018ffbd04eaeb59f
+ _018ffbd04f2ffb46
                     0x1060          0x8 usb_descriptors.o
                     0x1060                  outPipes
 
-_019203104eaeb59f
+_019203104f2ffb46
                     0x11c0          0x6
- _019203104eaeb59f
+ _019203104f2ffb46
                     0x11c0          0x6 usb_descriptors.o
                     0x11c0                  USB_SD_Ptr
 
-_019030004eaeb59f
+_019030004f2ffb46
                     0x104a          0x6
- _019030004eaeb59f
+ _019030004f2ffb46
                     0x104a          0x6 usb_descriptors.o
                     0x104a                  pBDTEntryOut
 
-_018ffe704eaeb59f
+_018ffe704f2ffb46
                     0x1050          0x6
- _018ffe704eaeb59f
+ _018ffe704f2ffb46
                     0x1050          0x6 usb_descriptors.o
                     0x1050                  pBDTEntryIn
 
-_018d3c404eaeb59f
+_018d3c404f2ffb46
                     0x105a          0x6
- _018d3c404eaeb59f
+ _018d3c404f2ffb46
                     0x105a          0x6 usb_descriptors.o
                     0x105a                  inPipes
 
-_019187e04eaeb59f
+_019187e04f2ffb46
                     0x1176          0x4
- _019187e04eaeb59f
+ _019187e04f2ffb46
                     0x1176          0x4 usb_descriptors.o
                     0x1176                  sd000
 
-_019137704eaeb59f
+_019137704f2ffb46
                     0x1072          0x4
- _019137704eaeb59f
+ _019137704f2ffb46
                     0x1072          0x4 usb_descriptors.o
                     0x1072                  ep_data_out
 
-_019136204eaeb59f
+_019136204f2ffb46
                     0x106e          0x4
- _019136204eaeb59f
+ _019136204f2ffb46
                     0x106e          0x4 usb_descriptors.o
                     0x106e                  ep_data_in
 
-_019200704eaeb59f
+_019200704f2ffb46
                     0x11be          0x2
- _019200704eaeb59f
+ _019200704f2ffb46
                     0x11be          0x2 usb_descriptors.o
                     0x11be                  USB_CD_Ptr
 
-_019182304eaeb59f
+_019182304f2ffb46
                     0x111e          0x2
- _019182304eaeb59f
+ _019182304f2ffb46
                     0x111e          0x2 usb_descriptors.o
                     0x111e                  rx_blocked
 
-_019180004eaeb59f
+_019180004f2ffb46
                     0x1114          0x2
- _019180004eaeb59f
+ _019180004f2ffb46
                     0x1114          0x2 usb_descriptors.o
                     0x1114                  control_signal_bitmap
 
-_01913f504eaeb59f
+_01913f504f2ffb46
                     0x1112          0x2
- _01913f504eaeb59f
+ _01913f504f2ffb46
                     0x1112          0x2 usb_descriptors.o
                     0x1112                  CDCDataInHandle
 
-_01913ee04eaeb59f
+_01913ee04f2ffb46
                     0x1110          0x2
- _01913ee04eaeb59f
+ _01913ee04f2ffb46
                     0x1110          0x2 usb_descriptors.o
                     0x1110                  CDCDataOutHandle
 
-_01913b604eaeb59f
+_01913b604f2ffb46
                     0x1086          0x2
- _01913b604eaeb59f
+ _01913b604f2ffb46
                     0x1086          0x2 usb_descriptors.o
                     0x1086                  USBStatusStageTimeoutCounter
 
-_01913a104eaeb59f
+_01913a104f2ffb46
                     0x1080          0x2
- _01913a104eaeb59f
+ _01913a104f2ffb46
                     0x1080          0x2 usb_descriptors.o
                     0x1080                  BothEP0OutUOWNsSet
 
-_019138c04eaeb59f
+_019138c04f2ffb46
                     0x107a          0x2
- _019138c04eaeb59f
+ _019138c04f2ffb46
                     0x107a          0x2 usb_descriptors.o
                     0x107a                  USBStatusStageEnabledFlag2
 
-_019138504eaeb59f
+_019138504f2ffb46
                     0x1078          0x2
- _019138504eaeb59f
+ _019138504f2ffb46
                     0x1078          0x2 usb_descriptors.o
                     0x1078                  USBStatusStageEnabledFlag1
 
-_019133804eaeb59f
+_019133804f2ffb46
                     0x106c          0x2
- _019133804eaeb59f
+ _019133804f2ffb46
                     0x106c          0x2 usb_descriptors.o
                     0x106c                  USTATcopy
 
-_019132a04eaeb59f
+_019132a04f2ffb46
                     0x106a          0x2
- _019132a04eaeb59f
+ _019132a04f2ffb46
                     0x106a          0x2 usb_descriptors.o
                     0x106a                  endpoint_number
 
-_019132304eaeb59f
+_019132304f2ffb46
                     0x1068          0x2
- _019132304eaeb59f
+ _019132304f2ffb46
                     0x1068          0x2 usb_descriptors.o
                     0x1068                  pDst
 
-_0190de704eaeb59f
+_0190de704f2ffb46
                     0x1058          0x2
- _0190de704eaeb59f
+ _0190de704f2ffb46
                     0x1058          0x2 usb_descriptors.o
                     0x1058                  controlTransferState
 
-_0190de004eaeb59f
+_0190de004f2ffb46
                     0x1056          0x2
- _0190de004eaeb59f
+ _0190de004f2ffb46
                     0x1056          0x2 usb_descriptors.o
                     0x1056                  shortPacketStatus
 
-_0190daf04eaeb59f
+_0190daf04f2ffb46
                     0x1048          0x2
- _0190daf04eaeb59f
+ _0190daf04f2ffb46
                     0x1048          0x2 usb_descriptors.o
                     0x1048                  pBDTEntryEP0OutNext
 
-_0190da804eaeb59f
+_0190da804f2ffb46
                     0x1046          0x2
- _0190da804eaeb59f
+ _0190da804f2ffb46
                     0x1046          0x2 usb_descriptors.o
                     0x1046                  pBDTEntryEP0OutCurrent
 
-_0190da104eaeb59f
+_0190da104f2ffb46
                     0x1044          0x2
- _0190da104eaeb59f
+ _0190da104f2ffb46
                     0x1044          0x2 usb_descriptors.o
                     0x1044                  USBAlternateInterface
 
-_018d69a04eaeb59f
+_018d69a04f2ffb46
                     0x1042          0x2
- _018d69a04eaeb59f
+ _018d69a04f2ffb46
                     0x1042          0x2 usb_descriptors.o
                     0x1042                  USBActiveConfiguration
 
-_018d68c04eaeb59f
+_018d68c04f2ffb46
                     0x1040          0x2
- _018d68c04eaeb59f
+ _018d68c04f2ffb46
                     0x1040          0x2 usb_descriptors.o
                     0x1040                  USBDeviceState
 
-_018d67e04eaeb59f
+_018d67e04f2ffb46
                     0x1084          0x2
- _018d67e04eaeb59f
+ _018d67e04f2ffb46
                     0x1084          0x2 usb_descriptors.o
                     0x1084                  USBBusIsSuspended
 
-_018d67704eaeb59f
+_018d67704f2ffb46
                     0x1082          0x2
- _018d67704eaeb59f
+ _018d67704f2ffb46
                     0x1082          0x2 usb_descriptors.o
                     0x1082                  RemoteWakeup
 
-_018d09a04eaeb59f
+_018d09a04f2ffb46
                     0x107c          0x2
- _018d09a04eaeb59f
+ _018d09a04f2ffb46
                     0x107c          0x2 usb_descriptors.o
                     0x107c                  USBDeferINDataStagePackets
 
-_018d06904eaeb59f
+_018d06904f2ffb46
                     0x107e          0x2
- _018d06904eaeb59f
+ _018d06904f2ffb46
                     0x107e          0x2 usb_descriptors.o
                     0x107e                  USBDeferOUTDataStagePackets
 
-_018d03104eaeb59f
+_018d03104f2ffb46
                     0x1076          0x2
- _018d03104eaeb59f
+ _018d03104f2ffb46
                     0x1076          0x2 usb_descriptors.o
                     0x1076                  USBDeferStatusStagePacket
 
@@ -3078,9 +3078,9 @@ _018d03104eaeb59f
                     0x1a96                  vmState
                     0x1acc                  events_flags
 
-_01934f504f02d451
+_01934f504f2ffb26
                     0x1ba4         0xb4
- _01934f504f02d451
+ _01934f504f2ffb26
                     0x1ba4         0xb4 skel-usb.o
                     0x1ba4                  settings
 
