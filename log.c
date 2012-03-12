@@ -182,7 +182,7 @@ static void check_load(unsigned int i) {
 	}
 }
 #undef A
-#define FUNC_OFFSET (19+4)
+#define FUNC_OFFSET (ASEBA_NATIVES_STD_COUNT+4)
 static void check_native(unsigned int i) {
 	switch(i) {
 	case FUNC_OFFSET + 2:
