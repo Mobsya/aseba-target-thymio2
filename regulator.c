@@ -33,8 +33,7 @@ void va_get(void) {
 }
 
 void va_put(void) {
-	atomic_add(&refcount, -1);
-	if(!refcount)
+	if(!atomic_add_and_test(&refcount, -1))
 		VA_ENABLE = 0;	
 }
 

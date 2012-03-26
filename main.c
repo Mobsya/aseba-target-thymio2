@@ -29,8 +29,9 @@ History:
 1: Wallsocket charger off mode fix. This version is the production firmware.
 2: Add rand() support and first public release, fix playback-recoreded sound, fix ground detection in explorer mode
 3: Second public release, see wiki for changelog
+4: Bugfix release
 */
-#define FW_VERSION 3
+#define FW_VERSION 4
 
 /* Firmware variant. Each variant of the firmware has it own number */
 
@@ -296,9 +297,6 @@ int main(void)
 	_INT3IF = 0;
 	_INT3IP = 1;
 	_INT3IE = 1;
-	
-	// Enable the LVD interrupt
-	_LVDIE = 1;
 
 	// Sound must be enabled before analog, as 
 	// The analog interrupt callback into sound processing ... 
@@ -371,6 +369,9 @@ int main(void)
 	if( ! load_settings_from_flash()) {
 		/* Todo */
 	}
+	
+	// Enable the LVD interrupt
+	_LVDIE = 1;
 	
 	play_sound(SOUND_POWERON);
 	
