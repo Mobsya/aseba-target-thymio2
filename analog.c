@@ -247,7 +247,7 @@ void analog_init(int t, int prio) {
 }
 
 
-#define BUTTON_TRESHOLD 500
+#define BUTTON_TRESHOLD 350
 
 static void do_reset(void) {
 // Switch on the CRC module.
