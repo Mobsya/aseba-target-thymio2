@@ -614,7 +614,7 @@ static void tick_sound(void) {
 }
 
 static void tick_line(void) {
-	static unsigned int black_level = 200;
+	static unsigned int black_level = 260;
 	static unsigned int white_level = 400;
 	static char led_pulse;
 #define STATE_BLACK 0
