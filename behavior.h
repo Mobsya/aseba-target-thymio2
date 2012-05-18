@@ -25,7 +25,8 @@
 
 
 
-void behavior_init(int timer, int prio);
+void behavior_init(int prio);
+void behavior_trigger(void);
 
 #define BEHAVIOR_SD_READ 0x1
 #define BEHAVIOR_SD_WRITE 0x2

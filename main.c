@@ -30,8 +30,9 @@ History:
 2: Add rand() support and first public release, fix playback-recoreded sound, fix ground detection in explorer mode
 3: Second public release, see wiki for changelog
 4: Bugfix release
+5: WIP
 */
-#define FW_VERSION 4
+#define FW_VERSION 5
 
 /* Firmware variant. Each variant of the firmware has it own number */
 
@@ -79,12 +80,16 @@ History:
 //_CONFIG2(IESO_OFF & PLLDIV_DIV2 & PLL96DIS_ON & FNOSC_PRIPLL & FCKSM_CSDCMD & OSCIOFNC_OFF & IOL1WAY_OFF & DISUVREG_OFF & POSCMOD_HS) 
 //_CONFIG3(WPEND_WPSTARTMEM & WPCFG_WPCFGDIS & WPDIS_WPEN) 
 
+/* 4 Softirq are used on INT1-4 
+ * INT1,INT2 are used for sound (IPL 2)
+ * INT3 is used to trigger poweroff (IPL 1)
+ * INT4 is used to handle the behavior (IPL 1)
+ */
+
 // Priority 2 is reserverd for SD operations ...
 #define PRIO_SENSORS 6
 // USB priority: 5
 #define PRIO_RC5 4
-#define PRIO_ACC 3
-#define PRIO_NTC 3
 #define PRIO_1KHZ 3
 // SD PRIO: 2 
 #define PRIO_BEHAVIOR 1
@@ -92,36 +97,11 @@ History:
 #define CHARGE_ENABLE_DIR _TRISF1
 #define CHARGE_500MA  _LATF0
 
-
 #define TIMER_ANALOG TIMER_2
-#define TIMER_RC5 TIMER_3
-#define TIMER_BEHAVIOR TIMER_1
-#define TIMER_SLOW TIMER_4
+#define TIMER_RC5 TIMER_4
 #define TIMER_1KHZ TIMER_5
 
-static unsigned int timer[2];
-
-static void timer_1khz(int timer_id) {
-	int i;
-	
-	disk_timerproc();
-	
-	log_poweron_tick();
-
-	
-	for(i = 0; i < 2; i++) {
-		if(vmVariables.timers[i]) {
-			if(++timer[i] >= vmVariables.timers[i]) {
-				timer[i] = 0;
-				SET_EVENT(EVENT_TIMER0 + i);
-			}
-		}
-	}
-	
-}
-
 static void acc_cb(int x, int y, int z, int tap) {
-
 	vmVariables.acc[0] = x;
 	vmVariables.acc[1] = y;
 	vmVariables.acc[2] = z;	
@@ -160,7 +140,7 @@ static void ntc_tick(void) {
 	}	
 }
 
-static void timer_slow_callback(int timer) {
+static void timer_slow(void) {
 	// timer_slow is at 16 Hz
 	static unsigned char ntc_prescaler = 0;
 	if(++ntc_prescaler >= 8) {
@@ -172,6 +152,39 @@ static void timer_slow_callback(int timer) {
 	mma7660_read_async();
 }
 
+static unsigned int timer[2];
+
+static void timer_1khz(int timer_id) {
+	int i;
+	static unsigned char timer_20ms;
+	static unsigned char timer_62ms;
+	
+	disk_timerproc();
+	
+	log_poweron_tick();
+	
+	// Generate behavior softirq at 50Hz
+	if(++timer_20ms >= 20) {
+		timer_20ms = 0;
+		behavior_trigger();
+	}
+
+	// Generate 16Hz, used by NTC & Acc.
+	if(++timer_62ms >= 62) {
+		timer_62ms = 0;
+		timer_slow();
+	}
+	
+	for(i = 0; i < 2; i++) {
+		if(vmVariables.timers[i]) {
+			if(++timer[i] >= vmVariables.timers[i]) {
+				timer[i] = 0;
+				SET_EVENT(EVENT_TIMER0 + i);
+			}
+		}
+	}
+	
+}
 
 
 
@@ -193,9 +206,6 @@ void update_aseba_variables_write(void) {
 // 	- In minimal power consuption mode
 void switch_off(void) { 
 	behavior_stop(B_ALL);
-	
-	timer_disable(TIMER_SLOW);
-	timer_disable_interrupt(TIMER_SLOW);
 	
 	timer_disable(TIMER_1KHZ);
 	timer_disable_interrupt(TIMER_1KHZ);
@@ -317,30 +327,23 @@ int main(void)
 
 	log_init(); // We will need to read vbat to be sure we can flash.
 
-	ntc_init(ntc_callback,PRIO_NTC);
-	
+	ntc_init(ntc_callback, PRIO_1KHZ);
 
-		
 	i2c_init(I2C_3);
-	i2c_init_master(I2C_3, 400000, PRIO_ACC);
+	i2c_init_master(I2C_3, 400000, PRIO_1KHZ);
 	
 	mma7660_init(I2C_3, MMA7660_DEFAULT_ADDRESS, acc_cb, 0);
 	mma7660_set_mode(MMA7660_120HZ, 1);
 	
-	timer_init(TIMER_SLOW, 62500, 6);
-	timer_enable_interrupt(TIMER_SLOW, timer_slow_callback, PRIO_ACC);
-	
 	rc5_init(TIMER_RC5, rc5_callback, PRIO_RC5);
 	
-	timer_enable(TIMER_SLOW);
-	
 	sd_init();
-
-	sd_log_file();
 
 	timer_init(TIMER_1KHZ, 1000, 6);
 	timer_enable_interrupt(TIMER_1KHZ, timer_1khz, PRIO_1KHZ);
 	timer_enable(TIMER_1KHZ);
+	
+	sd_log_file();
 	
 	vm_present = init_aseba_and_usb();
 	
@@ -357,7 +360,8 @@ int main(void)
 		log_analyse_bytecode();
 	}
 
-	behavior_init(TIMER_BEHAVIOR, PRIO_BEHAVIOR);
+	// Behavior is on INT4 (softirq trigged by 1khz timer).
+	behavior_init(PRIO_BEHAVIOR);
 	
 	
 	test_mode = sd_test_file_present();

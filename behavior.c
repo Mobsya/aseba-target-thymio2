@@ -44,7 +44,6 @@
 						r;}))
 
 
-static int timer;
 static unsigned int behavior;
 
 #define ENABLED(b) ({behavior & b;})
@@ -367,7 +366,9 @@ static void behavior_leds_ntc(void ) {
 	}
 }
 
-static void timer_cb(int timer_id) {
+void _ISR _INT4Interrupt(void) {
+	_INT4IF = 0;
+	
 	if(ENABLED(B_LEDS_SD)) 
 		behavior_sd();
 	
@@ -399,15 +400,15 @@ static void timer_cb(int timer_id) {
 		test_mode_tick();
 }
 
-void behavior_init(int t, int prio) {
-	timer = t;
-	timer_init(timer, 20, 3);
-	timer_enable_interrupt(timer,timer_cb, prio);
+void behavior_init(int prio) {
+	_INT4IP = prio;
 }
 
 void behavior_start(int b) {
-	if(!behavior)
-		timer_enable(timer);
+	if(!behavior) {
+		_INT4IF = 0;
+		_INT4IE = 1;
+	}
 
 	ENABLE(b);
 }
@@ -416,13 +417,17 @@ int behavior_enabled(int b) {
 	return ENABLED(b);
 }
 
+void behavior_trigger(void) {
+	_INT4IF = 1;
+}	
+
 void behavior_stop(int b) {
 	
 	DISABLE(b);
 	
 	if(!behavior) {
 		// TODO: Zero the when section ?
-		timer_disable(timer);
+		_INT4IE = 0;
 	}
 }
 
