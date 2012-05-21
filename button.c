@@ -57,16 +57,14 @@ static char state[5];
 static unsigned char init[5];
 
 // Some offset, constants, etc ...
-#define MIN_TRESHOLD 200
+#define MIN_TRESHOLD 130
 #define TRESH_OFFSET 20
 
 static void iir_sum(unsigned int i) {
 	// Fixed point 26.6
 	unsigned long u  = sum[i]*64;
-	
-	// TODO CHECK that compiler optimize correctly
+
 	sum_filtered[i] = sum_filtered[i] * 128 + u;
-	
 	
 	sum_filtered[i] = __udiv3216(sum_filtered[i], 129);
 }
@@ -81,58 +79,62 @@ static void iir_noise(unsigned int i) {
 }
 
 // update the max, min & mean value
-static void compute_stats(unsigned int b, unsigned int i) {
+static void compute_stats(unsigned int b, unsigned int i, unsigned int inhibit) {
 
 	int j;
 	
-	// adjust the sum and insert now button value
+	// adjust the sum and insert new button value
 	sum[i] -= old_b[i][insert[i]];
 	sum[i] += b;
 	old_b[i][insert[i]] = b;
 	
 	insert[i] = (insert[i] + 1) & 0xF; // +1 modulo 16
 	
+	if(!inhibit) {
 		// recompute the max & min ... 
-	max[i] = 0;
-	min[i] = 0xFFFF;
-	for(j = 0; j < 16; j++) {
-		if(max[i] < old_b[i][j])
-			max[i] = old_b[i][j];
+		max[i] = 0;
+		min[i] = 0xFFFF;
+		for(j = 0; j < 16; j++) {
+			if(max[i] < old_b[i][j])
+				max[i] = old_b[i][j];
 		
-		if(min[i] > old_b[i][j])
-			min[i] = old_b[i][j];
+			if(min[i] > old_b[i][j])
+				min[i] = old_b[i][j];
+		}
+		iir_sum(i);
+		iir_noise(i);
 	}
-	
-	iir_sum(i);
-	iir_noise(i);
 }
 
 void button_process(unsigned int b, unsigned int i) {
 	unsigned int tresh;
+	unsigned int _sum_filt;
 	
 	/* first give raw value to the user... */
 	vmVariables.buttons[i] = b;
 	
-	if(!init[i]) {
-		init[i] = 1;
+	if(init[i] < 3) {
+		init[i]++;
 		int j; 
 		for(j = 0; j < 16; j++)
 			old_b[i][j] = b;
-		noise[i] = 20*512;
+		noise[i] = (MIN_TRESHOLD*512UL)/2;
 		sum_filtered[i] = 64*16UL * b;
 		sum[i] = 16UL * b;
+		return;
 	}
 	
-	vmVariables.buttons_mean[i] = sum_filtered[i] / (64*16);
-	vmVariables.buttons_noise[i] = noise[i] / 256;
-		
-	tresh = __builtin_divsd(noise[i],256);
+	_sum_filt = sum_filtered[i] / (64*16);
+	vmVariables.buttons_mean[i] = _sum_filt;
+	tresh = noise[i] / 256;
+	vmVariables.buttons_noise[i] = tresh;
+	
 	if(tresh < MIN_TRESHOLD)
 		tresh = MIN_TRESHOLD;
 	
 	tresh += TRESH_OFFSET;
 	// Fixme, do the check only one every 16 samples ? 
-	if(b < __builtin_divud(sum_filtered[i],64*16) - tresh) {
+	if(b < _sum_filt - tresh) {
 		state[i]++;
 	} else {
 		if(state[i] == DEBOUNCE)
@@ -148,15 +150,20 @@ void button_process(unsigned int b, unsigned int i) {
 	} else {
 		if(state[i] == STATE_RELEASED) {
 			// We got released, inhibit any stat update for some time ...
-			inhibit[i] = 16;
+			inhibit[i] = 32;
 		}
 		vmVariables.buttons_state[i] = 0;
 		buttons_state[i]= 0;
-		if(inhibit[i] > 0) 
+		if(inhibit[i] > 0) {
+			// While we are released, take in account the button values
+			// But do not update the mean & noise values
 			inhibit[i]--;
-		else 
+			compute_stats(b,i,1);
+		} else 
+			// While we are about to be pressed (or we are pressed)
+			// Don't take in account the values.
 			if(!state[i])
-				compute_stats(b,i);
+				compute_stats(b,i,0);
 	}
 	
 	// Poweroff button managment. non-configurable behavior
