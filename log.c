@@ -120,7 +120,7 @@ void AsebaVMErrorCB(AsebaVMState *vm, const char * msg) {
 void log_poweron_tick(void) {
 	static unsigned int poweron_tick;
 	poweron_tick++;
-	if(poweron_tick == 60*1000UL) {
+	if(poweron_tick == 60*1000U) {
 		poweron_tick = 0;
 		_tick();
 	}
