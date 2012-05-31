@@ -9,7 +9,7 @@ LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
 LanguageToolLocation=C:\Program Files\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)|Z:\aseba\trunk;Z:\molole;Z:\svn_robot\trunk\common\dspic\glue;Z:\svn_robot\trunk\thymio2\thymio2_v1_0b;Z:\svn_robot\trunk\thymio2\usb_pic24||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib||$(LKRDIR)||
-SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|ir_prox.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
+SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s|ir_prox.c||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
@@ -35,7 +35,7 @@ LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
 LanguageToolLocation=C:\Program Files\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)|Z:\aseba\trunk;Z:\molole;Z:\svn_robot\trunk\common\dspic\glue;Z:\svn_robot\trunk\thymio2\thymio2_v1_0b;Z:\svn_robot\trunk\thymio2\usb_pic24||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib||$(LKRDIR)||
-SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|ir_prox.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
+SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s|ir_prox.c||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
@@ -61,25 +61,12 @@ LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
 LanguageToolLocation=C:\Program Files\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)|Z:\aseba\trunk;Z:\molole;Z:\svn_robot\trunk\common\dspic\glue;Z:\svn_robot\trunk\thymio2\thymio2_v1_0b;Z:\svn_robot\trunk\thymio2\usb_pic24||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib||$(LKRDIR)||
-SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|ir_prox.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
+SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s|ir_prox.c||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
 [File005]
-Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\ir_prox.o
-Folder=Intermediary
-DeviceName=PIC24FJ128GB106
-LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
-LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
-LanguageToolLocation=C:\Program Files\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
-PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)|Z:\aseba\trunk;Z:\molole;Z:\svn_robot\trunk\common\dspic\glue;Z:\svn_robot\trunk\thymio2\thymio2_v1_0b;Z:\svn_robot\trunk\thymio2\usb_pic24||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib||$(LKRDIR)||
-SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|ir_prox.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
-SuiteArgsString=
-ToolArgsString=-g -Wall -Os
-TraceCmdString=
-DebugOptions=
-[File006]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\leds.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -92,7 +79,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File007]
+[File006]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\main.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -100,12 +87,12 @@ LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
 LanguageToolLocation=C:\Program Files\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)|Z:\aseba\trunk;Z:\molole;Z:\svn_robot\trunk\common\dspic\glue;Z:\svn_robot\trunk\thymio2\thymio2_v1_0b;Z:\svn_robot\trunk\thymio2\usb_pic24||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib||$(LKRDIR)||
-SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|ir_prox.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
+SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s|ir_prox.c||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File008]
+[File007]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\mma7660.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -118,7 +105,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File009]
+[File008]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\motor.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -126,12 +113,12 @@ LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
 LanguageToolLocation=C:\Program Files\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)|Z:\aseba\trunk;Z:\molole;Z:\svn_robot\trunk\common\dspic\glue;Z:\svn_robot\trunk\thymio2\thymio2_v1_0b;Z:\svn_robot\trunk\thymio2\usb_pic24||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib||$(LKRDIR)||
-SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|ir_prox.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
+SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s|ir_prox.c||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File010]
+[File009]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\ntc.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -144,7 +131,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File011]
+[File010]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\pid_motor.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -152,12 +139,12 @@ LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
 LanguageToolLocation=C:\Program Files\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)|Z:\aseba\trunk;Z:\molole;Z:\svn_robot\trunk\common\dspic\glue;Z:\svn_robot\trunk\thymio2\thymio2_v1_0b;Z:\svn_robot\trunk\thymio2\usb_pic24||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib||$(LKRDIR)||
-SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|ir_prox.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
+SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s|ir_prox.c||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File012]
+[File011]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\playback.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -165,12 +152,12 @@ LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
 LanguageToolLocation=C:\Program Files\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)|Z:\aseba\trunk;Z:\molole;Z:\svn_robot\trunk\common\dspic\glue;Z:\svn_robot\trunk\thymio2\thymio2_v1_0b;Z:\svn_robot\trunk\thymio2\usb_pic24||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib||$(LKRDIR)||
-SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|ir_prox.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
+SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s|ir_prox.c||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File013]
+[File012]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\pmp.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -183,7 +170,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File014]
+[File013]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\pwm_motor.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -196,7 +183,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File015]
+[File014]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\rc5.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -209,7 +196,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File016]
+[File015]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\regulator.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -222,7 +209,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File017]
+[File016]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\sd.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -230,12 +217,12 @@ LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
 LanguageToolLocation=C:\Program Files\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)|Z:\aseba\trunk;Z:\molole;Z:\svn_robot\trunk\common\dspic\glue;Z:\svn_robot\trunk\thymio2\thymio2_v1_0b;Z:\svn_robot\trunk\thymio2\usb_pic24||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib||$(LKRDIR)||
-SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|ir_prox.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
+SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s|com.c||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File018]
+[File017]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\sensors.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -243,12 +230,12 @@ LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
 LanguageToolLocation=C:\Program Files\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)|Z:\aseba\trunk;Z:\molole;Z:\svn_robot\trunk\common\dspic\glue;Z:\svn_robot\trunk\thymio2\thymio2_v1_0b;Z:\svn_robot\trunk\thymio2\usb_pic24||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib||$(LKRDIR)||
-SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|ir_prox.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
+SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s|ir_prox.c||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File019]
+[File018]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\sound.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -256,12 +243,12 @@ LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
 LanguageToolLocation=C:\Program Files\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)|Z:\aseba\trunk;Z:\molole;Z:\svn_robot\trunk\common\dspic\glue;Z:\svn_robot\trunk\thymio2\thymio2_v1_0b;Z:\svn_robot\trunk\thymio2\usb_pic24||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib||$(LKRDIR)||
-SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|ir_prox.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
+SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s|ir_prox.c||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File020]
+[File019]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\usb_uart.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -274,7 +261,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File021]
+[File020]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\ff.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -287,7 +274,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File022]
+[File021]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\mmc.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -300,7 +287,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File023]
+[File022]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\natives.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -313,7 +300,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File024]
+[File023]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\vm.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -326,7 +313,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File025]
+[File024]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\vm-buffer.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -339,7 +326,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File026]
+[File025]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\usb-buffer.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -352,7 +339,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File027]
+[File026]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\timer.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -365,7 +352,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File028]
+[File027]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\clock.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -378,7 +365,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File029]
+[File028]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\error.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -391,7 +378,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File030]
+[File029]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\flash.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -404,7 +391,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File031]
+[File030]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\usb_descriptors.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -417,7 +404,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File032]
+[File031]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\usb_device.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -430,7 +417,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File033]
+[File032]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\usb_function_cdc.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -443,7 +430,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File034]
+[File033]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\master_protocol.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -456,7 +443,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File035]
+[File034]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\i2c.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -469,7 +456,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File036]
+[File035]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\master.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -482,7 +469,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File037]
+[File036]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\tone.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -495,7 +482,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File038]
+[File037]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\behavior.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -503,12 +490,12 @@ LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
 LanguageToolLocation=C:\Program Files\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)|Z:\aseba\trunk;Z:\molole;Z:\svn_robot\trunk\common\dspic\glue;Z:\svn_robot\trunk\thymio2\thymio2_v1_0b;Z:\svn_robot\trunk\thymio2\usb_pic24||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib||$(LKRDIR)||
-SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|ir_prox.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
+SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s|ir_prox.c||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File039]
+[File038]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\mode.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -516,12 +503,12 @@ LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
 LanguageToolLocation=C:\Program Files\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)|Z:\aseba\trunk;Z:\molole;Z:\svn_robot\trunk\common\dspic\glue;Z:\svn_robot\trunk\thymio2\thymio2_v1_0b;Z:\svn_robot\trunk\thymio2\usb_pic24||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib||$(LKRDIR)||
-SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|ir_prox.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
+SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s|ir_prox.c||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File040]
+[File039]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\test_mode.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -529,12 +516,12 @@ LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
 LanguageToolLocation=C:\Program Files\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)|Z:\aseba\trunk;Z:\molole;Z:\svn_robot\trunk\common\dspic\glue;Z:\svn_robot\trunk\thymio2\thymio2_v1_0b;Z:\svn_robot\trunk\thymio2\usb_pic24||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib||$(LKRDIR)||
-SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|ir_prox.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
+SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s|ir_prox.c||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File041]
+[File040]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\thymio_natives.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -542,12 +529,12 @@ LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
 LanguageToolLocation=C:\Program Files\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)|Z:\aseba\trunk;Z:\molole;Z:\svn_robot\trunk\common\dspic\glue;Z:\svn_robot\trunk\thymio2\thymio2_v1_0b;Z:\svn_robot\trunk\thymio2\usb_pic24||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib||$(LKRDIR)||
-SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|ir_prox.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
+SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s|ir_prox.c||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File042]
+[File041]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\traps.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -560,7 +547,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File043]
+[File042]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\wav.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -573,7 +560,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File044]
+[File043]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\crc.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -586,7 +573,7 @@ SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File045]
+[File044]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\abo.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -594,12 +581,12 @@ LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
 LanguageToolLocation=C:\Program Files\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)|Z:\aseba\trunk;Z:\molole;Z:\svn_robot\trunk\common\dspic\glue;Z:\svn_robot\trunk\thymio2\thymio2_v1_0b;Z:\svn_robot\trunk\thymio2\usb_pic24||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib||$(LKRDIR)||
-SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|ir_prox.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
+SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s|ir_prox.c||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File046]
+[File045]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\log.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -607,12 +594,12 @@ LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
 LanguageToolLocation=C:\Program Files\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)|Z:\aseba\trunk;Z:\molole;Z:\svn_robot\trunk\common\dspic\glue;Z:\svn_robot\trunk\thymio2\thymio2_v1_0b;Z:\svn_robot\trunk\thymio2\usb_pic24||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib||$(LKRDIR)||
-SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|ir_prox.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
+SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s|ir_prox.c||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
 SuiteArgsString=
 ToolArgsString=-g -Wall -Os
 TraceCmdString=
 DebugOptions=
-[File047]
+[File046]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\leds_low.o
 Folder=Intermediary
 DeviceName=PIC24FJ128GB106
@@ -625,6 +612,19 @@ SuiteArgsString=
 ToolArgsString=-g
 TraceCmdString=
 DebugOptions=
+[File047]
+Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\ir_prox.o
+Folder=Intermediary
+DeviceName=PIC24FJ128GB106
+LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
+LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
+LanguageToolLocation=C:\Program Files\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
+PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)|Z:\aseba\trunk;Z:\molole;Z:\svn_robot\trunk\common\dspic\glue;Z:\svn_robot\trunk\thymio2\thymio2_v1_0b;Z:\svn_robot\trunk\thymio2\usb_pic24||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib||$(LKRDIR)||
+SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s|ir_prox.c||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
+SuiteArgsString=
+ToolArgsString=-g -Wall -Os
+TraceCmdString=
+DebugOptions=
 [File048]
 Location=Z:\svn_robot\trunk\thymio2\thymio2_v1_0b\thymio2.cof
 Folder=Output
@@ -633,7 +633,7 @@ LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={433C3D55-811D-409D-A6BF-159CF9355B42}
 LanguageToolLocation=C:\Program Files\Microchip\mplabc30\v3.25\bin\pic30-ld.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)|Z:\aseba\trunk;Z:\molole;Z:\svn_robot\trunk\common\dspic\glue;Z:\svn_robot\trunk\thymio2\thymio2_v1_0b;Z:\svn_robot\trunk\thymio2\usb_pic24||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib||$(LKRDIR)||
-SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|ir_prox.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
+SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s|ir_prox.c||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
 SuiteArgsString=
 ToolArgsString=-Map="$(BINDIR_)$(TARGETBASE).map" --report-mem -o"$(BINDIR_)$(TARGETBASE).$(TARGETSUFFIX)"
 TraceCmdString=
@@ -646,7 +646,7 @@ LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
 LanguageToolID={433C3D55-811D-409D-A6BF-159CF9355B42}
 LanguageToolLocation=C:\Program Files\Microchip\mplabc30\v3.25\bin\pic30-ld.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)|Z:\aseba\trunk;Z:\molole;Z:\svn_robot\trunk\common\dspic\glue;Z:\svn_robot\trunk\thymio2\thymio2_v1_0b;Z:\svn_robot\trunk\thymio2\usb_pic24||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib||$(LKRDIR)||
-SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|ir_prox.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
+SOLK=<src>|Z:\svn_robot\trunk\common\dspic\glue\skel-usb.c|analog.c|button.c|entry.s|ground_ir.c|leds.c|main.c|mma7660.c|motor.c|ntc.c|pid_motor.c|playback.c|pmp.c|pwm_motor.c|rc5.c|regulator.c|sd.c|sensors.c|sound.c|usb_uart.c|sd\ff.c|sd\mmc.c|Z:\aseba\trunk\vm\natives.c|Z:\aseba\trunk\vm\vm.c|Z:\aseba\trunk\transport\buffer\vm-buffer.c|Z:\aseba\trunk\transport\microchip_usb\usb-buffer.c|Z:\molole\timer\timer.c|Z:\molole\clock\clock.c|Z:\molole\error\error.c|Z:\molole\flash\flash.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_descriptors.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_device.c|Z:\svn_robot\trunk\thymio2\usb_pic24\usb_function_cdc.c|Z:\molole\i2c\master_protocol.c|Z:\molole\i2c\i2c.c|Z:\molole\i2c\master.c|tone.c|behavior.c|mode.c|test_mode.c|thymio_natives.c|traps.c|wav.c|crc.c|abo.c|log.c|leds_low.s|ir_prox.c||<obj>||<lib>||<lkr>|p24FJ128GB106.gld||
 SuiteArgsString=
 ToolArgsString=-Map="$(BINDIR_)$(TARGETBASE).map" --report-mem -o"$(BINDIR_)$(TARGETBASE).$(TARGETSUFFIX)"
 TraceCmdString=

@@ -51,6 +51,7 @@ const AsebaVMDescription vmDescription = {
 		{1, "motor.left.target"},
 		{1, "motor.right.target"},
 		{2, "_vbat"},
+		{2, "_imot"},
 		{1, "motor.left.speed"},
 		{1, "motor.right.speed"},
 		{1, "motor.left.pwm"},

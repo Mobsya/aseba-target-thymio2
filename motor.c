@@ -42,16 +42,15 @@ static int counter; // Internal counter to the state
 
 
 // Working value for the _CURRENT_ mesurment
-static unsigned int vbat[2];
-static unsigned int vind1[2];
-static unsigned int vind2[2];
+static int vbat[2];
+static int vind1[2];
+static int vind2[2];
 static int vind[2];
 
 // Filter value we mean the vind over 4
 static int vind_left[4];
 static int vind_right[4];
 static int filter_p; // Same for left and right
-
 static int vind_filtered[2];
 
 static int motor_sens[2];
@@ -106,44 +105,39 @@ void motor_new_analog(unsigned int l, unsigned int r) {
 					
 					vmVariables.vbat[i] = vbat[i];
 					
-					if(vind_filtered[i] > 0 && motor_sens[i] > 0) {
+					if(vind[i] > 0 && motor_sens[i] > 0) {
 						if(++motor_sens[i] >= SENS_MAX)
 							motor_sens[i] = SENS_MAX;
 					}	
-					if(vind_filtered[i] < 0 && motor_sens[i] < 0) {
+					if(vind[i] < 0 && motor_sens[i] < 0) {
 						if(--motor_sens[i] <= -SENS_MAX)
 							motor_sens[i] = -SENS_MAX;
 					}
-					if(vind_filtered[i]> 0 && motor_sens[i] <= 0) 
+					if(vind[i]> 0 && motor_sens[i] <= 0) 
 						motor_sens[i]++;	
-					if(vind_filtered[i] < 0 && motor_sens[i] >= 0) 
+					if(vind[i] < 0 && motor_sens[i] >= 0) 
 						motor_sens[i]--;
+						
+					
 				}
-			
-			
+
 				// Now filter the vind ... 
+				vind_filtered[0] -= vind_left[filter_p];
+				vind_filtered[1] -= vind_right[filter_p];
+				vind_filtered[0] += vind[0];
+				vind_filtered[1] += vind[1];
 				vind_left[filter_p] = vind[0];
 				vind_right[filter_p++] = vind[1];
 				if(filter_p >= 4)
 					filter_p = 0;
-
-// TODO: Optimize		
-			/*	int mean = 0;
-				for( i = 0; i < 4; i++) 
-					mean += vind_left[i];*/
-				vind_filtered[0] = vind[0]; //mean / 4;
-				/*
-				mean = 0;
-				for(i = 0; i < 4; i++) 
-					mean += vind_right[i];*/
-				vind_filtered[1] = vind[1]; //mean / 4;
-				
-				vmVariables.uind[0] = vind_filtered[0];
-				vmVariables.uind[1] = vind_filtered[1];
-			}
 					
+				vmVariables.uind[0] = vind_filtered[0] / 4;
+				vmVariables.uind[1] = vind_filtered[1] / 4;
+
+			}
 			
-			pid_motor_tick(vind_filtered);
+			
+			pid_motor_tick(vind,vbat);
 			
 				
 			/* HAAAAAAAAACK */

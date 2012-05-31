@@ -75,6 +75,7 @@ struct _vmVariables {
 	sint16 target[2];
 	
 	sint16 vbat[2];
+	sint16 imot[2];
 	
 	sint16 uind[2];
 	sint16 pwm[2];
@@ -120,9 +121,8 @@ enum Event
 	// Must be consecutive
 	EVENT_TIMER0,
 	EVENT_TIMER1,
-	// We have now 16 events.
-	// this is the maximum. if you want to increase it
-	// you have to change skel-usb.c 
+
+// Maximum count: 32
 	EVENT_COUNT // Do not touch
 };
 

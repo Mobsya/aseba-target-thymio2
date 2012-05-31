@@ -32,6 +32,15 @@
 #define PWM_DIFF_M 300
 #define INTEG_MAX (PWM_MAX*2*TI)
 
+// it's about 400mA
+#define IMOT_MAX 600
+#define IMOT_HYST 300
+// Must be power of two ... 
+#define IMOT_FILT_CST 64
+static int imot[2];
+#define ILIM_LATENCY 3
+static int ilim_enabled[2];
+
 static int integ[2];
 
 #define COUNTER_M 40
@@ -39,11 +48,28 @@ static int counter[2];
 
 static int prev[2];
 
-void pid_motor_tick(int *u) {
+void pid_motor_tick(int *u, int * vbat) {
 	int i;
 	int error;
-	int output[2];
+	int temp;
 	for(i = 0; i < 2; i++) {
+		/* First current estimation with previous pwm value. */
+
+		// Actually, "PWM_MAX" in the following equation 
+		// should be more around 850 to take in account
+		// the time we spend to aquire vbat & vind
+		temp = __builtin_divsd(__builtin_mulss(vbat[i], prev[i]), PWM_MAX);
+		temp += u[i]; // uint is inverted
+		imot[i] = (temp + __builtin_mulss(imot[i],(IMOT_FILT_CST - 1))) / IMOT_FILT_CST;
+		vmVariables.imot[i] = imot[i];
+		if(abs(imot[i]) > IMOT_MAX)
+			ilim_enabled[i]++;
+		
+		if(abs(imot[i]) < IMOT_MAX - IMOT_HYST)
+			ilim_enabled[i] = 0;
+		
+		
+		/* Now, PID computation. */
 		error = -vmVariables.target[i] + u[i];
 		integ[i] += error;
 		if(integ[i] > INTEG_MAX)
@@ -60,27 +86,31 @@ void pid_motor_tick(int *u) {
 		}
 		
 		if(counter[i] == COUNTER_M) {
-			output[i] = 0;
+			temp = 0;
 			integ[i] = 0;
 			prev[i] = 0;
 		} else {
-			output[i] =  KP * error;
-			output[i] += integ[i] / TI;
+			temp =  KP * error;
+			temp += integ[i] / TI;
 		}
-		/*
-		if(abs(vmVariables.pwm[i]-output[i]) > PWM_DIFF_M) {
-			if(output[i] > vmVariables.pwm[i]) 
-				vmVariables.pwm[i] += PWM_DIFF_M;
-			else
-				vmVariables.pwm[i] -= PWM_DIFF_M;
-		}*/
-		
-		prev[i] += output[i];
+
+		// Lowpass filter on output
+		prev[i] += temp;
 		prev[i] /= 2;	
 		
+		if(prev[i] > PWM_MAX)
+			prev[i] = PWM_MAX;
+		if(prev[i] < - PWM_MAX)
+			prev[i] = -PWM_MAX;
+		
+		if(ilim_enabled[i] >= ILIM_LATENCY) {
+			ilim_enabled[i] = ILIM_LATENCY;
+			prev[i] /= 2;
+		}
+		
 		vmVariables.pwm[i] = prev[i];
+		
 	}
-	
 	pwm_motor_left(prev[0]);
 	pwm_motor_right(prev[1]);
 }
