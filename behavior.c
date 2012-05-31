@@ -22,6 +22,7 @@
 
 
 #include <timer/timer.h>
+#include <error/error.h>
 
 #include "behavior.h"
 #include "leds.h"
