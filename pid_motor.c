@@ -22,6 +22,7 @@
 
 #include "pid_motor.h"
 #include "pwm_motor.h"
+#include "log.h"
 
 #include <skel-usb.h>
 
@@ -104,6 +105,7 @@ void pid_motor_tick(int *u, int * vbat) {
 			prev[i] = -PWM_MAX;
 		
 		if(ilim_enabled[i] >= ILIM_LATENCY) {
+			log_set_flag(LOG_FLAG_MOTOROVERC);
 			ilim_enabled[i] = ILIM_LATENCY;
 			prev[i] /= 2;
 		}

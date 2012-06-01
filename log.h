@@ -57,6 +57,7 @@ void log_init(void);
 #define LOG_FLAG_LEDOTHER		(19)
 #define LOG_FLAG_EVENTNTC		(20)
 #define LOG_FLAG_EVENTTIMER		(21)
+#define LOG_FLAG_MOTOROVERC		(22)
 
 void log_set_flag(unsigned char flag);
 
