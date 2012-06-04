@@ -30,7 +30,7 @@ History:
 2: Add rand() support and first public release, fix playback-recoreded sound, fix ground detection in explorer mode
 3: Second public release, see wiki for changelog
 4: Bugfix release
-5: WIP
+5: Limit motor current in soft, improve button detection, change timer use
 */
 #define FW_VERSION 5
 
