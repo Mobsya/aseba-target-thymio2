@@ -247,7 +247,8 @@ void analog_init(int t, int prio) {
 }
 
 
-#define BUTTON_TRESHOLD 350
+#define BUTTON_TRESHOLD 300
+unsigned int __attribute((noload,far)) boff[16];
 
 static void do_reset(void) {
 // Switch on the CRC module.
@@ -262,7 +263,7 @@ void __attribute__((noreturn)) analog_enter_poweroff_mode(void) {
 	int pressed = 0;
 	int i;
 	int was_connected;
-	unsigned int boff[16];
+//	unsigned int boff[16];
 	unsigned int b = 0;
 	unsigned long bsum = 0;
 	unsigned int tresh;
