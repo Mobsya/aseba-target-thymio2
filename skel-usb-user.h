@@ -34,8 +34,8 @@
 /* Send queue minimum size: 512+6+4+1 */
 #define SEND_QUEUE_SIZE (512+6+4+1)
 
-/* Recv queue minimum size: 512+6+4+1 */
-#define RECV_QUEUE_SIZE (512+6+4+1)
+/* Recv queue minimum size: 512+6+4+1+USB_MTU */
+#define RECV_QUEUE_SIZE (512+6+4+1+64)
 
 /* This is the number of "private" variable the aseba script can have */
 #define VM_VARIABLES_FREE_SPACE 512
