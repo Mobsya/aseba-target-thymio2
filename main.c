@@ -31,8 +31,9 @@ History:
 3: Second public release, see wiki for changelog
 4: Bugfix release
 5: Limit motor current in soft, improve button detection, change timer use
+6: Development version, never went out of the lab.
 */
-#define FW_VERSION 5
+#define FW_VERSION 6
 
 /* Firmware variant. Each variant of the firmware has it own number */
 
@@ -69,6 +70,7 @@ History:
 #include "mode.h"
 #include "test.h"
 #include "log.h"
+#include "rf.h"
 
 #include <skel-usb.h>
 
@@ -88,7 +90,9 @@ History:
 
 // Priority 2 is reserverd for SD operations ...
 #define PRIO_SENSORS 6
-// USB priority: 5
+// Need to be higher than communication priority
+#define PRIO_I2C 5 
+// Communication priority: 4
 #define PRIO_RC5 4
 #define PRIO_1KHZ 3
 // SD PRIO: 2 
@@ -149,7 +153,9 @@ static void timer_slow(void) {
 		ntc_tick();
 	}
 	
-	mma7660_read_async();
+	// Yeah .... quite hackish, but the I2C is shared between RF and 
+	// accelerometer. RF has to schedule the acc when the bus is idle.
+	rf_schedule_acc_read();
 }
 
 static unsigned int timer[2];
@@ -158,10 +164,17 @@ static void timer_1khz(int timer_id) {
 	int i;
 	static unsigned char timer_20ms;
 	static unsigned char timer_62ms;
+	static unsigned char timer_10ms;
 	
 	disk_timerproc();
 	
 	log_poweron_tick();
+	
+	// Poll the RF at 100Hz
+	if(++timer_10ms >= 10) {
+		timer_10ms = 0;
+		rf_poll();
+	}	
 	
 	// Generate behavior softirq at 50Hz
 	if(++timer_20ms >= 20) {
@@ -219,6 +232,8 @@ void switch_off(void) {
 	sd_shutdown();
 	leds_poweroff();
 	mma7660_suspend();
+	rf_poweroff();
+	
 	I2C3CONbits.I2CEN = 0; // Disable i2c.
 	_MI2C3IE = 0;
 	
@@ -291,6 +306,11 @@ int main(void)
 	int vm_present;
 	int i;
 	unsigned int seed;
+
+	// Needs to be called ASAP as rf need a looooooong time to wake up.
+	// This function is just sending a pulse over the SCL line.
+	rf_wakeup();
+	
 	clock_set_speed(16000000UL,16);	
 	
 	setup_pps();
@@ -329,8 +349,11 @@ int main(void)
 
 	ntc_init(ntc_callback, PRIO_1KHZ);
 
-	i2c_init(I2C_3);
-	i2c_init_master(I2C_3, 400000, PRIO_1KHZ);
+//	i2c_init(I2C_3);
+
+	i2c_init_master(I2C_3, 400000, PRIO_I2C);
+	I2C3CON = 0x9000;
+
 	
 	mma7660_init(I2C_3, MMA7660_DEFAULT_ADDRESS, acc_cb, 0);
 	mma7660_set_mode(MMA7660_120HZ, 1);
@@ -341,11 +364,14 @@ int main(void)
 
 	timer_init(TIMER_1KHZ, 1000, 6);
 	timer_enable_interrupt(TIMER_1KHZ, timer_1khz, PRIO_1KHZ);
+	
+	rf_init(I2C_3);
+	
 	timer_enable(TIMER_1KHZ);
 	
 	sd_log_file();
 	
-	vm_present = init_aseba_and_usb();
+	vm_present = init_aseba_and_fifo();
 	
 	if(vm_present) 
 		log_analyse_bytecode();
@@ -385,10 +411,14 @@ int main(void)
 			idle_without_aseba();
 	}
 	
-	
 	while(behavior_enabled(B_MODE)) 
 		idle_without_aseba();
 	
+	// If usb did not put us out of behavior mode, then start the rf link
+	if(!usb_uart_serial_port_open() && (rf_get_status() & RF_PRESENT)) {
+		rf_set_link(RF_UP);
+	}
+
 	// get the random seed
 	seed = 0;
 	for(i = 0; i < 5; i++) {

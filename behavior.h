@@ -53,7 +53,8 @@ int behavior_enabled(int b);
 #define B_LEDS_NTC		(1 << 9)
 #define B_MODE			(1 << 10)
 #define B_TEST			(1 << 11)
-#define B_MAX			B_TEST
+#define B_PAIRING		(1 << 12)
+#define B_MAX			B_PAIRING
 
 #define B_ALWAYS		(B_LEDS_BATTERY | B_LEDS_RC5 | B_LEDS_SD | B_SOUND_BUTTON | B_LEDS_BUTTON)
 

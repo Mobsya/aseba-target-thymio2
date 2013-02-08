@@ -27,7 +27,7 @@
 
 #define FLASH_END 0x15800
 
-#define PRIO_USB 5
+#define PRIO_COMMUNICATION 4
 
 #define PRODUCT_ID 8
 

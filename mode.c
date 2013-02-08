@@ -28,6 +28,7 @@
 #include "test.h"
 #include "usb_uart.h"
 #include "playback.h"
+#include "rf.h"
 #include <skel-usb.h>
 
 
@@ -106,7 +107,7 @@ static void exit_mode(enum mode m) {
 	
 	switch(m) {
 		case MODE_MENU:
-			
+			behavior_stop(B_PAIRING);
 			break;
 		case MODE_FOLLOW:
 			behavior_stop(B_LEDS_PROX);
@@ -171,7 +172,7 @@ static void init_mode(enum mode m) {
 	
 	switch(m) {
 		case MODE_MENU:
-		/* Nothing to do ... */
+		    behavior_start(B_PAIRING);
 			break;
 		case MODE_FOLLOW:
 			leds_set_circle(0,0,0,32,32,32,0,0);
@@ -827,7 +828,7 @@ void mode_tick(void) {
 			exit_mode(current_mode);
 			if(_selecting == MODE_MENU) {
 				// Special case, if we select the mode menu stuff
-				behavior_stop(B_MODE);
+				behavior_stop(B_MODE | B_PAIRING);
 				init_vm_mode();
 				return;
 			}
@@ -842,7 +843,7 @@ void mode_tick(void) {
 	}	
 	
 	 // Exit case: Serial port open !
-	if(usb_uart_serial_port_open()) {
+	if(usb_uart_serial_port_open() || (rf_get_status() & RF_DATA_RX)) {
 		exit_mode(current_mode);
 		behavior_stop(B_MODE);
 		init_vm_mode();

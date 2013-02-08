@@ -166,14 +166,14 @@ AsebaNativeFunctionDescription AsebaNativeDescription_set_led_circle = {
 	"leds.circle",
 	"Set circular ring leds",
 	{
-		{1,"led 0"},
-		{1,"led 1"},
-		{1,"led 2"},
-		{1,"led 3"},
-		{1,"led 4"},
-		{1,"led 5"},
-		{1,"led 6"},
-		{1,"led 7"},
+		{1,"l0"},
+		{1,"l1"},
+		{1,"l2"},
+		{1,"l3"},
+		{1,"l4"},
+		{1,"l5"},
+		{1,"l6"},
+		{1,"l7"},
 		{0,0},
 	}
 };
@@ -253,10 +253,10 @@ AsebaNativeFunctionDescription AsebaNativeDescription_set_led_buttons = {
 	"leds.buttons",
 	"Set buttons leds",
 	{
-		{1,"led 0"},
-		{1,"led 1"},
-		{1,"led 2"},
-		{1,"led 3"},
+		{1,"l0"},
+		{1,"l1"},
+		{1,"l2"},
+		{1,"l3"},
 		{0,0},
 	}
 };
@@ -279,14 +279,14 @@ AsebaNativeFunctionDescription AsebaNativeDescription_set_hprox_leds = {
 	"leds.prox.h",
 	"Set horizontal proximity leds",
 	{
-		{1,"led 0"},
-		{1,"led 1"},
-		{1,"led 2"},
-		{1,"led 3"},
-		{1,"led 4"},
-		{1,"led 5"},
-		{1,"led 6"},
-		{1,"led 7"},
+		{1,"l0"},
+		{1,"l1"},
+		{1,"l2"},
+		{1,"l3"},
+		{1,"l4"},
+		{1,"l5"},
+		{1,"l6"},
+		{1,"l7"},
 		{0,0},
 	}
 };
@@ -318,8 +318,8 @@ AsebaNativeFunctionDescription AsebaNativeDescription_set_vprox_leds = {
 	"leds.prox.v",
 	"Set vertical proximity leds",
 	{
-		{1,"led 0"},
-		{1,"led 1"},
+		{1,"l0"},
+		{1,"l1"},
 		{0,0},
 	}
 };
