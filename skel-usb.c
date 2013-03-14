@@ -213,33 +213,8 @@ const AsebaNativeFunctionDescription * const * AsebaGetNativeFunctionsDescriptio
 
 #define NUMBER_OF_CHUNK 3
 
-unsigned char  aseba_flash[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, address(FLASH_END - 0x800*/ /* bootloader */ /*- 0x400 *//* settings */ /*- NUMBER_OF_CHUNK*0x400L*PAGE_PER_CHUNK)*//*, noload*/));
-unsigned char aseba_flash1[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, noload*/));
-unsigned char aseba_flash2[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, noload*/));
-#if 0
-unsigned char aseba_flash3[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, noload*/));
-unsigned char aseba_flash4[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, noload*/));
-unsigned char aseba_flash5[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, noload*/));
-unsigned char aseba_flash6[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, noload*/));
-unsigned char aseba_flash7[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, noload*/));
-unsigned char aseba_flash8[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, noload*/));
-unsigned char aseba_flash9[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, noload*/));
-unsigned char aseba_flash10[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, noload*/));
-unsigned char aseba_flash11[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, noload*/));
-unsigned char aseba_flash12[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, noload*/));
-unsigned char aseba_flash13[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, noload*/));
-unsigned char aseba_flash14[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, noload*/));
-unsigned char aseba_flash15[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, noload*/));
-unsigned char aseba_flash16[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, noload*/));
-unsigned char aseba_flash17[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, noload*/));
-unsigned char aseba_flash18[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, noload*/));
-unsigned char aseba_flash19[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, noload*/));
-unsigned char aseba_flash20[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, noload*/));
-unsigned char aseba_flash21[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, noload*/));
-unsigned char aseba_flash22[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, noload*/));
-unsigned char aseba_flash23[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, noload*/));
-unsigned char aseba_flash24[PAGE_PER_CHUNK][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, noload*/));
-#endif
+unsigned char  aseba_flash[PAGE_PER_CHUNK*3][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, address(FLASH_END - 0x800*/ /* bootloader */ /*- 0x400 *//* settings */ /*- NUMBER_OF_CHUNK*0x400L*PAGE_PER_CHUNK)*//*, noload*/));
+
 // Saveguard the bootloader (4 pages)
 // Done by linker script...
 //unsigned char __bootloader[INSTRUCTIONS_PER_PAGE * 2 * 4 - 2*4/* used by the config words */] __attribute((space(prog), section(".boot"), noload, address(FLASH_END - 0x1000)));
@@ -422,7 +397,6 @@ void __attribute__((noreturn)) error_handler(const char * file, int line, int id
 // return 1 if code has been loaded from flash
 // return 0 if not the case
 int init_aseba_and_fifo(void) {
-	unsigned int low, high;
 	int ret;
 	
 	// If RF module is there, take it's nodeId
@@ -432,15 +406,9 @@ int init_aseba_and_fifo(void) {
 	} else
 		vmState.nodeId = 1;
 
-#if __C30_VERSION__ >= 325
-	asm("mov #tbloffset(.startof.(.aseba_bytecode)), %[l]" : [l] "=r" (low));
-	asm("mov #tblpage(.startof.(.aseba_bytecode)), %[h]" : [h] "=r" (high));
-	aseba_flash_ptr = (unsigned long) high << 16 | low;	
-
+	aseba_flash_ptr =__builtin_tbladdress(aseba_flash);
 	aseba_settings_ptr = __builtin_tbladdress(aseba_settings_flash);
-#else
-#error Please update you compiler ...
-#endif
+
 
 	COMPILATION_ASSERT(SEND_QUEUE_SIZE >= (ASEBA_MAX_PACKET_SIZE + 4));
 	COMPILATION_ASSERT(RECV_QUEUE_SIZE >= (ASEBA_MAX_PACKET_SIZE + 4));
