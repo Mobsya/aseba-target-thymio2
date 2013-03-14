@@ -21,7 +21,7 @@
 */
 
 
-#include <p24fxxxx.h>
+#include <p24Fxxxx.h>
 #include <string.h>
 #include <stddef.h>
 #include <skel-usb.h>

@@ -43,7 +43,7 @@ History:
 */
 #define FW_VARIANT 0
 
-#include <p24fxxxx.h>
+#include <p24Fxxxx.h>
 #include <clock/clock.h>
 #include <timer/timer.h>
 #include <gpio/gpio.h>

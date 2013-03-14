@@ -20,7 +20,7 @@
         along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <p24fxxxx.h>
+#include <p24Fxxxx.h>
 
 #include "pwm_motor.h"
 

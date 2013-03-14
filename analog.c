@@ -21,7 +21,7 @@
 */
 
 
-#include <p24fxxxx.h>
+#include <p24Fxxxx.h>
 
 #include <timer/timer.h>
 #include <clock/clock.h>

@@ -32,7 +32,7 @@ Software License Agreement:
 #include <usb/usb_device.h>
 #include "usb_function_cdc.h"
 
-#include "hardwareprofile.h"
+#include "HardwareProfile.h"
 #include <usb/usb_hal_pic24.h>
 #include "usb_config.h"
 
