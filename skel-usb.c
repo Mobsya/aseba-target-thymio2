@@ -457,25 +457,24 @@ void __attribute((noreturn)) run_aseba_main_loop(void) {
 		{
 			unsigned i;
 			asm __volatile__ ("mov #SR, w0\r\n"
-							  "mov #0xC0, w1\r\n"
-							  "ior.b w1, [w0],[w0]\r\n"
-							  "ff1r [%[word]], %[b]\r\n"
-							  "bra nc, 2f\r\n"
-							  "add %[word],#2,%[word]\r\n"
-							  "ff1r [%[word]], %[b]\r\n"
-							  "bra nc, 1f\r\n"
-							  "rcall _AsebaFifoRecvBufferEmpty\r\n"
-							  "cp0 w0\r\n"
-							  "bra z, 2f\r\n"
-							  "call _clock_idle\r\n"
-							  "bra 2f\r\n"
-							  "1:\r\n"
-							  "add %[b],#16,%[b]\r\n"
-							  "2:\r\n"
-							  "mov #SR, w0\r\n"
-							  "mov #0x1F, w1\r\n"
-							  "and.b w1, [w0],[w0]\r\n"
-							  : [b] "=x" (i) : [word] "r" (events_flags) : "cc", "w0", "w1", "w2", "w3", "w4", "w5", "w6", "w7");
+                                          "mov #0xC0, w1\r\n"
+                                          "ior.b w1, [w0],[w0]\r\n"
+                                          "ff1r [%[word]++], %[b]\r\n"
+                                          "bra nc, 2f\r\n"
+                                          "ff1r [%[word]--], %[b]\r\n"
+                                          "bra nc, 1f\r\n"
+                                          "rcall _AsebaFifoRecvBufferEmpty\r\n"
+                                          "cp0 w0\r\n"
+                                          "bra z, 2f\r\n"
+                                          "call _clock_idle\r\n"
+                                          "bra 2f\r\n"
+                                          "1:\r\n"
+                                          "add %[b],#16,%[b]\r\n"
+                                          "2:\r\n"
+                                          "mov #SR, w0\r\n"
+                                          "mov #0x1F, w1\r\n"
+                                          "and.b w1, [w0],[w0]\r\n"
+							  : [b] "=&x" (i) : [word] "r" (events_flags) : "cc", "w0", "w1", "w2", "w3", "w4", "w5", "w6", "w7");
 			
 			if(i && !(AsebaMaskIsSet(vmState.flags, ASEBA_VM_STEP_BY_STEP_MASK) &&  AsebaMaskIsSet(vmState.flags, ASEBA_VM_EVENT_ACTIVE_MASK))) {
 				i--;
