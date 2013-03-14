@@ -33,9 +33,12 @@ __resetALT:
 	.weak    __user_init, __has_user_init
 
 ; Reset the stack
+.ifdef NO_BOOTLOADER
+    nop
+    nop
+.else
 	goto 0x14800 			;; go to bootloader
-	
-	
+.endif
 
 	mov #__SP_init, w15
 	mov #__SPLIM_init, w0
@@ -192,12 +195,12 @@ do_init:
 	;w7 return value
 	; w8 min address of the hole
 	; w9 max address of the hole
-
+.ifndef NO_BOOTLOADER
 	cpsgt w2, w8 ; skip if w2 >= 0x1000
 	bra _do_init_ok
 	cpsgt w2, w9 ; skip if w2 >= end address
 	bra _do_init_nok
-
+.endif
 _do_init_ok:
 	setm w7
 	return
