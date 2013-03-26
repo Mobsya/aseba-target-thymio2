@@ -39,7 +39,7 @@ MEMORY
   reset          : ORIGIN = 0x0,           LENGTH = 0x4
   ivt            : ORIGIN = 0x4,           LENGTH = 0xFC
   aivt           : ORIGIN = 0x104,         LENGTH = 0xFC
-  program (xr)   : ORIGIN = 0x200,         LENGTH = 0x14600
+  program (xr)   : ORIGIN = 0x200,         LENGTH = 0x14604
   config4        : ORIGIN = 0x157F8,       LENGTH = 0x2
   config3        : ORIGIN = 0x157FA,       LENGTH = 0x2
   config2        : ORIGIN = 0x157FC,       LENGTH = 0x2
