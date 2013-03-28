@@ -749,22 +749,36 @@ static void tick_rc5(void) {
 	if(vmVariables.rc5_command) {
 		switch(vmVariables.rc5_command) {
 			case 2:
+			case 80:
+			case 32:
 				if(rc5_speed_t)
 					rc5_speed_t = 0;
 				else
 					rc5_speed_l += 200;
 				break;
 			case 4:
+			case 85:
+			case 17:
 				rc5_speed_t = -200;
 				break;
 			case 8:
+			case 81:
+			case 33:
 				if(rc5_speed_t)
 					rc5_speed_t = 0;
 				else
 					rc5_speed_l -= 200;
 				break;
 			case 6:
+			case 86:
+			case 16:
 				rc5_speed_t = 200;
+				break;
+			case 5:
+			case 87:
+			case 13:
+				rc5_speed_t = 0;
+				rc5_speed_l = 0;
 				break;
 		}
 		vmVariables.rc5_command = 0;
