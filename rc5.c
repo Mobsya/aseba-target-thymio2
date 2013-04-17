@@ -167,19 +167,24 @@ void m_throw_cb(void)
 	// Save the data, so we can perform a reset
 	static unsigned int previous_rc5 = 0;
 	unsigned int rc5_data_save = rc5_data; 		// Avoid inconsistency if rc5_data changes in the interrupt
+
 	m_reset_state_machine();
 
-	rc5_valid_flag = 1;
-
 	if (cb) {
-		// Check if data has changed + begin with 11 (2x start bit)
-		if ((rc5_data_save != previous_rc5) && ((rc5_data_save >> 14) == 0b11)) {
-			previous_rc5 = rc5_data_save;
-			rc5_data_save &= ~(0b111 << 13);
-			rc5_data_save >>= 2;
-			cb( (rc5_data_save >> 6) & 0b11111, rc5_data_save & 0b111111);
+		
+		// Start bit valid ? 
+		if(rc5_data_save >> 15) {
+			rc5_valid_flag = 1;
+			// Check if data has changed
+			if (rc5_data_save != previous_rc5) {
+				unsigned char command;
+				previous_rc5 = rc5_data_save;
+				command = (rc5_data_save >> 2) & 0b111111;
+				command |= ((rc5_data_save & (1 << 14)) >> 8) ^ (1 << 6); // "Extended" bit, inverted
+				cb((rc5_data_save >> 8) & 0b11111, command);
+			}
+			// else: only a repeated frame -> do nothing
 		}
-		// else: only a repeated frame -> do nothing
 	}
 }
 

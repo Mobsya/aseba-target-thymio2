@@ -31,7 +31,7 @@ History:
 3: Second public release, see wiki for changelog
 4: Bugfix release
 5: Limit motor current in soft, improve button detection, change timer use
-6: Development version, never went out of the lab.
+6: Fix bug on MacOSX 10.7+, improve RC5 processing
 */
 #define FW_VERSION 6
 
