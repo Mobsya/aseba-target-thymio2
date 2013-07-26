@@ -455,27 +455,42 @@ void __attribute((noreturn)) run_aseba_main_loop(void) {
 		
 		if (AsebaMaskIsSet(vmState.flags, ASEBA_VM_STEP_BY_STEP_MASK) || AsebaMaskIsClear(vmState.flags, ASEBA_VM_EVENT_ACTIVE_MASK))
 		{
-			unsigned i;
-			asm __volatile__ ("mov #SR, w0\r\n"
-                                          "mov #0xC0, w1\r\n"
-                                          "ior.b w1, [w0],[w0]\r\n"
-                                          "ff1r [%[word]++], %[b]\r\n"
-                                          "bra nc, 2f\r\n"
-                                          "ff1r [%[word]--], %[b]\r\n"
-                                          "bra nc, 1f\r\n"
-                                          "rcall _AsebaFifoRecvBufferEmpty\r\n"
-                                          "cp0 w0\r\n"
-                                          "bra z, 2f\r\n"
-                                          "call _clock_idle\r\n"
-                                          "bra 2f\r\n"
-                                          "1:\r\n"
-                                          "add %[b],#16,%[b]\r\n"
-                                          "2:\r\n"
-                                          "mov #SR, w0\r\n"
-                                          "mov #0x1F, w1\r\n"
-                                          "and.b w1, [w0],[w0]\r\n"
-							  : [b] "=&x" (i) : [word] "r" (events_flags) : "cc", "w0", "w1", "w2", "w3", "w4", "w5", "w6", "w7");
-			
+                    unsigned i;
+#if 0
+#define FF1R(word, pos) asm("ff1r [%[w]], %[b]" : [b] "=x" (pos) : [w] "r" (word) : "cc")
+                    
+                    _IPL = 6;
+                    FF1R(&events_flags[0], i);
+                    if(!i) {
+                        FF1R(&events_flags[1], i);
+                        if(!i && AsebaFifoRecvBufferEmpty())
+                            clock_idle();
+                        else
+                            i += 16;
+                    }
+                    _IPL = 0;
+#else
+                    asm __volatile__ ("mov #SR, w0\r\n"
+                                      "mov #0xC0, w1\r\n"
+                                      "ior.b w1, [w0],[w0]\r\n"
+                                      "ff1r [%[word]++], %[b]\r\n"
+                                      "bra nc, 2f\r\n"
+                                      "ff1r [%[word]], %[b]\r\n"
+                                      "bra nc, 1f\r\n"
+                                      "rcall _AsebaFifoRecvBufferEmpty\r\n"
+                                      "cp0 w0\r\n"
+                                      "bra z, 2f\r\n"
+                                      "call _clock_idle\r\n"
+                                      "bra 2f\r\n"
+                                      "1:\r\n"
+                                      "add %[b],#16,%[b]\r\n"
+                                      "2:\r\n"
+                                      "dec2 %[word], %[word]\n"
+                                      "mov #SR, w0\r\n"
+                                      "mov #0x1F, w1\r\n"
+                                      "and.b w1, [w0],[w0]\r\n"
+                                      : [b] "=&x" (i) : [word] "r" (events_flags) : "cc", "w0", "w1", "w2", "w3", "w4", "w5", "w6", "w7");
+#endif
 			if(i && !(AsebaMaskIsSet(vmState.flags, ASEBA_VM_STEP_BY_STEP_MASK) &&  AsebaMaskIsSet(vmState.flags, ASEBA_VM_EVENT_ACTIVE_MASK))) {
 				i--;
 				CLEAR_EVENT(i);

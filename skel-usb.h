@@ -42,13 +42,16 @@ extern AsebaVMState vmState;
 #define _SET_EVENT_LOW(event) atomic_or(&events_flags[0], 1 << (event))
 #define _SET_EVENT_HIGH(event) atomic_or(&events_flags[1], 1 << (event-16))
 
-#define SET_EVENT(event) do { int _ = event; if (_ < 16) _SET_EVENT_LOW(_); else _SET_EVENT_HIGH(_); } while(0)
+#define SET_EVENT(event) do { unsigned int _ = event; if (_ < 16) _SET_EVENT_LOW(_); else _SET_EVENT_HIGH(_); } while(0)
 
 #define _CLEAR_EVENT_LOW(event) atomic_and(&events_flags[0], ~(1 << (event)))
 #define _CLEAR_EVENT_HIGH(event) atomic_and(&events_flags[1], ~(1 << (event-16)))
-#define CLEAR_EVENT(event) do { int _ = event; if (_ < 16) _CLEAR_EVENT_LOW(_); else _CLEAR_EVENT_HIGH(_); } while(0)
+#define CLEAR_EVENT(event) do { unsigned int _ = event; if (_ < 16) _CLEAR_EVENT_LOW(_); else _CLEAR_EVENT_HIGH(_); } while(0)
 
-#define IS_EVENT(event) (*((long *)events_flags) & (1L << (event)))
+#define _IS_EVENT_HIGH(event) (events_flags[1] & (1 << (event - 16)))
+#define _IS_EVENT_LOW(event) (events_flags[0] & (1 << (event)))
+
+#define IS_EVENT(event) (event < 16 ? _IS_EVENT_LOW(event) : _IS_EVENT_HIGH(event))
 
 // Call this when everything is initialised and you are ready to give full control to the VM
 void __attribute((noreturn)) run_aseba_main_loop(void);
