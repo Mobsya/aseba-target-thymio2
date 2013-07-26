@@ -135,8 +135,6 @@ static AsebaNativeFunctionDescription AsebaNativeDescription__system_settings_fl
 	}
 };
 
-static void AsebaNative__system_settings_flash(AsebaVMState *vm);
-
 void AsebaPutVmToSleep(AsebaVMState *vm) {
 // FIXME: Should we support this ? 
 	AsebaVMEmitNodeSpecificError(vm, "Sleep mode not supported");
@@ -299,7 +297,7 @@ void AsebaWriteBytecode(AsebaVMState *vm) {
 }
 
 const static unsigned int _magic_[8] = {0xDE, 0xAD, 0xCA, 0xFE, 0xBE, 0xEF, 0x04, 0x02};
-	static void AsebaNative__system_settings_flash(AsebaVMState *vm) {
+void AsebaNative__system_settings_flash(AsebaVMState *vm) {
 	// Look for the last "Magic" we know, this is the most up to date conf
 	// Then write the next row with the correct magic.
 	// If no magic is found, erase the page, and then write the first one

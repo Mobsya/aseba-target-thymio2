@@ -213,6 +213,18 @@ void update_aseba_variables_write(void) {
 	}
 }	
 
+static void wait_valid_vbat(void) {
+        int i;
+        vmVariables.vbat[0] = 0;
+        barrier();
+
+        for(i = 0; i < 10000; i++) {
+                if(vmVariables.vbat[0])
+                        break;
+                clock_delay_us(1);
+        }
+}
+
 // This function is used to shutdown everything exept USB
 // When this function return all the peripheral should be :
 // 	- Disabled
@@ -224,7 +236,11 @@ void switch_off(void) {
 	timer_disable_interrupt(TIMER_1KHZ);
 	
 	_LVDIE = 0;
-	
+
+        // Why waiting on valid vbat ?
+        //   => We use an aseba variable, the user may corrupt it
+        wait_valid_vbat(); // ir autocalibration is using it.
+
 	analog_disable();
 	pwm_motor_poweroff();
 	prox_poweroff();
@@ -254,6 +270,13 @@ AsebaNativeFunctionDescription AsebaNativeDescription_poweroff = {
 };
 
 void power_off(AsebaVMState *vm) {
+        unsigned int flags;
+
+        // Protect against two racing poweroff:
+        //  One from the softirq (button)
+        //  One from the VM
+        RAISE_IPL(flags,1);
+
 	behavior_stop(B_ALL);
 	
  	play_sound_block(SOUND_POWEROFF);
@@ -336,6 +359,11 @@ int main(void)
 	
 	pwm_motor_init();
 	pid_motor_init();
+
+        // We need the settings for the horizontal prox.
+        if( ! load_settings_from_flash()) {
+		/* Todo */
+	}
 	
 	// This is the horizontal prox. Vertical one are handled by the ADC
 	// but ADC sync the motor mesurment with the prox, so we don't pullute it with noise ... 
@@ -344,7 +372,8 @@ int main(void)
 	// Warning: We cannot use the SD before the analog init as some pin are on the analog port.
 	analog_init(TIMER_ANALOG, PRIO_SENSORS);
 
-
+        wait_valid_vbat(); 
+        
 	log_init(); // We will need to read vbat to be sure we can flash.
 
 	ntc_init(ntc_callback, PRIO_1KHZ);
@@ -396,9 +425,6 @@ int main(void)
 		mode_init(vm_present);
 
 	
-	if( ! load_settings_from_flash()) {
-		/* Todo */
-	}
 	
 	// Enable the LVD interrupt
 	_LVDIE = 1;

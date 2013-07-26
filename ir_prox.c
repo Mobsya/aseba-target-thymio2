@@ -28,6 +28,13 @@
 
 #include <skel-usb.h>
 
+
+#define N_SENSORS 7
+#define DEFAULT_CALIB 5000
+
+
+static unsigned char update_calib;
+
 // I don't want gcc to optimise too much, force noinline
 static int __attribute((noinline)) ic_bufne(int ic) {
 	IC1CON1BITS * ic_ptr =(IC1CON1BITS *) &IC1CON1bits + 4*ic; // Memory map: con1, con2, buf, tmr
@@ -41,12 +48,29 @@ static unsigned int __attribute((noinline)) ic_buf(int ic) {
 static void __attribute((noinline)) ic_reset_timer(int ic) {
 	IC1CON2BITS * ic_ptr = (IC1CON2BITS *) &IC1CON2bits + 4 * ic;
 	ic_ptr->TRIGSTAT = 0;
-}	
+}
+
+static int perform_calib(int raw, int i) {
+        if(settings.prox_min[i] > 0) {
+                // On the fly recalibration
+                if(raw < settings.prox_min[i]) {
+                        settings.prox_min[i] = raw;
+                        update_calib = 1;
+                }
+                // Cast to unsigned so the compiler optimise by a shift
+                // We checked that the value was positive, so it's safe.
+                return raw - (3*((unsigned int) settings.prox_min[i])) / 4 + 800;
+
+        } else {
+                // Calibration disabled
+                return raw;
+        }
+}
 
 void ir_prox_mesure(void) {
 	int temp[2];
 	int i;	
-	for(i = 0; i < 7; i++) {
+	for(i = 0; i < N_SENSORS; i++) {
 		if(ic_bufne(i)) {
 			temp[0] = ic_buf(i);
 			if(ic_bufne(i)) {
@@ -56,13 +80,13 @@ void ir_prox_mesure(void) {
 				switch (i) {
 				case 0 ... 4:
 					if(temp[0] < 1560 && temp[0] > 1100) 
-						vmVariables.prox[i] = temp[1] - temp[0];
+						vmVariables.prox[i] = perform_calib(temp[1] - temp[0],i);
 					else
 						vmVariables.prox[i] = 0;
 					break;
 				case 5 ... 6:
 					if(temp[0] < 2550 && temp[0] > 2080)
-						vmVariables.prox[i] = temp[1] - temp[0];
+						vmVariables.prox[i] = perform_calib(temp[1] - temp[0],i);
 					else
 						vmVariables.prox[i] = 0;
 					break;
@@ -74,12 +98,12 @@ void ir_prox_mesure(void) {
 			} else 
 				vmVariables.prox[i] = 0;
 		} else {
-			vmVariables.prox[i] = 0;
+                        vmVariables.prox[i] = 0;
 		}
 		
 		ic_reset_timer(i);
 	}
-	
+
 	SET_EVENT(EVENT_PROX);
 	
 	// Retrigger everything ...
@@ -98,8 +122,17 @@ void ir_prox_mesure(void) {
 
 
 void prox_init(void) {
+        int i;
 	va_get();
-	
+
+        // brand-new robots will have a settings to 0
+        // Thus put the maximum minimum value in order to start the calibration
+        // from a valid point.
+        for(i = 0; i < N_SENSORS; i++)
+            if(settings.prox_min[i] == 0) {
+                settings.prox_min[i] = DEFAULT_CALIB;
+            }
+
 	
 	// IC configuration
 	
@@ -152,7 +185,8 @@ void prox_init(void) {
 }
 
 void prox_poweroff(void) {
-	
+
+    
 	OC7CON1 = 0;
 	OC8CON1 = 0;
 	IC1CON1bits.ICM = 0;
@@ -164,5 +198,10 @@ void prox_poweroff(void) {
 	IC7CON1bits.ICM = 0;
 	
 	va_put();
+        
+        // if calibration is new, and Vbat > 3.3V, then flash
+        if(update_calib && vmVariables.vbat[0] > 655) {
+            AsebaNative__system_settings_flash(NULL);
+        }
 }
 

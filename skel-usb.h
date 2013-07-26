@@ -53,6 +53,10 @@ extern AsebaVMState vmState;
 
 #define IS_EVENT(event) (event < 16 ? _IS_EVENT_LOW(event) : _IS_EVENT_HIGH(event))
 
+// Might be usefull if the firmware want to automatically update the settings
+// USE WITH CAUTION !
+void AsebaNative__system_settings_flash(AsebaVMState *vm);
+
 // Call this when everything is initialised and you are ready to give full control to the VM
 void __attribute((noreturn)) run_aseba_main_loop(void);
 

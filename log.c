@@ -558,16 +558,8 @@ static int write_record(void) {
 	struct _record r;
 	int i;
 
-	// First wait until we have a valid vbat
-	vmVariables.vbat[0] = 0;
-	barrier();
+	// main() is waiting to have a valid vbat
 	
-	for(i = 0; i < 10000; i++) {
-		if(vmVariables.vbat[0])
-			break;
-		clock_delay_us(1);
-	}
-		
 	// Vbat < 3.3V, don't flash
 	if(vmVariables.vbat[0] < 656)
 		return 0;
