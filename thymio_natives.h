@@ -74,6 +74,9 @@ void set_ntc_leds(AsebaVMState *vm);
 extern AsebaNativeFunctionDescription AsebaNativeDescription_set_wave;
 void set_wave(AsebaVMState *vm);
 
+extern AsebaNativeFunctionDescription AsebaNativeDescription_prox_network;
+void prox_network(AsebaVMState *vm);
+
 #define THYMIO_NATIVES_DESCRIPTIONS \
 	&AsebaNativeDescription_set_led, \
 	&AsebaNativeDescription_record, \
@@ -91,7 +94,8 @@ void set_wave(AsebaVMState *vm);
 	&AsebaNativeDescription_set_rc_leds, \
 	&AsebaNativeDescription_set_sound_leds, \
 	&AsebaNativeDescription_set_ntc_leds, \
-	&AsebaNativeDescription_set_wave
+	&AsebaNativeDescription_set_wave, \
+        &AsebaNativeDescription_prox_network
 	
 #define THYMIO_NATIVES_FUNCTIONS \
 	set_led, \
@@ -110,7 +114,8 @@ void set_wave(AsebaVMState *vm);
 	set_rc_leds, \
 	set_sound_leds, \
 	set_ntc_leds, \
-	set_wave
+	set_wave, \
+        prox_network
 
 
 #endif

@@ -44,6 +44,12 @@ const AsebaVMDescription vmDescription = {
 		{5, "buttons._noise"},
 		
 		{7, "prox.horizontal"},
+
+		{7, "prox._rx_d"},
+		{7, "prox._rx_i"},
+		{1, "prox.rx_data"},
+		{1, "prox.tx_data"},
+
 		{2, "prox.ground.ambiant"},
 		{2, "prox.ground.reflected"},
 		{2, "prox.ground.delta"},
@@ -94,6 +100,7 @@ static const AsebaLocalEventDescription localEvents[] = {
 	{ "button.right", "Right button status changed"},	
 	{ "buttons", "Buttons values updated"},
 	{ "prox", "Proximity values updated"},
+	{ "prox.data", "Data received on the proximity"},
 	{ "tap", "A tap is detected"},
 	{ "acc", "Accelerometer values updated"},
 	{ "mic", "Fired when microphone intensity is above threshold"},	

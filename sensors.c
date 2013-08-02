@@ -63,17 +63,51 @@ static inline void manage_buttons_event(void) {
 	}	
 }	
 
+#define PERIOD_100MS	799
 void new_sensors_value(unsigned int * val, int b) {
+	static unsigned int time;		// some sensors needs to have access to a timebase over 100ms (0-799), can be more than 799 if the ir want to stretch the period
+	static int per_acc;				// Period accumulator, allow the ir_prox to change their period. This accumulate the change and release it oneW tick per 100ms
+									// Negative mean that we want to slow down (count higher than 799) positive we want to accelerate (stop counting at 798)
 	leds_tick_cb();
 	
 	/* Sound ... */
 	sound_new_sample(val[3]);
-	
-	/* Motors */
-	motor_new_analog(val[5],val[4]);
-	
-	/* IR sensors ... */
-	ground_ir_new(val[1], val[2]);
+
+	/* Motor and IR sensors need to be synchronized
+	 * But the Horizontal IR need to be able to change its period slightly.
+	 * We keep the period drift here. The offset are kept inside each sub-routine
+	 *
+	 * The motors needs to have a period of about 100Hz, they trigger every 80 cycle, phase shifted by 40. need 10 cycles
+	 * The ground IR need a period of 10Hz, they trigger at time == 50, need 6 cycles
+	 * The horizontal IR need a period of 10Hz, with variable phase, trigger at time = 0, need 40 cycle.
+	 */
+
+	motor_new_analog(val[5],val[4],time);
+
+	per_acc += ir_prox_tick(time);
+
+	ground_ir_new(val[1],val[2],time);
+
+	if(per_acc < 0) {
+		if(time == PERIOD_100MS) {
+			per_acc++;
+			time++;
+		} else if(time > PERIOD_100MS) {
+			time = 0;
+		} else {
+			time++;
+		}
+	} else if(per_acc > 0) {
+		if(time == PERIOD_100MS - 1) {
+			per_acc--;
+			time = 0;
+		} else if(time++ == PERIOD_100MS) { // We have to re-check as per_acc might be set when time == PERIOD_100MS
+			time = 0;
+		}
+	} else {
+		if(time++ == PERIOD_100MS)
+			time = 0;
+	}
 
 	// Latch the leds ...
 	asm volatile ("	bset LATC,#13");

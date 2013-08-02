@@ -28,6 +28,7 @@
 #include "playback.h"
 #include "behavior.h"
 #include "tone.h"
+#include "ir_prox.h"
 
 AsebaNativeFunctionDescription AsebaNativeDescription_set_led = {
 	"_leds.set",
@@ -438,4 +439,22 @@ void set_wave(AsebaVMState * vm) {
 	}
 	
 	tone_set_waveform(wave);
+}
+
+
+AsebaNativeFunctionDescription AsebaNativeDescription_prox_network = {
+	"prox.network",
+	"Enable or fisable the proximity communication",
+	{
+		{1, "enable"},
+		{0,0},
+	}
+};
+
+void prox_network(AsebaVMState * vm) {
+	int enable = vm->variables[AsebaNativePopArg(vm)];
+	if(enable)
+		prox_enable_network();
+	else
+		prox_disable_network();
 }

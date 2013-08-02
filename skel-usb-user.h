@@ -68,6 +68,12 @@ struct _vmVariables {
 	sint16 buttons_noise[5];
 	
 	sint16 prox[7];
+        sint16 sensor_data[7];
+        sint16 intensity[7];
+        sint16 rx_data;
+        sint16 ir_tx_data;
+
+
 	sint16 ground_ambiant[2];
 	sint16 ground_reflected[2];
 	sint16 ground_delta[2];
@@ -111,6 +117,7 @@ enum Event
 	EVENT_B_RIGHT,
 	EVENT_BUTTONS,
 	EVENT_PROX,
+        EVENT_DATA,
 	EVENT_TAP,
 	EVENT_ACC,
 	EVENT_MIC,

@@ -39,9 +39,10 @@ History:
 
 /* Variant list:
 0: Standard one
+1: Development one
 
 */
-#define FW_VARIANT 0
+#define FW_VARIANT 1
 
 #include <p24Fxxxx.h>
 #include <clock/clock.h>
@@ -101,9 +102,10 @@ History:
 #define CHARGE_ENABLE_DIR _TRISF1
 #define CHARGE_500MA  _LATF0
 
-#define TIMER_ANALOG TIMER_2
-#define TIMER_RC5 TIMER_4
-#define TIMER_1KHZ TIMER_5
+#define TIMER_ANALOG	TIMER_2
+#define TIMER_RC5		TIMER_4
+#define TIMER_1KHZ		TIMER_5
+#define TIMER_IR_COMM	TIMER_1 // Timer number hardcoded into prox. processing code.
 
 static void acc_cb(int x, int y, int z, int tap) {
 	vmVariables.acc[0] = x;
@@ -237,9 +239,9 @@ void switch_off(void) {
 	
 	_LVDIE = 0;
 
-        // Why waiting on valid vbat ?
-        //   => We use an aseba variable, the user may corrupt it
-        wait_valid_vbat(); // ir autocalibration is using it.
+    // Why waiting on valid vbat ?
+    //   => We use an aseba variable, the user may corrupt it
+    wait_valid_vbat(); // ir autocalibration is using it.
 
 	analog_disable();
 	pwm_motor_poweroff();
@@ -272,10 +274,10 @@ AsebaNativeFunctionDescription AsebaNativeDescription_poweroff = {
 void power_off(AsebaVMState *vm) {
         unsigned int flags;
 
-        // Protect against two racing poweroff:
-        //  One from the softirq (button)
-        //  One from the VM
-        RAISE_IPL(flags,1);
+    // Protect against two racing poweroff:
+    //  One from the softirq (button)
+    //  One from the VM
+    RAISE_IPL(flags,1);
 
 	behavior_stop(B_ALL);
 	
@@ -361,18 +363,20 @@ int main(void)
 	pid_motor_init();
 
         // We need the settings for the horizontal prox.
-        if( ! load_settings_from_flash()) {
+    if( ! load_settings_from_flash()) {
 		/* Todo */
 	}
 	
 	// This is the horizontal prox. Vertical one are handled by the ADC
-	// but ADC sync the motor mesurment with the prox, so we don't pullute it with noise ... 
-	prox_init();
+	// but ADC sync the motor mesurment with the prox, so we don't pullute it with noise ...
+	
+	timer_init(TIMER_IR_COMM, 0,-1); // The period will be changed later.
+	prox_init(PRIO_SENSORS);  // Same priority as analog (maybe should be at 7 ...)
 	
 	// Warning: We cannot use the SD before the analog init as some pin are on the analog port.
 	analog_init(TIMER_ANALOG, PRIO_SENSORS);
 
-        wait_valid_vbat(); 
+    wait_valid_vbat(); 
         
 	log_init(); // We will need to read vbat to be sure we can flash.
 

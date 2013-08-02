@@ -23,9 +23,11 @@
 #ifndef _IR_PROX_H_
 #define _IR_PROX_H_
 
-void prox_init(void);
+void prox_init(int priority);
 void prox_poweroff(void);
-void ir_prox_mesure(void);
+int ir_prox_tick(unsigned int time);
+void prox_enable_network(void);
+void prox_disable_network(void);
 
 #endif
 

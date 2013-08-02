@@ -177,9 +177,13 @@ void _ISR _INT2Interrupt(void) {
 	}
 }
 
-static unsigned char mic_ign;
-void sound_ignore_next_sample(void) {
-	mic_ign = 2;
+// Do not change this, as it is called from
+// an interrupt with only w0 saved.
+static unsigned char __attribute((near)) mic_ign;
+void __attribute((naked)) sound_ignore_next_sample(void) {
+	asm ("mov #2, w0		\n"
+		 "mov.b WREG,%[mic]	\n"
+		 : [mic] "=T" (mic_ign)::"w0");
 }	
 
 void sound_new_sample(unsigned int sample) {

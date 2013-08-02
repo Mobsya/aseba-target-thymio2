@@ -35,7 +35,6 @@
 #define STATE_PWM 4
 
 #define DURATION_IDLE 2
-#define DURATION_PWM (80 - DURATION_IDLE - 3)
 
 static int state;
 static int counter; // Internal counter to the state
@@ -55,13 +54,13 @@ static int vind_filtered[2];
 
 static int motor_sens[2];
 
-static unsigned char ir_period; 
-
 #define SENS_MAX 10
 
 // We are called at 8kHz
 // We should manage the Vind and Vbat acquisition @ 100Hz
-void motor_new_analog(unsigned int l, unsigned int r) {
+//		=> We do it when time == 40, 120, 200, 280, 360, 440, 520, 600, 680, 760
+//	in order to be phase shifted with the horizontal and vertical prox.
+void motor_new_analog(unsigned int l, unsigned int r, unsigned int time) {
 	switch (state) {
 		case STATE_IDLE:
 			if (++counter == DURATION_IDLE) {
@@ -139,19 +138,8 @@ void motor_new_analog(unsigned int l, unsigned int r) {
 			
 			pid_motor_tick(vind,vbat);
 			
-				
-			/* HAAAAAAAAACK */
-			_TRISB12 = 0;
-			
 			pwm_motor_unlock_left();
 			pwm_motor_unlock_right();
-			
-			// Trigger prox mesurment
-			if(++ir_period == 10) {
-				ir_period = 0;
-				ir_prox_mesure();
-			}
-
 			
 			state = STATE_PWM;
 			
@@ -195,14 +183,12 @@ void motor_new_analog(unsigned int l, unsigned int r) {
 			break;
 			
 		case STATE_PWM:	
-			if(++counter == DURATION_PWM) {
+			if(time == 40 || time ==  120 || time == 200 || time == 280
+				|| time == 360 || time == 440 || time == 520 || time == 600
+				|| time == 680 || time == 760) {
 				state = STATE_IDLE;
-				counter = 0;
 				pwm_motor_lock_off_left();
 				pwm_motor_lock_off_right();
-				
-				/* HAAAAAAAAAAACK */
-				_TRISB12 = 1;
 			}
 			break;
 	}
