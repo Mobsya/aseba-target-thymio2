@@ -29,8 +29,8 @@
 
 #include <skel-usb.h>
 
-#define COMM_GAIN		14  // TODO: Optimize
-#define COMM_OFFSET		(COMM_GAIN * 429) // TODO: Optimize
+#define COMM_GAIN		28  // TODO: Optimize
+#define COMM_OFFSET		(7000) // TODO: Optimize
 
 #define COMM_MAX		((0xFFFF - COMM_OFFSET - 960 - 4) / COMM_GAIN)
 
@@ -106,7 +106,7 @@ static void ir_tx(int value) {
 	IC5CON2bits.TRIGSTAT = 0;
 	IC6CON2bits.TRIGSTAT = 0;
 	IC7CON2bits.TRIGSTAT = 0;
-
+	
 	// The order (OC7 then OC8) is important as I prefer to have OC7
 	// a little bit (1 cycle) before OC8 for the first pulse
 	// instead of the opposite (leading to 1 cycle of front & back switched on)
@@ -168,13 +168,18 @@ static unsigned int do_rx(int i, unsigned int time) {
 				unsigned int intensity =  edge_ic_time[i + N_SENSORS] - edge_ic_time[i];
 				symbol_lead = edge_ic_time[i + N_SENSORS*2] - edge_ic_time[i];
 				symbol_trail = edge_ic_time[i + N_SENSORS*3] - edge_ic_time[i+  N_SENSORS];
-				if(abs(symbol_trail - symbol_lead) < COMM_GAIN) { // FIXME: not related to comm_gain ....
+				if(abs(symbol_trail - symbol_lead) < 20) { // FIXME: Tune this value
 					// FIXME: check this value...
 					if(intensity >= 1400 && intensity < COMM_OFFSET) {
-					// Decode the input
-						vmVariables.intensity[i] = intensity;
-						vmVariables.sensor_data[i] = ((int) ((symbol_lead - COMM_OFFSET + COMM_GAIN/2) / COMM_GAIN));
-						ret = 1;
+						// Check that the decoded input is really close to a symbol
+						unsigned int temp =  ((int) ((symbol_lead - COMM_OFFSET + COMM_GAIN/2) / COMM_GAIN));
+						unsigned int temp2 = temp * COMM_GAIN + COMM_OFFSET;
+						if(abs(symbol_lead - temp2) < 3) {
+							// Ok, valid.
+							vmVariables.intensity[i] = intensity;
+							vmVariables.sensor_data[i] = temp;
+							ret = 1;
+						}
 					}
 				}
 				edge[i] = 0;
@@ -186,6 +191,7 @@ static unsigned int do_rx(int i, unsigned int time) {
 
 static int ir_prox_rx(unsigned int time) {
 	static unsigned int rx_pending;
+	static unsigned char hold_off;
 
 	int i;
 	int ret = 0;
@@ -195,13 +201,17 @@ static int ir_prox_rx(unsigned int time) {
 		active |= do_rx(i, time) << i;
 
 	if(active) {
+		hold_off = 2; // we might have 500 us between the end of pulse on one sensor and on another one...
 		if(time > 720)
 			ret = -2; // we should slow down a bit ...
 		if(time < 80)
 			ret = 2;  // we should hurry up a bit ...
-	}
+	} else if(hold_off)
+		hold_off--;
+	
+	rx_pending |= active;
 
-	if(active == 0 && rx_pending != 0) {
+	if(hold_off == 0 && rx_pending != 0) {
 		// We got something previously, and all the sensors are now idle.
 		int max;
 #define FF1R(word, pos) asm("ff1r %[w], %[b]" : [b] "=x" (pos) : [w] "r" (word) : "cc")
@@ -215,12 +225,18 @@ static int ir_prox_rx(unsigned int time) {
 				max = i;
 
 		vmVariables.rx_data = vmVariables.sensor_data[max];
+
+		// DEBUG
+		vmVariables.args[0] = max;
+		for(i = 0; i < N_SENSORS * 4; i++) {
+			vmVariables.args[i+1] = edge_ic_time[i];
+		}
+		
+
 		SET_EVENT(EVENT_DATA);
 
 		rx_pending = 0;
-	} else
-		rx_pending |= active;
-
+	} 
 	
 	return 0;
 }
@@ -260,7 +276,7 @@ int ir_prox_tick(unsigned int time) {
 			} else
 				ir_tx(-1);
 			break;
-		case 5: // First pulse should be emitted by now. 
+		case 5: // First pulse should be emitted by now.
 				// FIXME: optimize this value
 			ir_prox_rx_oa();
 			break;
