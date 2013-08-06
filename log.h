@@ -1,7 +1,7 @@
 /*
         Thymio-II Firmware
 
-        Copyright (C) 2012 Philippe Retornaz <philippe dot retornaz at epfl dot ch>,
+        Copyright (C) 2013 Philippe Retornaz <philippe dot retornaz at epfl dot ch>,
         Mobots group (http://mobots.epfl.ch), Robotics system laboratory (http://lsro.epfl.ch)
         EPFL Ecole polytechnique federale de Lausanne (http://www.epfl.ch)
 
@@ -58,6 +58,7 @@ void log_init(void);
 #define LOG_FLAG_EVENTNTC		(20)
 #define LOG_FLAG_EVENTTIMER		(21)
 #define LOG_FLAG_MOTOROVERC		(22)
+#define LOG_FLAG_IRCOMM			(23)
 
 void log_set_flag(unsigned char flag);
 

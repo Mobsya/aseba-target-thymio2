@@ -1,7 +1,7 @@
 /*
         Thymio-II Firmware
 
-        Copyright (C) 2012 Philippe Retornaz <philippe dot retornaz at epfl dot ch>,
+        Copyright (C) 2013 Philippe Retornaz <philippe dot retornaz at epfl dot ch>,
         Mobots group (http://mobots.epfl.ch), Robotics system laboratory (http://lsro.epfl.ch)
         EPFL Ecole polytechnique federale de Lausanne (http://www.epfl.ch)
 
@@ -57,7 +57,7 @@ struct _ud {
 	unsigned char poweroff_d;
 
 
-	unsigned char flags[3];
+	unsigned char flags[4];
 	
 	
 	unsigned int crc; // The crc of all the previous values ... must be at the end.
@@ -225,6 +225,9 @@ static void check_native(unsigned int i) {
 		// ntc led
 		log_set_flag(LOG_FLAG_LEDOTHER);
 		break;
+	case FUNC_OFFSET + 17:
+		log_set_flag(LOG_FLAG_IRCOMM);
+		break;
 	}
 	
 }
@@ -359,7 +362,7 @@ struct _record {
 	unsigned int __attribute((packed)) poweron;
 	unsigned int __attribute((packed)) studio;
 	unsigned int __attribute((packed)) usb;
-	unsigned char __attribute((packed)) flags[3];
+	unsigned char __attribute((packed)) flags[4];
 	unsigned char __attribute((packed)) switchon;
 	unsigned char __attribute((packed)) reprogram;
 	unsigned char __attribute((packed)) mmenu;
@@ -371,7 +374,6 @@ struct _record {
 	unsigned char __attribute((packed)) msound;
 	unsigned char __attribute((packed)) mvm;
 	unsigned char __attribute((packed)) poweroff;
-	unsigned char __attribute((packed)) _;
 }; // Sizeof(_record) == 21 == 7 instructions
 
 struct _header {
@@ -390,12 +392,12 @@ struct _header {
 	unsigned int __attribute((packed)) msound;	// ''
 	unsigned int __attribute((packed)) mvm;		// ''
 	unsigned int __attribute((packed)) poweroff;// poweroff time in days.
-	unsigned char __attribute((packed)) flags[3]; // flags, or-ed
+	unsigned char __attribute((packed)) flags[4]; // flags, or-ed
 	unsigned char __attribute((packed)) page_count;
-	unsigned char __attribute((packed)) _[5]; 	// padding, can be used for something else.
+	unsigned char __attribute((packed)) _[4]; 	// padding, can be used for something else.
 }; // sizeof(_header) == 45 == 15 instruction
 
-#define HEADER_VERSION 2
+#define HEADER_VERSION 3
 
 #define HEADER_SIZE (sizeof(struct _header))
 #define RECORD_SIZE (sizeof(struct _record))
@@ -420,6 +422,7 @@ static void sum_stats(struct _header * h, unsigned long source) {
 		h->flags[0] |= r.flags[0];
 		h->flags[1] |= r.flags[1];
 		h->flags[2] |= r.flags[2];
+		h->flags[3] |= r.flags[3];
 		
 		h->poweroff += r.poweroff;
 		h->mvm += r.mvm;
@@ -539,6 +542,7 @@ static void create_record(struct _record * r) {
 	r->flags[0] = ud.flags[0];
 	r->flags[1] = ud.flags[1];
 	r->flags[2] = ud.flags[2];
+	r->flags[3] = ud.flags[3];
 	r->switchon = ud.poweron_c;
 	r->reprogram = ud.reprogram_c;
 	r->mmenu = ud.mode_m[MODE_MENU];
@@ -635,4 +639,3 @@ void log_dump(void * _f) {
 		flash_erase_page(PAGE_1);
 
 }
-
