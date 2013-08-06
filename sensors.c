@@ -85,6 +85,10 @@ void new_sensors_value(unsigned int * val, int b) {
 	motor_new_analog(val[5],val[4],time);
 
 	per_acc += ir_prox_tick(time);
+	if(per_acc > 100)
+		per_acc = 100;
+	if(per_acc < -100)
+		per_acc = -100;
 
 	ground_ir_new(val[1],val[2],time);
 
