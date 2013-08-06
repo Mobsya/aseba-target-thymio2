@@ -14,7 +14,7 @@ struct __attribute((packed)) _record  {
         uint16 poweron;
         uint16 studio;
         uint16 usb;
-        uint8 flags[3];
+        uint8 flags[4];
         uint8 switchon;
         uint8 reprogram;
         uint8 mmenu;
@@ -26,7 +26,6 @@ struct __attribute((packed)) _record  {
         uint8 msound;
         uint8 mvm;
         uint8 poweroff;
-        uint8 _;
 }; // Sizeof(_record) == 21 == 7 instructions
 
 
@@ -46,9 +45,9 @@ struct __attribute((packed)) _header  {
         uint16 msound;      // ''
         uint16 mvm;         // ''
         uint16 poweroff;// poweroff time in days.
-        uint8 flags[3]; // flags, or-ed
+        uint8 flags[4]; // flags, or-ed
 	uint8 page_count; // Number of flash
-        uint8 _[5];      // padding, can be used for something else.
+        uint8 _[4];      // padding, can be used for something else.
 }; // sizeof(_header) == 45 == 15 instruction
 
 #define RECORD_PER_PAGE 71
@@ -114,11 +113,11 @@ static int dump_record(struct _record * r, int c) {
 	printf("\t\tSound\t\t%d\tminutes\n",r->msound);
 	printf("\t\tVirtual Machine\t%d\tminutes\n",r->mvm);
 	
-	printf("Flags: 0x%02x%02x%02x (", r->flags[0], r->flags[1], r->flags[2]);
-	for(i = 0; i < 24; i++) 
+	printf("Flags: 0x%02x%02x%02x%02x (", r->flags[0], r->flags[1], r->flags[2], r->flags[3]);
+	for(i = 0; i < 32; i++) 
 		if(flag_set(r->flags, i))
 			printf("%d ",i);
-	if(!r->flags[0] && !r->flags[1] && !r->flags[2])
+	if(!r->flags[0] && !r->flags[1] && !r->flags[2] && !r->flags[3])
 		printf("none");
  	printf(")\n");
 	
@@ -133,8 +132,8 @@ static void dump_header(struct _header * h) {
 	}
 		
 	
-	if(h->version != 2)
-		printf("/!\\ Warning: header version: %d while expecting version 2 /!\\ \n",h->version);
+	if(h->version != 3)
+		printf("/!\\ Warning: header version: %d while expecting version 3 /!\\ \n",h->version);
 	
 	printf("Poweron time: \t\t%d \tminutes\n",h->poweron);
 	printf("Asebastudio time: \t%d \tminutes\n",h->studio);
@@ -153,11 +152,11 @@ static void dump_header(struct _header * h) {
 	printf("\tSound\t\t%d\tminutes\n",h->msound);
 	printf("\tVirtual Machine\t%d\tminutes\n",h->mvm);
 	
-	printf("Flags: 0x%02x%02x%02x (", h->flags[0], h->flags[1], h->flags[2]);
-	for(i = 0; i < 24; i++) 
+	printf("Flags: 0x%02x%02x%02x%02x (", h->flags[0], h->flags[1], h->flags[2], h->flags[3]);
+	for(i = 0; i < 32; i++) 
 		if(flag_set(h->flags, i))
 			printf("%d ",i);
-	if(!h->flags[0] && !h->flags[1] && !h->flags[2])
+	if(!h->flags[0] && !h->flags[1] && !h->flags[2] && !h->flags[3])
 		printf("none");
  	printf(")\n");
 }
