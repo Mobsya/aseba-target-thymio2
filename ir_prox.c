@@ -168,12 +168,15 @@ static unsigned int do_rx(int i, unsigned int time) {
 				unsigned int intensity =  edge_ic_time[i + N_SENSORS] - edge_ic_time[i];
 				symbol_lead = edge_ic_time[i + N_SENSORS*2] - edge_ic_time[i];
 				symbol_trail = edge_ic_time[i + N_SENSORS*3] - edge_ic_time[i+  N_SENSORS];
-				if(abs(symbol_trail - symbol_lead) < 20) { // FIXME: Tune this value
-					// FIXME: check this value...
+				 // This force the same light intensity on both pulse
+				if(abs(symbol_trail - symbol_lead) < 20) {
+					// This force to have a good enough SNR. Weak signal have much much more noise (rising edge is slow)
+					// And remove too big pulses such as two robot sending at the same times
 					if(intensity >= 1400 && intensity < COMM_OFFSET) {
 						// Check that the decoded input is really close to a symbol
 						unsigned int temp =  ((int) ((symbol_lead - COMM_OFFSET + COMM_GAIN/2) / COMM_GAIN));
 						unsigned int temp2 = temp * COMM_GAIN + COMM_OFFSET;
+						// This is the most strict filter when the robot is moving
 						if(abs(symbol_lead - temp2) < 3) {
 							// Ok, valid.
 							vmVariables.intensity[i] = intensity;
@@ -226,13 +229,6 @@ static int ir_prox_rx(unsigned int time) {
 
 		vmVariables.rx_data = vmVariables.sensor_data[max];
 
-		// DEBUG
-		vmVariables.args[0] = max;
-		for(i = 0; i < N_SENSORS * 4; i++) {
-			vmVariables.args[i+1] = edge_ic_time[i];
-		}
-		
-
 		SET_EVENT(EVENT_DATA);
 
 		rx_pending = 0;
@@ -276,15 +272,16 @@ int ir_prox_tick(unsigned int time) {
 			} else
 				ir_tx(-1);
 			break;
-		case 5: // First pulse should be emitted by now.
-				// FIXME: optimize this value
+		case 5: // First pulse should be emitted by now. (max pulse: 8000, emition time: 960, back is delayed by 960: 9920 => 5.
 			ir_prox_rx_oa();
 			break;
-		case 40:
+		// Todo: we should check if we receive something when we don't send a pulse during this time
+		// this would be a strong hint to know if another robot is TX at the same times as us.
+		case 37:
 			if(enable_network == 2)
 				ir_prox_rx_reset();
 			break;
-		case 41 ... 0xFFFF: // Rest of the period
+		case 38 ... 0xFFFF: // Rest of the period
 			if(enable_network == 2) {
 				ret = ir_prox_rx(time);
 			}
