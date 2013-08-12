@@ -74,6 +74,18 @@ void set_ntc_leds(AsebaVMState *vm);
 extern AsebaNativeFunctionDescription AsebaNativeDescription_set_wave;
 void set_wave(AsebaVMState *vm);
 
+extern AsebaNativeFunctionDescription AsebaNativeDescription_sd_open;
+void thymio_native_sd_open(AsebaVMState * vm);
+
+extern AsebaNativeFunctionDescription AsebaNativeDescription_sd_write;
+void thymio_native_sd_write(AsebaVMState * vm);
+
+extern AsebaNativeFunctionDescription AsebaNativeDescription_sd_read;
+void thymio_native_sd_read(AsebaVMState * vm);
+
+extern AsebaNativeFunctionDescription AsebaNativeDescription_sd_seek;
+void thymio_native_sd_seek(AsebaVMState * vm);
+
 #define THYMIO_NATIVES_DESCRIPTIONS \
 	&AsebaNativeDescription_set_led, \
 	&AsebaNativeDescription_record, \
@@ -91,7 +103,11 @@ void set_wave(AsebaVMState *vm);
 	&AsebaNativeDescription_set_rc_leds, \
 	&AsebaNativeDescription_set_sound_leds, \
 	&AsebaNativeDescription_set_ntc_leds, \
-	&AsebaNativeDescription_set_wave
+	&AsebaNativeDescription_set_wave, \
+        &AsebaNativeDescription_sd_open, \
+        &AsebaNativeDescription_sd_write, \
+        &AsebaNativeDescription_sd_read, \
+        &AsebaNativeDescription_sd_seek
 	
 #define THYMIO_NATIVES_FUNCTIONS \
 	set_led, \
@@ -110,7 +126,11 @@ void set_wave(AsebaVMState *vm);
 	set_rc_leds, \
 	set_sound_leds, \
 	set_ntc_leds, \
-	set_wave
+	set_wave, \
+        thymio_native_sd_open, \
+        thymio_native_sd_write, \
+        thymio_native_sd_read, \
+        thymio_native_sd_seek
 
 
 #endif

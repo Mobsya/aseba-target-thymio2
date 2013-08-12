@@ -86,8 +86,7 @@ AsebaNativeFunctionDescription AsebaNativeDescription_sound_system = {
 	}
 };
 
-
-static void prepare_name(unsigned int n, char * buf) {
+static char * _prepare_name(unsigned int n, char * buf) {
 	unsigned int div;
 	unsigned int z = 0;
 	for(div=10000; div > 0; div /= 10) {
@@ -98,6 +97,11 @@ static void prepare_name(unsigned int n, char * buf) {
 			*buf++ = '0' + disp;
 		}
 	}
+	return buf;
+}
+
+static void prepare_name(unsigned int n, char * buf) {
+	buf = _prepare_name(n, buf);
 	
 	*buf++ = '.';
 	*buf++ = 'w';
@@ -438,4 +442,96 @@ void set_wave(AsebaVMState * vm) {
 	}
 	
 	tone_set_waveform(wave);
+}
+
+AsebaNativeFunctionDescription AsebaNativeDescription_sd_open = {
+	"sd.open",
+	"Open a file on the sd card",
+	{
+		{1, "number"},
+		{1, "status"},
+		{0,0},
+	}
+};
+
+void thymio_native_sd_open(AsebaVMState * vm) {
+	int no = vm->variables[AsebaNativePopArg(vm)];
+	unsigned int status = AsebaNativePopArg(vm);
+	char name[13] = {'u'};
+	char * p;
+
+
+	if(no == -1) {
+		sd_user_open(NULL);
+		vm->variables[status] = 0;
+	} else {
+		p = _prepare_name(no, &name[1]);
+		*p++ = '.';
+		*p++ = 'd';
+		*p++ = 'a';
+		*p++ = 't';
+		*p++ = 0;
+		vm->variables[status] = sd_user_open(name);
+	}
+}
+
+AsebaNativeFunctionDescription AsebaNativeDescription_sd_write = {
+	"sd.write",
+	"Write data on the sd card",
+	{
+		{-1, "data"},
+		{1, "written"},
+		{0,0},
+	}
+};
+
+
+void thymio_native_sd_write(AsebaVMState * vm) {
+	// variable pos
+	unsigned char * data = (unsigned char *) (vm->variables + AsebaNativePopArg(vm));
+	uint16 status = AsebaNativePopArg(vm);
+
+	// variable size
+	uint16 length = AsebaNativePopArg(vm) * 2;
+
+	vm->variables[status] = sd_user_write(data,length) / 2;
+}
+
+AsebaNativeFunctionDescription AsebaNativeDescription_sd_read = {
+	"sd.read",
+	"Read data on the sd card",
+	{
+		{-1, "data"},
+		{1, "read"},
+		{0,0},
+	}
+};
+
+
+void thymio_native_sd_read(AsebaVMState * vm) {
+	// variable pos
+	unsigned char * data = (unsigned char *) (vm->variables + AsebaNativePopArg(vm));
+	uint16 status = AsebaNativePopArg(vm);
+
+	// variable size
+	uint16 length = AsebaNativePopArg(vm) * 2;
+
+	vm->variables[status] = sd_user_read(data,length) / 2;
+}
+
+AsebaNativeFunctionDescription AsebaNativeDescription_sd_seek = {
+	"sd.seek",
+	"Seek",
+	{
+		{1, "position"},
+		{1, "status"},
+		{0,0},
+	}
+};
+
+void thymio_native_sd_seek(AsebaVMState * vm) {
+	unsigned long seek =  vm->variables[AsebaNativePopArg(vm)];
+	unsigned int status = AsebaNativePopArg(vm);
+
+	vm->variables[status] = sd_user_seek(seek * 2);
 }

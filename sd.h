@@ -34,4 +34,9 @@
 	int sd_load_aseba_code(void);
 	
 	void sd_log_file(void);
+
+        int sd_user_open(char * name);
+        int sd_user_seek(unsigned long offset);
+        unsigned int sd_user_read(unsigned char * data, unsigned int size);
+        unsigned int sd_user_write(unsigned char * data, unsigned int size);
 #endif
