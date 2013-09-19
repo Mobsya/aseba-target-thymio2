@@ -477,7 +477,7 @@ void thymio_native_sd_open(AsebaVMState * vm) {
 
 AsebaNativeFunctionDescription AsebaNativeDescription_sd_write = {
 	"sd.write",
-	"Write data from the opened file",
+	"Write data to the opened file",
 	{
 		{-1, "data"},
 		{1, "written"},
