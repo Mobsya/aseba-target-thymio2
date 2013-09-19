@@ -446,7 +446,7 @@ void set_wave(AsebaVMState * vm) {
 
 AsebaNativeFunctionDescription AsebaNativeDescription_sd_open = {
 	"sd.open",
-	"Open a file on the sd card",
+	"Open a file on the SD card",
 	{
 		{1, "number"},
 		{1, "status"},
@@ -477,7 +477,7 @@ void thymio_native_sd_open(AsebaVMState * vm) {
 
 AsebaNativeFunctionDescription AsebaNativeDescription_sd_write = {
 	"sd.write",
-	"Write data on the sd card",
+	"Write data from the opened file",
 	{
 		{-1, "data"},
 		{1, "written"},
@@ -499,7 +499,7 @@ void thymio_native_sd_write(AsebaVMState * vm) {
 
 AsebaNativeFunctionDescription AsebaNativeDescription_sd_read = {
 	"sd.read",
-	"Read data on the sd card",
+	"Read data from the opened file",
 	{
 		{-1, "data"},
 		{1, "read"},
@@ -521,7 +521,7 @@ void thymio_native_sd_read(AsebaVMState * vm) {
 
 AsebaNativeFunctionDescription AsebaNativeDescription_sd_seek = {
 	"sd.seek",
-	"Seek",
+	"Seek the opened file",
 	{
 		{1, "position"},
 		{1, "status"},
