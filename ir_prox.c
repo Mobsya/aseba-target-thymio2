@@ -39,7 +39,9 @@
 	
 static unsigned char update_calib;
 static unsigned char __attribute((near)) pulse_count; // used in interrupt processing. needs to be "near"
+static unsigned char __attribute((near)) last_tx;   // used in interrupt processing. needs to be "near"
 static unsigned char enable_network;				  // 1 mean will be enabled, 2 mean enabled. 0 == disabled (default)
+
 
 // I don't want gcc to optimise too much, force noinline
 static int __attribute((noinline)) ic_bufne(int ic) {
@@ -78,9 +80,10 @@ void __attribute((interrupt, no_auto_psv)) _OC8Interrupt(void) {
 	"mov #0xFFF8, w0				\n"
 	"and 0x1CC						\n"		//		OC7CON1bits.OCM = 0;
 	"and 0x1D6						\n"		//		OC8CON1bits.OCM = 0;
+	"inc.b %[sec]					\n"		//		sec++;  // set to on, as it should be init. at 0
 	"1:								\n"		// }
 	"rcall _sound_ignore_next_sample\n"		// sound_ignore_next_sample(); // This function only modify w0 and a memory location
-	: [cnt] "+U" (pulse_count): : "cc","memory","w0");
+	: [cnt] "+U" (pulse_count), [sec] "+U" (last_tx) : : "cc","memory","w0");
 }
 
 static void ir_tx(int value) {
@@ -97,6 +100,8 @@ static void ir_tx(int value) {
 		PR1 = 0xFFFF; // Large enough to never trigger before the OC interrupt
 		pulse_count = 1;
 	}
+
+	last_tx = 0;
 
 	// Reset the IC TMR and hold in reset until corresponding OC pulse
 	IC1CON2bits.TRIGSTAT = 0;
@@ -237,27 +242,47 @@ static int ir_prox_rx(unsigned int time) {
 	return 0;
 }
 
-static void ir_prox_rx_oa(void) {
+static int ir_prox_rx_oa(void) {
 	int temp[2];
 	int i;
+	int ret = 0;
 	for(i = 0; i < N_SENSORS; i++) {
+		vmVariables.prox[i] = 0;
 		if(ic_bufne(i)) {
 			temp[0] = ic_buf(i);
 			if(ic_bufne(i)) {
 				temp[1] = ic_buf(i);
 
 				// Validity check
-				if(temp[0] < 2000 && temp[0] > 100)
-					vmVariables.prox[i] = perform_calib(temp[1] - temp[0],i,1);
-				else
-					vmVariables.prox[i] = 0;
-
-			} else
-				vmVariables.prox[i] = 0;
-		} else {
-			vmVariables.prox[i] = 0;
+				if(temp[0] < 2000) {
+					if(temp[0] > 100)
+						vmVariables.prox[i] = perform_calib(temp[1] - temp[0],i,1);
+					else
+						ret = -10; // we should delay the tx, somebody is transmitting right before us.
+				} else
+					ret = 10; // we should hurry up, somebody is transmitting right after us.
+			} 
 		}
 	}
+	return ret;
+}
+
+static int ir_prox_check_2nd_pulse(void) {
+	unsigned int temp;
+	int i;
+	int ret = 0;
+	unsigned int period = PR1;
+	for(i = 0; i < N_SENSORS; i++) {
+		if(ic_bufne(i)) {
+			temp = ic_buf(i);
+
+			if(temp >= 2000 + period)
+				ret = 10; // we should hurry up, somebody is transmitting right after us.
+			if(temp <= 100 + period)
+				ret = -10; // we should delay the tx, somebody is transmitting right before us.
+		}
+	}
+	return ret;
 }
 
 int ir_prox_tick(unsigned int time) {
@@ -273,19 +298,25 @@ int ir_prox_tick(unsigned int time) {
 				ir_tx(-1);
 			break;
 		case 5: // First pulse should be emitted by now. (max pulse: 8000, emition time: 960, back is delayed by 960: 9920 => 5.
-			ir_prox_rx_oa();
+			ret = ir_prox_rx_oa();
 			break;
-		// Todo: we should check if we receive something when we don't send a pulse during this time
-		// this would be a strong hint to know if another robot is TX at the same times as us.
-		case 37:
-			if(enable_network == 2)
-				ir_prox_rx_reset();
-			break;
-		case 38 ... 0xFFFF: // Rest of the period
-			if(enable_network == 2) {
-				ret = ir_prox_rx(time);
+		case 6 ... 0xFFFF: 
+			if(enable_network == 2 && last_tx) {
+				if(last_tx == 6) {
+					ret = ir_prox_check_2nd_pulse(); // If we just sent the 2nd pulse, check if there is contention.
+					ir_prox_rx_reset();
+					last_tx++;
+				} else if(last_tx > 6) {
+					// We sent the two pulses, now start to listen
+					ret = ir_prox_rx(time);
+				} else
+					// Wait the local echo
+					last_tx++;
 			}
+			break;
 	}
+	if(enable_network != 2)
+		ret = 0;
 	return ret;
 }
 
