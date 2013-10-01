@@ -222,7 +222,6 @@ unsigned char aseba_settings_flash[INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((sp
 #warning "the settings page is NOT initialised"
 
 unsigned long aseba_flash_ptr;
-unsigned long aseba_settings_ptr;
 
 void AsebaWriteBytecode(AsebaVMState *vm) {
 	// Look for the lowest number of use
@@ -303,7 +302,7 @@ void AsebaNative__system_settings_flash(AsebaVMState *vm) {
 	// If no magic is found, erase the page, and then write the first one
 	// If the last magic is found, erase the page and then write the first one
 	
-	unsigned long setting_addr = aseba_settings_ptr;
+	unsigned long setting_addr = __builtin_tbladdress(aseba_settings_flash);;
 	int i = 0;
 	unsigned int mag;
 	unsigned long temp;
@@ -356,9 +355,9 @@ int load_settings_from_flash(void) {
 	// Max size 95 int, min 1 int
 	COMPILATION_ASSERT(sizeof(settings) < ((INSTRUCTIONS_PER_ROW*3) - 2));
 	COMPILATION_ASSERT(sizeof(settings) > 1);
-	
+
 	// The the last "known" magic found
-	unsigned long temp = aseba_settings_ptr;
+	unsigned long temp = __builtin_tbladdress(aseba_settings_flash);;
 	int i = 0;
 	unsigned int mag;
 	
@@ -405,7 +404,7 @@ int init_aseba_and_fifo(void) {
 		vmState.nodeId = 1;
 
 	aseba_flash_ptr =__builtin_tbladdress(aseba_flash);
-	aseba_settings_ptr = __builtin_tbladdress(aseba_settings_flash);
+	
 
 
 	COMPILATION_ASSERT(SEND_QUEUE_SIZE >= (ASEBA_MAX_PACKET_SIZE + 4));
