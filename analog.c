@@ -26,6 +26,7 @@
 #include <timer/timer.h>
 #include <clock/clock.h>
 
+#include "sensors.h"
 #include "analog.h"
 #include "regulator.h"
 #include "ground_ir.h"
@@ -42,7 +43,6 @@
 static int analog_state; // 0-4, depending on which button is scanned ... 
 static int timer;
 
-void new_sensors_value(unsigned int * val, int button); // callback
 
 void __attribute((interrupt,no_auto_psv)) _ADC1Interrupt(void) {
 	_ADON = 0;

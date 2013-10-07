@@ -26,6 +26,7 @@
 #include "ir_prox.h"
 #include "regulator.h"
 #include "sound.h"
+#include "sensors.h"
 
 #include <skel-usb.h>
 
@@ -41,7 +42,7 @@ static unsigned char update_calib;
 static unsigned char __attribute((near)) pulse_count; // used in interrupt processing. needs to be "near"
 static unsigned char __attribute((near)) last_tx;   // used in interrupt processing. needs to be "near"
 static unsigned char enable_network;				  // 1 mean will be enabled, 2 mean enabled. 0 == disabled (default)
-
+static unsigned int loopback_delay[N_SENSORS];
 
 // I don't want gcc to optimise too much, force noinline
 static int __attribute((noinline)) ic_bufne(int ic) {
@@ -53,21 +54,27 @@ static unsigned int __attribute((noinline)) ic_buf(int ic) {
 	return *((&IC1BUF) + ic*4);
 }
 
-static int perform_calib(int raw, int i, int update) {
-        if(settings.prox_min[i] > 0) {
-                // On the fly recalibration
-                if(raw < settings.prox_min[i] && update) {
-                        settings.prox_min[i] = raw;
-                        update_calib = 1;
-                }
-                // Cast to unsigned so the compiler optimise by a shift
-                // We checked that the value was positive, so it's safe.
-                return raw - (3*((unsigned int) settings.prox_min[i])) / 4 + 800;
+static int perform_calib(unsigned int raw, int i, int update) {
+	int value;
+	if(raw > 32767)
+		return 0; // No way.
+	
+	value = raw;
 
-        } else {
-                // Calibration disabled
-                return raw;
-        }
+	if(settings.prox_min[i] > 0) {
+			// On the fly recalibration
+			if(value < settings.prox_min[i] && update) {
+					settings.prox_min[i] = value;
+					update_calib = 1;
+			}
+			// Cast to unsigned so the compiler optimise by a shift
+			// We checked that the value was positive, so it's safe.
+			return value- (3*((unsigned int) settings.prox_min[i])) / 4 + 800;
+
+	} else {
+			// Calibration disabled
+			return value;
+	}
 }
 
 void __attribute((interrupt, no_auto_psv)) _OC8Interrupt(void) {
@@ -248,19 +255,22 @@ static int ir_prox_rx_oa(void) {
 	int ret = 0;
 	for(i = 0; i < N_SENSORS; i++) {
 		vmVariables.prox[i] = 0;
+		loopback_delay[i] = 0;
 		if(ic_bufne(i)) {
 			temp[0] = ic_buf(i);
 			if(ic_bufne(i)) {
 				temp[1] = ic_buf(i);
-
+				loopback_delay[i] = temp[0];
 				// Validity check
 				if(temp[0] < 2000) {
 					if(temp[0] > 100)
 						vmVariables.prox[i] = perform_calib(temp[1] - temp[0],i,1);
-					else
-						ret = -10; // we should delay the tx, somebody is transmitting right before us.
-				} else
-					ret = 10; // we should hurry up, somebody is transmitting right after us.
+					else if(!sensors_prox_drift()) {
+						ret = ((temp[0] & 0x3) - 2) * 5; // Should use random here ....
+					}
+				} else if(!sensors_prox_drift()) {
+					ret = ((temp[0] & 0x3) - 1) * 5; // Should use random here ....
+				}
 			} 
 		}
 	}
@@ -275,11 +285,13 @@ static int ir_prox_check_2nd_pulse(void) {
 	for(i = 0; i < N_SENSORS; i++) {
 		if(ic_bufne(i)) {
 			temp = ic_buf(i);
-
-			if(temp >= 2000 + period)
-				ret = 10; // we should hurry up, somebody is transmitting right after us.
-			if(temp <= 100 + period)
-				ret = -10; // we should delay the tx, somebody is transmitting right before us.
+			
+			if((loopback_delay[i] + period - COMM_GAIN < temp) && !sensors_prox_drift()) {
+				ret =  ((temp & 0x3) - 2) * 5; // Should use random here ....
+			}
+			if((loopback_delay[i] + period + COMM_GAIN > temp) && !sensors_prox_drift()) {
+				ret =  ((temp & 0x3) - 1) * 5; // Should use random here ....
+			}
 		}
 	}
 	return ret;

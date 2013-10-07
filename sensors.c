@@ -24,12 +24,13 @@
 #include <skel-usb.h>
 
 #include "analog.h"
-//#include "sensors.h"
+#include "sensors.h"
 #include "button.h"
 #include "sound.h"
 #include "motor.h"
 #include "ground_ir.h"
 #include "leds.h"
+#include "ir_prox.h"
 
 // Callback from the ADC @ 8kHz
 // Capacitive touch sensors availble at 8/5Khz
@@ -64,10 +65,15 @@ static inline void manage_buttons_event(void) {
 }	
 
 #define PERIOD_100MS	799
+static int per_acc;				// Period accumulator, allow the ir_prox to change their period. This accumulate the change and release it oneW tick per 100ms
+								// Negative mean that we want to slow down (count higher than 799) positive we want to accelerate (stop counting at 798)
+
+int sensors_prox_drift(void) {
+	return per_acc;
+}
+
 void new_sensors_value(unsigned int * val, int b) {
 	static unsigned int time;		// some sensors needs to have access to a timebase over 100ms (0-799), can be more than 799 if the ir want to stretch the period
-	static int per_acc;				// Period accumulator, allow the ir_prox to change their period. This accumulate the change and release it oneW tick per 100ms
-									// Negative mean that we want to slow down (count higher than 799) positive we want to accelerate (stop counting at 798)
 	leds_tick_cb();
 	
 	/* Sound ... */
