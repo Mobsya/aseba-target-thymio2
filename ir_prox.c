@@ -39,6 +39,7 @@
 #define DEFAULT_CALIB 5000
 	
 static unsigned char update_calib;
+static unsigned char prox_calib_counter[N_SENSORS];
 static unsigned char __attribute((near)) pulse_count; // used in interrupt processing. needs to be "near"
 static unsigned char __attribute((near)) last_tx;   // used in interrupt processing. needs to be "near"
 static unsigned char enable_network;				  // 1 mean will be enabled, 2 mean enabled. 0 == disabled (default)
@@ -54,23 +55,33 @@ static unsigned int __attribute((noinline)) ic_buf(int ic) {
 	return *((&IC1BUF) + ic*4);
 }
 
-static int perform_calib(unsigned int raw, int i, int update) {
+static int _calib(int value, int i) {
+
+	if(value < settings.prox_min[i]+30) {
+		if(++prox_calib_counter[i] > 3) {
+			if(value < settings.prox_min[i]) {
+				settings.prox_min[i] = value;
+				update_calib = 1;
+			} else
+				prox_calib_counter[i] = 0;
+		}
+	} else
+		prox_calib_counter[i] = 0;
+	// Cast to unsigned so the compiler optimise by a shift
+	// We checked that the value was positive, so it's safe.
+	return value- (3*((unsigned int) settings.prox_min[i])) / 4 + 800;
+}
+
+static int perform_calib(unsigned int raw, int i) {
 	int value;
 	if(raw > 32767)
-		return 0; // No way.
+		return 0; // Sanity check
 	
 	value = raw;
 
 	if(settings.prox_min[i] > 0) {
 			// On the fly recalibration
-			if(value < settings.prox_min[i] && update) {
-					settings.prox_min[i] = value;
-					update_calib = 1;
-			}
-			// Cast to unsigned so the compiler optimise by a shift
-			// We checked that the value was positive, so it's safe.
-			return value- (3*((unsigned int) settings.prox_min[i])) / 4 + 800;
-
+			return _calib(value,i);
 	} else {
 			// Calibration disabled
 			return value;
@@ -264,7 +275,7 @@ static int ir_prox_rx_oa(void) {
 				// Validity check
 				if(temp[0] < 2000) {
 					if(temp[0] > 100)
-						vmVariables.prox[i] = perform_calib(temp[1] - temp[0],i,1);
+						vmVariables.prox[i] = perform_calib(temp[1] - temp[0],i);
 					else if(!sensors_prox_drift()) {
 						ret = ((temp[0] & 0x3) - 2) * 5; // Should use random here ....
 					}
@@ -273,6 +284,11 @@ static int ir_prox_rx_oa(void) {
 				}
 			} 
 		}
+		// Reset the calibration counter if the sensor did not see something:
+		// => perform_calib was not trigged, thus, prox_calib_counter was not updated
+		// So, do it here.
+		if(!vmVariables.prox[i])
+			prox_calib_counter[i] = 0;
 	}
 	return ret;
 }
