@@ -36,7 +36,9 @@
 #define COMM_MAX		((0xFFFF - COMM_OFFSET - 960 - 4) / COMM_GAIN)
 
 #define N_SENSORS 7
-#define DEFAULT_CALIB 5000
+#define CALIB_HIST 30
+#define DEFAULT_CALIB 0x7FFF
+
 	
 static unsigned char update_calib;
 static unsigned char prox_calib_counter[N_SENSORS];
@@ -56,8 +58,9 @@ static unsigned int __attribute((noinline)) ic_buf(int ic) {
 }
 
 static int _calib(int value, int i) {
+	int ret;
 
-	if(value < settings.prox_min[i]+30) {
+	if(value - CALIB_HIST < settings.prox_min[i]) {
 		if(++prox_calib_counter[i] > 3) {
 			if(value < settings.prox_min[i]) {
 				settings.prox_min[i] = value;
@@ -69,7 +72,16 @@ static int _calib(int value, int i) {
 		prox_calib_counter[i] = 0;
 	// Cast to unsigned so the compiler optimise by a shift
 	// We checked that the value was positive, so it's safe.
-	return value- (3*((unsigned int) settings.prox_min[i])) / 4 + 800;
+
+	if (settings.prox_min[i] == DEFAULT_CALIB)
+		ret = value;
+	else
+		ret = value - (3*((unsigned int) settings.prox_min[i])) / 4 + 800;
+
+	if(ret < 0)
+		ret = 0;
+
+	return ret;
 }
 
 static int perform_calib(unsigned int raw, int i) {
