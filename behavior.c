@@ -239,7 +239,7 @@ static void behavior_sound_buttons(void) {
 static void behavior_leds_prox(void) {
 	// 5 front, two back, two ground
 	static int max[9] = {4000,4000,4000,4000,4000,4000,4000,900,900};
-	static int min[9] = {900,900,900,900,900,900,900,0,0};
+	static int min[9] = {1200,1200,1200,1200,1200,1200,1200,0,0};
 	static unsigned char led[9] = {16,17,20,18,19,0,1,22,23};
 	
 // Do some adaptative stuff, so first we have a "standard" model of the sensor
