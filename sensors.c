@@ -111,11 +111,11 @@ void new_sensors_value(unsigned int * val, int b) {
 		if(time == PERIOD_100MS - 1) {
 			per_acc--;
 			time = 0;
-		} else if(time++ == PERIOD_100MS) { // We have to re-check as per_acc might be set when time == PERIOD_100MS
+		} else if(time++ >= PERIOD_100MS) { // We have to re-check as per_acc might be set when time == PERIOD_100MS
 			time = 0;
 		}
 	} else {
-		if(time++ == PERIOD_100MS)
+		if(time++ >= PERIOD_100MS)
 			time = 0;
 	}
 
