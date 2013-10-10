@@ -221,15 +221,13 @@ unsigned char  aseba_flash[PAGE_PER_CHUNK*3][INSTRUCTIONS_PER_PAGE * 2] __attrib
 unsigned char aseba_settings_flash[INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), noload, section(".aseba_settings"), address(FLASH_END - 0x1000 - 0x400)));
 #warning "the settings page is NOT initialised"
 
-unsigned long aseba_flash_ptr;
-
 void AsebaWriteBytecode(AsebaVMState *vm) {
 	// Look for the lowest number of use
 	unsigned long min = 0xFFFFFFFF;
 	unsigned long min_addr = 0;
 	unsigned long count;
 	unsigned int i;
-	unsigned long temp_addr = aseba_flash_ptr;
+	unsigned long temp_addr = __builtin_tbladdress(aseba_flash);
 	unsigned int instr_count;
 	unsigned char * bcptr = (unsigned char *) vm->bytecode;
 
@@ -331,7 +329,7 @@ static int load_code_from_flash(AsebaVMState *vm) {
 	// Find the last maximum value
 	unsigned long max = 0;
 	unsigned long max_addr = 0;
-	unsigned long temp_addr = aseba_flash_ptr;
+	unsigned long temp_addr = __builtin_tbladdress(aseba_flash);
 	unsigned long count;
 	unsigned int i;
 	// take the last maximum value
@@ -402,10 +400,6 @@ int init_aseba_and_fifo(void) {
 		rf_set_link(RF_PRESENCE_ONLY); // We do not want full-aseba traffic now.
 	} else
 		vmState.nodeId = 1;
-
-	aseba_flash_ptr =__builtin_tbladdress(aseba_flash);
-	
-
 
 	COMPILATION_ASSERT(SEND_QUEUE_SIZE >= (ASEBA_MAX_PACKET_SIZE + 4));
 	COMPILATION_ASSERT(RECV_QUEUE_SIZE >= (ASEBA_MAX_PACKET_SIZE + 4));
