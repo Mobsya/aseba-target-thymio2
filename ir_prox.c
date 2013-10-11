@@ -269,7 +269,7 @@ static int ir_prox_rx(unsigned int time) {
 		rx_pending = 0;
 	} 
 	
-	return 0;
+	return ret;
 }
 
 static int ir_prox_rx_oa(void) {
@@ -313,11 +313,8 @@ static int ir_prox_check_2nd_pulse(void) {
 	for(i = 0; i < N_SENSORS; i++) {
 		if(ic_bufne(i)) {
 			temp = ic_buf(i);
-			
-			if((loopback_delay[i] + period - COMM_GAIN < temp) && !sensors_prox_drift()) {
-				ret = (((int) temp & 0x3) - 2) * 5; // Should use random here ....
-			}
-			if((loopback_delay[i] + period + COMM_GAIN > temp) && !sensors_prox_drift()) {
+
+			if((loopback_delay[i] + period + COMM_GAIN < temp) && !sensors_prox_drift()) {
 				ret = (((int) temp & 0x3) - 1) * 5; // Should use random here ....
 			}
 		}
