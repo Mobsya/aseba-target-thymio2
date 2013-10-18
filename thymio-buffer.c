@@ -234,7 +234,7 @@ void AsebaSendBuffer(AsebaVMState *vm, const uint8 *data, uint16 length) {
 			break;
 		}
 
-		if(get_free(&AsebaFifo.tx) > length + 4) {
+		if(get_free(&AsebaFifo.tx) >= length + 4) {
 			length -= 2;
 			memcpy_to_fifo(&AsebaFifo.tx, (unsigned char *) &length, 2);
 			memcpy_to_fifo(&AsebaFifo.tx, (unsigned char *) &vm->nodeId, 2);
