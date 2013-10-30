@@ -29,6 +29,7 @@
 #include "usb_uart.h"
 #include "playback.h"
 #include "rf.h"
+#include "ir_prox.h"
 #include <skel-usb.h>
 
 
@@ -56,6 +57,47 @@ static void set_body_rgb(unsigned int r, unsigned int g, unsigned int b) {
 	leds_set_top(r,g,b);
 	leds_set_br(r,g,b);
 	leds_set_bl(r,g,b);
+}
+
+static int pulse_get(void) {
+	static char led_pulse;
+	int ret;
+	led_pulse = led_pulse + 1;
+	if(led_pulse > 0) {
+		ret = led_pulse;
+		if(led_pulse > 40)
+			led_pulse = -128;
+	} else
+		ret = -led_pulse/4;
+	return ret;
+}
+
+static char _rainbow_get(unsigned char i) {
+	if(i < 32)
+		return i;
+	if( i < 64)
+		return 64-i;
+	return 0;
+}
+
+static void rainbow_get(unsigned char *rgb) {
+	static unsigned char led_i;
+	led_i = led_i + 1;
+	if(led_i > 96)
+		led_i = 0;
+
+	rgb[0] = led_i;
+	rgb[1] = led_i + 32;
+	if(rgb[1] > 96)
+		rgb[1] -=96;
+
+	rgb[2] = led_i + 64;
+	if(rgb[2] > 96)
+		rgb[2] -=96;
+
+	rgb[0] = _rainbow_get(rgb[0]);
+	rgb[1] = _rainbow_get(rgb[1]);
+	rgb[2] = _rainbow_get(rgb[2]);
 }
 
 static void set_mode_color(enum mode m) {
@@ -110,6 +152,7 @@ static void exit_mode(enum mode m) {
 			behavior_stop(B_PAIRING);
 			break;
 		case MODE_FOLLOW:
+			prox_disable_network();
 			behavior_stop(B_LEDS_PROX);
 			vmVariables.target[0] = 0;
 			vmVariables.target[1] = 0;
@@ -175,8 +218,8 @@ static void init_mode(enum mode m) {
 		    behavior_start(B_PAIRING);
 			break;
 		case MODE_FOLLOW:
-			leds_set_circle(0,0,0,32,32,32,0,0);
 			behavior_start(B_LEDS_PROX);
+			prox_enable_network();
 			break;
 		case MODE_EXPLORER:
 			behavior_start(B_LEDS_PROX);
@@ -209,9 +252,13 @@ static void init_mode(enum mode m) {
 }
 
 static void tick_follow(void) {
-	static char led_pulse;
+	
 	static char sound_done = 0;
+	static char does_see_friend;
+	static unsigned char led_state;
+	static char led_delta = 1;
 	static int speed = 300;
+
 
 #define DETECT 500 
 
@@ -251,23 +298,40 @@ static void tick_follow(void) {
 		speed_l = -speed;
 	
 	if(max < DETECT) {
-		vmVariables.target[0] = 0;
-		vmVariables.target[1] = 0;
+		if(does_see_friend) {
+			vmVariables.target[0] = speed;
+			vmVariables.target[1] = speed;
+		} else {
+			vmVariables.target[0] = 0;
+			vmVariables.target[1] = 0;
+		}
 	} else {
 		vmVariables.target[1] = speed_diff + speed_l;
 		vmVariables.target[0] = speed_l - speed_diff;
 	}
 
-/* Body led managment */	
-	led_pulse = led_pulse + 1;
-	if(led_pulse > 0) { 
-		set_body_rgb(0,led_pulse,0);
-		if(led_pulse > 40)
-			led_pulse = -128;
-	} else 
-		set_body_rgb(0,-led_pulse / 4,0);
-		
-		
+	if(does_see_friend > 0 && sound_done) {
+		unsigned char rgb[3];
+
+		rainbow_get(rgb);
+
+		leds_set_top(rgb[0],rgb[1],rgb[2]);
+		leds_set_bl(rgb[2],rgb[0],rgb[1]);
+		leds_set_br(rgb[1],rgb[2],rgb[0]);
+	} else
+		set_body_rgb(0,pulse_get(),0);
+
+	if(does_see_friend) {
+		led_state += led_delta;
+		if(led_state >= 31)
+			led_delta = -1;
+		else if(led_state == 0)
+			led_delta = 1;
+
+		leds_set_circle(0, led_state >> 4, led_state >> 3, led_state, 32, led_state, led_state >> 3, led_state >> 4);	
+	} else
+		leds_set_circle(0,0,0,32,32,32,0,0);
+
 	/* button managment */
 	when(buttons_state[3])  {
 		speed = speed + 50;
@@ -302,24 +366,44 @@ static void tick_follow(void) {
 		leds_set(LED_R_BOT_R, 0);
 	}
 	
-	
+	if(does_see_friend)
+		does_see_friend--;
+
+	if(IS_EVENT(EVENT_DATA)) {
+		CLEAR_EVENT(EVENT_DATA);
+		does_see_friend = 0;
+		mi = 0;
+		max = vmVariables.intensity[0];
+		vmVariables.intensity[0] = 0;
+		for(i = 1; i < 7; i++) {
+			if(vmVariables.intensity[0] > max) {
+				mi = i;
+				max = vmVariables.intensity[i];
+			}
+			vmVariables.intensity[i] = 0;
+		}
+		if(max > 3000) {
+			vmVariables.ir_tx_data = mi;
+			if(vmVariables.rx_data > 0 && vmVariables.rx_data < 4) {
+				when(mi == 2) {
+					play_sound(SOUND_F_OK);
+				}
+				if(mi == 2)
+					does_see_friend = 3;
+			}
+		}
+	}
+
 }
 static void tick_explorer(void) {
 	static unsigned char led_state;
-	static char led_pulse;
 	static  int speed = 150;
 	
 	unsigned char l[8] = {0,0,0,0,0,0,0,0};
 	unsigned char fixed;
 	
-	
-	led_pulse = led_pulse + 1;
-	if(led_pulse > 0) { 
-		leds_set_top(led_pulse, led_pulse, 0);
-		if(led_pulse > 40)
-			led_pulse = -64;
-	} else 
-		leds_set_top(-led_pulse / 2, -led_pulse / 2, 0);
+	int p = pulse_get();
+	leds_set_top(p,p,0);
 
 	/* circle led managment */
 	led_state += 2;
@@ -388,7 +472,6 @@ static void tick_acc(void) {
 #define ACC_OBSTACLE 1000
 #define ACC_FREE_FALL 14
 	static unsigned int acc = 32;
-	static char led_pulse;
 	static int counter;
 	int play = 0;
 	acc = acc + acc + acc + abs(vmVariables.acc[0]) + abs(vmVariables.acc[1]) + abs(vmVariables.acc[2]);
@@ -411,13 +494,7 @@ static void tick_acc(void) {
 			leds_set_top(0,0,0);
 		}
 	} else {
-		led_pulse = led_pulse + 1;
-		if(led_pulse > 0) { 
-			set_body_rgb(led_pulse, 0, 0);
-			if(led_pulse > 40)
-				led_pulse = -64;
-		} else 
-			leds_set_top(-led_pulse / 2,0, 0);
+		set_body_rgb(pulse_get(),0,0);
 	}	
 	
 	if(vmVariables.acc_tap) {
@@ -482,22 +559,13 @@ static void tick_draw(void) {
 	
 }
 
-static char rainbow_get(unsigned char i) {
-	if(i < 32) 
-		return i;
-	if( i < 64)
-		return 64-i;
-	return 0;
-}
 
 #define SOUND_TURN_SPEED 80
 #define SOUND_FRONT_SPEED 80
 static void tick_sound(void) {
-	static char led_pulse;
 	static char time;
 	static char clap;
 	static char disco;
-	static char led_i;
 #define SOUND_STOP 0
 #define SOUND_RUN 1
 #define SOUND_TURNRIGHT 2
@@ -518,7 +586,7 @@ static void tick_sound(void) {
 			clap = 3;
 			leds_set_circle(32,32,32,0,0,0,32,32);
 			play_sound(SOUND_F_OK);
-			led_pulse = 0;
+			disco = 0;
 		}
 	}
 	
@@ -574,42 +642,21 @@ static void tick_sound(void) {
 	
 	/* Body led managment */
 	if(disco) {
-		unsigned char r,g,b;
-		
-		led_i = led_i + 1;
-		if(led_i > 96)
-			led_i = 0;
-		
-		r = led_i;
-		g = led_i + 32;
-		if(g > 96)
-			g -=96;
-		
-		b = led_i + 64;
-		if(b > 96)
-			b -=96;
-		r = rainbow_get(r);
-		g = rainbow_get(g);
-		b = rainbow_get(b);
-		leds_set_top(r,g,b);
-		leds_set_bl(b,r,g);
-		leds_set_br(g,b,r);
-		led_pulse++;
-		if(led_pulse == 127) {
+		unsigned char rgb[3];
+
+		rainbow_get(rgb);
+
+		leds_set_top(rgb[0],rgb[1],rgb[2]);
+		leds_set_bl(rgb[2],rgb[0],rgb[1]);
+		leds_set_br(rgb[1],rgb[2],rgb[0]);
+		disco++;
+		if(disco == 127) {
 			disco = 0;
-			led_pulse = 0;
 			leds_set_bl(0,0,0);
 			leds_set_br(0,0,0);
 		}
-	} else {	
-		led_pulse = led_pulse + 1;
-		if(led_pulse > 0) { 
-			leds_set_top(0,0,led_pulse);
-			if(led_pulse > 40)
-				led_pulse = -128;
-		} else 
-			leds_set_top(0,0,-led_pulse / 4);
-	}	
+	} else
+		leds_set_top(0,0,pulse_get());
 		
 	
 }
@@ -617,7 +664,6 @@ static void tick_sound(void) {
 static void tick_line(void) {
 	static unsigned int black_level = 260;
 	static unsigned int white_level = 400;
-	static char led_pulse;
 #define STATE_BLACK 0
 #define STATE_WHITE 1
 	static unsigned char s[2];
@@ -632,13 +678,9 @@ static void tick_line(void) {
 
 #define SPEED_LINE 300
 
-	led_pulse = led_pulse + 1;
-	if(led_pulse > 0) { 
-		leds_set_top(0, led_pulse, led_pulse);
-		if(led_pulse > 40)
-			led_pulse = -64;
-	} else 
-		leds_set_top(0, -led_pulse / 2, -led_pulse / 2);
+	int p = pulse_get();
+
+	leds_set_top(0, p, p);
 	
 // Calibration feature
 	if(buttons_state[0] && buttons_state[3]) {
@@ -709,16 +751,11 @@ static void tick_line(void) {
 
 }
 static void tick_rc5(void) {
-	static char led_pulse;
 
 
-	led_pulse = led_pulse + 1;
-	if(led_pulse > 0) { 
-		leds_set_top(led_pulse, 0, led_pulse);
-		if(led_pulse > 40)
-			led_pulse = -64;
-	} else 
-		leds_set_top(-led_pulse / 2, 0, -led_pulse / 2);
+	int p = pulse_get();
+
+	leds_set_top(p,0,p);
 
 	when(buttons_state[1]) {
 		rc5_speed_t = -200;
