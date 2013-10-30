@@ -443,10 +443,10 @@ void set_wave(AsebaVMState * vm) {
 
 
 AsebaNativeFunctionDescription AsebaNativeDescription_prox_network = {
-	"prox.network",
+	"prox.comm.enable",
 	"Enable or disable the proximity communication",
 	{
-		{1, "enable"},
+		{1, "state"},
 		{0,0},
 	}
 };
