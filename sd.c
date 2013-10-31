@@ -35,6 +35,7 @@
 static FATFS fs; // SD fat 
 static FIL read_file; // Read handle
 static FIL write_file; // Write handle
+static __attribute((far)) FIL user_file; // Read/write file accessible from the VM
 static unsigned char l;
 
 #define SD_PRIO 2
@@ -63,6 +64,7 @@ void sd_shutdown(void) {
 	
 	f_close(&read_file);
 	f_close(&write_file);
+	f_close(&user_file);
 	f_mount(0,0);
 	
 	_TRISB14 = 1;
@@ -233,3 +235,59 @@ int sd_load_aseba_code(void) {
 	return ret;
 }		
 
+int sd_user_open(char * name) {
+	int ret = 0;
+	unsigned int flags;
+
+	RAISE_IPL(flags, SD_PRIO);
+	f_close(&user_file);
+	if(name) {
+		if(f_open(&user_file, name, FA_READ | FA_WRITE | FA_OPEN_ALWAYS) != FR_OK) {
+			ret = -1;
+		}
+	}
+	IRQ_ENABLE(flags);
+	return ret;
+}
+
+int sd_user_seek(unsigned long offset) {
+	int ret;
+	unsigned int flags;
+
+	RAISE_IPL(flags, SD_PRIO);
+	if(f_lseek(&user_file, offset) == FR_OK)
+		ret = 0;
+	else
+		ret = -1;
+	IRQ_ENABLE(flags);
+	return ret;
+}
+
+unsigned int sd_user_read(unsigned char * data, unsigned int size) {
+	unsigned int ret;
+	unsigned int flags;
+	unsigned int read;
+	
+	RAISE_IPL(flags, SD_PRIO);
+	
+	if(f_read(&user_file, data, size, &read) == FR_OK) 
+		ret = read;
+	else
+		ret = 0;
+
+	IRQ_ENABLE(flags);
+	return ret;
+}
+
+unsigned int sd_user_write(unsigned char * data, unsigned int size) {
+	unsigned int ret;
+	unsigned int flags;
+	unsigned int written;
+	RAISE_IPL(flags, SD_PRIO);
+	if(f_write(&user_file, data, size, &written) == FR_OK)
+		ret = written;
+	else
+		ret = 0;
+	IRQ_ENABLE(flags);
+	return ret;
+}
