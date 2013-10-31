@@ -256,7 +256,7 @@ static void init_mode(enum mode m) {
 
 static void tick_follow(void) {
 	
-	static char sound_done = 0;
+	static char sound_done;
 	static char does_see_friend;
 	static unsigned char led_state;
 	static char led_delta = 1;
@@ -379,7 +379,7 @@ static void tick_follow(void) {
 		max = vmVariables.intensity[0];
 		vmVariables.intensity[0] = 0;
 		for(i = 1; i < 7; i++) {
-			if(vmVariables.intensity[0] > max) {
+			if(vmVariables.intensity[i] > max) {
 				mi = i;
 				max = vmVariables.intensity[i];
 			}
@@ -392,7 +392,7 @@ static void tick_follow(void) {
 					play_sound(SOUND_F_OK);
 				}
 				if(mi == 2)
-					does_see_friend = 3;
+					does_see_friend = 6;
 			}
 		}
 	}
