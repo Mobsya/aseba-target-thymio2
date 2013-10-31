@@ -32,9 +32,9 @@
 #include "playback.h"
 #include "log.h"
 
-static FATFS fs; // SD fat 
-static FIL read_file; // Read handle
-static FIL write_file; // Write handle
+static __attribute((far)) FATFS fs; // SD fat 
+static __attribute((far)) FIL read_file; // Read handle
+static __attribute((far)) FIL write_file; // Write handle
 static __attribute((far)) FIL user_file; // Read/write file accessible from the VM
 static unsigned char l;
 
