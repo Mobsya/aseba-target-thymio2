@@ -153,6 +153,9 @@ static void exit_mode(enum mode m) {
 			break;
 		case MODE_FOLLOW:
 			prox_disable_network();
+			CLEAR_EVENT(EVENT_DATA);
+			vmVariables.rx_data = 0;
+			vmVariables.ir_tx_data = 0;
 			behavior_stop(B_LEDS_PROX);
 			vmVariables.target[0] = 0;
 			vmVariables.target[1] = 0;
