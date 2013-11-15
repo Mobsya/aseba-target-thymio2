@@ -244,6 +244,8 @@ int sd_user_open(char * name) {
 	if(name) {
 		if(f_open(&user_file, name, FA_READ | FA_WRITE | FA_OPEN_ALWAYS) != FR_OK) {
 			ret = -1;
+		} else {
+			 behavior_notify_sd(BEHAVIOR_START | BEHAVIOR_SD_FILE_ACCESS);
 		}
 	}
 	IRQ_ENABLE(flags);
@@ -255,9 +257,10 @@ int sd_user_seek(unsigned long offset) {
 	unsigned int flags;
 
 	RAISE_IPL(flags, SD_PRIO);
-	if(f_lseek(&user_file, offset) == FR_OK)
+	if(f_lseek(&user_file, offset) == FR_OK) {
 		ret = 0;
-	else
+		behavior_notify_sd(BEHAVIOR_START | BEHAVIOR_SD_FILE_ACCESS);
+	} else
 		ret = -1;
 	IRQ_ENABLE(flags);
 	return ret;
@@ -270,9 +273,10 @@ unsigned int sd_user_read(unsigned char * data, unsigned int size) {
 	
 	RAISE_IPL(flags, SD_PRIO);
 	
-	if(f_read(&user_file, data, size, &read) == FR_OK) 
+	if(f_read(&user_file, data, size, &read) == FR_OK) {
 		ret = read;
-	else
+		behavior_notify_sd(BEHAVIOR_START | BEHAVIOR_SD_FILE_ACCESS);
+	} else
 		ret = 0;
 
 	IRQ_ENABLE(flags);
@@ -284,9 +288,10 @@ unsigned int sd_user_write(unsigned char * data, unsigned int size) {
 	unsigned int flags;
 	unsigned int written;
 	RAISE_IPL(flags, SD_PRIO);
-	if(f_write(&user_file, data, size, &written) == FR_OK)
+	if(f_write(&user_file, data, size, &written) == FR_OK) {
 		ret = written;
-	else
+		behavior_notify_sd(BEHAVIOR_START | BEHAVIOR_SD_FILE_ACCESS);
+	} else
 		ret = 0;
 	IRQ_ENABLE(flags);
 	return ret;

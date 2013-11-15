@@ -52,7 +52,7 @@ static unsigned int behavior;
 #define ENABLE(b) do {behavior |= b;} while(0)
 #define DISABLE(b) do {behavior &= ~b;} while(0)
 
-static unsigned char led_sd;
+static unsigned int led_sd;
 
 
 static void behavior_sd(void) {
@@ -61,9 +61,12 @@ static void behavior_sd(void) {
 	if(led_sd) {
 		sd_led_counter += 2;
 	
-		if(sd_led_counter >= 32) 
+		if(sd_led_counter >= 32) {
+			led_sd &= 0x3; // clear the "file access" bit.
 			sd_led_counter = -32;
-		leds_set(LED_SD_CARD, abs(sd_led_counter));
+		}
+		if(led_sd)
+			leds_set(LED_SD_CARD, abs(sd_led_counter));
 	} 
 	
 	when(led_sd == 0) {
@@ -500,7 +503,8 @@ void behavior_sound_mic(unsigned char level) {
 // of no real & proper way to do a refcounting in the SD code
 void behavior_notify_sd(unsigned int rw) {
 	if(rw & BEHAVIOR_START) {
-	 	led_sd |= rw & 0x3;
-	} else 
-		led_sd &= ~rw;
+		atomic_or(&led_sd, rw & 0x7);
+	} else {
+		atomic_and(&led_sd, ~rw);
+	}
 }

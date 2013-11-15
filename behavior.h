@@ -28,8 +28,12 @@
 void behavior_init(int prio);
 void behavior_trigger(void);
 
+// Access for read, will pulse continiously the led
 #define BEHAVIOR_SD_READ 0x1
+// Same for write
 #define BEHAVIOR_SD_WRITE 0x2
+// File-access based, will just blink it once.
+#define BEHAVIOR_SD_FILE_ACCESS 0x4
 #define BEHAVIOR_START 0x8000
 #define BEHAVIOR_STOP 0x0000
 void behavior_notify_sd(unsigned int rw);
