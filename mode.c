@@ -800,6 +800,7 @@ static void tick_rc5(void) {
 			case 4:
 			case 85:
 			case 17:
+			case 77:
 				rc5_speed_t = -200;
 				break;
 			case 8:
@@ -813,6 +814,7 @@ static void tick_rc5(void) {
 			case 6:
 			case 86:
 			case 16:
+			case 78:
 				rc5_speed_t = 200;
 				break;
 			case 5:
