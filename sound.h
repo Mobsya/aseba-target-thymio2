@@ -32,7 +32,7 @@ typedef int (*sound_cb)(unsigned char * buffer);
 
 void sound_new_sample(unsigned int sample);
 
-void sound_ignore_next_sample(void);
+void sound_ignore_next_sample(unsigned char delay);
 
 void sound_init(void);
 void sound_poweroff(void);

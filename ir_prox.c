@@ -104,6 +104,7 @@ void __attribute((interrupt, no_auto_psv)) _OC8Interrupt(void) {
 // The compiler is too dumb to optimize thoses registers access....
 	asm volatile (
 	"bclr 0x89, #4					\n"		// _OC8IF = 0;
+	"mov #2, w0						\n"
 	"dec.b %[cnt]					\n"		// if (--cnt == 0) {
 	"bra nz, 1f						\n"
 	"bclr 0x105, #7					\n"		//		T1CONbits.TON = 0;
@@ -111,8 +112,9 @@ void __attribute((interrupt, no_auto_psv)) _OC8Interrupt(void) {
 	"and 0x1CC						\n"		//		OC7CON1bits.OCM = 0;
 	"and 0x1D6						\n"		//		OC8CON1bits.OCM = 0;
 	"inc.b %[sec]					\n"		//		sec++;  // set to on, as it should be init. at 0
+	"mov #1, w0						\n"
 	"1:								\n"		// }
-	"rcall _sound_ignore_next_sample\n"		// sound_ignore_next_sample(); // This function only modify w0 and a memory location
+	"rcall _sound_ignore_next_sample\n"		// sound_ignore_next_sample(); // This function only modify memory location
 	: [cnt] "+U" (pulse_count), [sec] "+U" (last_tx) : : "cc","memory","w0");
 }
 

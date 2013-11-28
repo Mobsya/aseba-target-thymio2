@@ -178,12 +178,12 @@ void _ISR _INT2Interrupt(void) {
 }
 
 // Do not change this, as it is called from
-// an interrupt with only w0 saved.
+// an interrupt without anything saved
 static unsigned char __attribute((near)) mic_ign;
-void __attribute((naked)) sound_ignore_next_sample(void) {
-	asm ("mov #2, w0		\n"
-		 "mov.b WREG,%[mic]	\n"
-		 : [mic] "=T" (mic_ign)::"w0");
+void __attribute((naked)) sound_ignore_next_sample(unsigned char delay) {
+	// Side effect of this statment: w0 must contain the delay
+	asm ("mov.b WREG,%[mic]	\n"
+		 : [mic] "=T" (mic_ign)::);
 }	
 
 void sound_new_sample(unsigned int sample) {
