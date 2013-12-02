@@ -32,8 +32,9 @@ History:
 4: Bugfix release
 5: Limit motor current in soft, improve button detection, change timer use
 6: Fix bug on MacOSX 10.7+, improve RC5 processing
+7: IR Communication, SD access from VM, others improvments
 */
-#define FW_VERSION 6
+#define FW_VERSION 7
 
 /* Firmware variant. Each variant of the firmware has it own number */
 
@@ -42,7 +43,7 @@ History:
 1: Development one
 
 */
-#define FW_VARIANT 1
+#define FW_VARIANT 0
 
 #include <p24Fxxxx.h>
 #include <clock/clock.h>
