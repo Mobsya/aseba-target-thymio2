@@ -345,6 +345,11 @@ static int load_code_from_flash(AsebaVMState *vm) {
 		return 0;
 	
 	flash_read_chunk(max_addr + 2, VM_BYTECODE_SIZE*2, (unsigned char *) vm->bytecode);
+
+	// Bytecode[0] is the event "irq table" size + 1.
+	// If no event is setup, the bytecode is empty, thus no bytecode exist.
+	if (vm->bytecode[0] <= 1)
+		return 0;
 	
 	return 1;
 }
