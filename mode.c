@@ -238,7 +238,7 @@ static void init_mode(enum mode m) {
 		case MODE_SOUND:
 			behavior_start(B_LEDS_PROX);
 			behavior_start(B_LEDS_MIC);
-			vmVariables.sound_tresh = 250;
+			vmVariables.sound_tresh = 246;
 			break;
 		case MODE_LINE:
 			behavior_start(B_LEDS_PROX);
