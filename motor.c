@@ -129,10 +129,6 @@ void motor_new_analog(unsigned int l, unsigned int r, unsigned int time) {
 				vind_right[filter_p++] = vind[1];
 				if(filter_p >= 4)
 					filter_p = 0;
-					
-				vmVariables.uind[0] = vind_filtered[0] / 4;
-				vmVariables.uind[1] = vind_filtered[1] / 4;
-
 			}
 			
 			
@@ -192,5 +188,10 @@ void motor_new_analog(unsigned int l, unsigned int r, unsigned int time) {
 			}
 			break;
 	}
+}
+
+void motor_get_vind(int * u) {
+	u[0] =__builtin_divsd(__builtin_mulss(vind_filtered[0],64), settings.mot256[0]);
+	u[1] =__builtin_divsd(__builtin_mulss(vind_filtered[1],64), settings.mot256[1]);
 }
 

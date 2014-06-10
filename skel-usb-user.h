@@ -142,7 +142,8 @@ struct private_settings {
 	/* The minimum size is one integer, the maximum size is 95 integer (check done at compilation) */
 	int sound_shift;
         int prox_min[7];
-	int settings[82];
+        int mot256[2];
+	int settings[80];
 };
 	
 

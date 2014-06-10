@@ -25,5 +25,6 @@
 
 void pid_motor_init(void);
 void pid_motor_tick(int * u, int * vbat);
+void pid_motor_set_target(int * t);
 
 #endif

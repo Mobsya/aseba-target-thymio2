@@ -49,6 +49,8 @@ static int counter[2];
 
 static int prev[2];
 
+static int motor_target[2];
+
 void pid_motor_tick(int *u, int * vbat) {
 	int i;
 	int error;
@@ -71,14 +73,14 @@ void pid_motor_tick(int *u, int * vbat) {
 		
 		
 		/* Now, PID computation. */
-		error = -vmVariables.target[i] + u[i];
+		error = -motor_target[i] + u[i];
 		integ[i] += error;
 		if(integ[i] > INTEG_MAX)
 			integ[i] = INTEG_MAX;
 		if(integ[i] < -INTEG_MAX)
 			integ[i] = -INTEG_MAX;
 			
-		if(vmVariables.target[i] == 0) {
+		if(motor_target[i] == 0) {
 			counter[i]++;
 			if(counter[i] >= COUNTER_M) 
 				counter[i] = COUNTER_M;
@@ -117,10 +119,29 @@ void pid_motor_tick(int *u, int * vbat) {
 	pwm_motor_right(prev[1]);
 }
 
+#define SPEED_BOUND 1000
+static int target_apply_calib(int t, int s) {
+	if (t > SPEED_BOUND)
+		t = SPEED_BOUND;
+	if (t < -SPEED_BOUND)
+		t = -SPEED_BOUND;
+
+	// The rounding is wrong if you have a negative value ...
+	// But it's OK as an error of 1 is completely negligible.
+	return __builtin_mulss(t,s) >> 8;
+}
+
+void pid_motor_set_target(int * t) {
+	motor_target[0] = target_apply_calib(t[0], settings.mot256[0]);
+	motor_target[1] = target_apply_calib(t[1], settings.mot256[1]);
+}
+
 void pid_motor_init(void) {
 	integ[0] = 0;
 	integ[1] = 0;
 	counter[0] = COUNTER_M;
-	counter[1] = COUNTER_M;	
+	counter[1] = COUNTER_M;
+	motor_target[0] = 0;
+	motor_target[1] = 0;
 }
 

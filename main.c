@@ -73,6 +73,7 @@ History:
 #include "test.h"
 #include "log.h"
 #include "rf.h"
+#include "motor.h"
 
 #include <skel-usb.h>
 
@@ -214,6 +215,8 @@ void update_aseba_variables_write(void) {
 			timer[i] = 0;
 		}
 	}
+
+	pid_motor_set_target((int *) vmVariables.target);
 }	
 
 static void wait_valid_vbat(void) {
@@ -319,11 +322,14 @@ void _ISR _INT3Interrupt(void) {
 void update_aseba_variables_read(void) {
 	// TODO: REMOVE ME (move to behavior ? /!\ behavior == IPL 1 !! race wrt aseba !)
 	usb_uart_tick();
+
+	motor_get_vind((int *) vmVariables.uind);
 }
 
 static void idle_without_aseba(void) {
 	clock_idle(); // race WRT interrupt, but we have tons of periodic interrupt which will wake us ..
-	usb_uart_tick(); // TODO: remove me (mote to behavior ?)	
+	update_aseba_variables_read();
+	update_aseba_variables_write();
 }
 
 int main(void)
@@ -363,9 +369,18 @@ int main(void)
 	pwm_motor_init();
 	pid_motor_init();
 
-        // We need the settings for the horizontal prox.
-    if( ! load_settings_from_flash()) {
-		/* Todo */
+	// We need the settings for the horizontal prox.
+	load_settings_from_flash();
+
+
+	for (i = 0; i < 2; i++) {
+		// Settings is definitely wrong....
+		if(settings.mot256[i] <= 0)
+			settings.mot256[i] = 256;
+
+		// 1024 (AD resolution is 10 bits) * 256 / 9 fits in signed 16 bits.
+		if (settings.mot256[i] < 9)
+			settings.mot256[i] = 9;
 	}
 	
 	// This is the horizontal prox. Vertical one are handled by the ADC
