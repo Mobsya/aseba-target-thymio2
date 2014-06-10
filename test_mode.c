@@ -29,7 +29,7 @@
 
 // Note: written after a 10 hours work day...
 
-#define WAIT_SHORT 350
+#define WAIT_SHORT 233
 
 static void wait_ms(unsigned int ms) {
 	unsigned int i;
