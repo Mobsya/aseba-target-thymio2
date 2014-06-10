@@ -753,33 +753,36 @@ static void tick_line(void) {
 	}
 
 }
+
+
+#define RC5_SPEED_STEP 150
+#define RC5_SPEED_SAT (RC5_SPEED_STEP*4)
+
 static void tick_rc5(void) {
-
-
 	int p = pulse_get();
 
 	leds_set_top(p,0,p);
 
 	when(buttons_state[1]) {
-		rc5_speed_t = -200;
+		rc5_speed_t = -RC5_SPEED_STEP;
 	}
 	
 	when(buttons_state[4]) {
-		rc5_speed_t = 200;
+		rc5_speed_t = RC5_SPEED_STEP;
 	}
 	
 	when(buttons_state[0]) {
 		if(rc5_speed_t)
 			rc5_speed_t = 0;
 		else
-			rc5_speed_l -= 200;
+			rc5_speed_l -= RC5_SPEED_STEP;
 	}
 	
 	when(buttons_state[3]) {
 		if(rc5_speed_t)
 			rc5_speed_t = 0;
 		else
-			rc5_speed_l += 200;
+			rc5_speed_l += RC5_SPEED_STEP;
 	}
 
 	when(buttons_state[0] && buttons_state[3]) 
@@ -795,13 +798,13 @@ static void tick_rc5(void) {
 				if(rc5_speed_t)
 					rc5_speed_t = 0;
 				else
-					rc5_speed_l += 200;
+					rc5_speed_l += RC5_SPEED_STEP;
 				break;
 			case 4:
 			case 85:
 			case 17:
 			case 77:
-				rc5_speed_t = -200;
+				rc5_speed_t = -RC5_SPEED_STEP;
 				break;
 			case 8:
 			case 81:
@@ -809,13 +812,13 @@ static void tick_rc5(void) {
 				if(rc5_speed_t)
 					rc5_speed_t = 0;
 				else
-					rc5_speed_l -= 200;
+					rc5_speed_l -= RC5_SPEED_STEP;
 				break;
 			case 6:
 			case 86:
 			case 16:
 			case 78:
-				rc5_speed_t = 200;
+				rc5_speed_t = RC5_SPEED_STEP;
 				break;
 			case 5:
 			case 87:
@@ -828,14 +831,14 @@ static void tick_rc5(void) {
 	}
 	
 	
-	if(rc5_speed_l > 600) 
-		rc5_speed_l = 600;
-	if(rc5_speed_l < -600)
-		rc5_speed_l = -600;
-	if(rc5_speed_t > 600)
-		rc5_speed_t = 600;
-	if(rc5_speed_t < -600)
-		rc5_speed_t = -600;
+	if(rc5_speed_l > RC5_SPEED_SAT)
+		rc5_speed_l = RC5_SPEED_SAT;
+	if(rc5_speed_l < -RC5_SPEED_SAT)
+		rc5_speed_l = -RC5_SPEED_SAT;
+	if(rc5_speed_t > RC5_SPEED_SAT)
+		rc5_speed_t = RC5_SPEED_SAT;
+	if(rc5_speed_t < -RC5_SPEED_SAT)
+		rc5_speed_t = -RC5_SPEED_SAT;
 		
 	vmVariables.target[0] = rc5_speed_l + rc5_speed_t;
 	vmVariables.target[1] = rc5_speed_l - rc5_speed_t;
