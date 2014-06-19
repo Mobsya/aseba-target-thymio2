@@ -695,6 +695,7 @@ static void tick_line(void) {
 	static unsigned char s[2];
 
 	static char dir;
+	unsigned char stop_moving = 0;
 #define DIR_LEFT (-1)
 #define DIR_L_LEFT (-2)
 #define DIR_RIGHT (1)
@@ -712,6 +713,7 @@ static void tick_line(void) {
 	if(buttons_state[0] && buttons_state[3]) {
 		bs_black_level = (vmVariables.ground_delta[0] + vmVariables.ground_delta[1]) / 2;
 		bs_black_level += 150;
+		stop_moving = 1;
 	}
 	
 	if(buttons_state[1] && buttons_state[4]) {
@@ -719,6 +721,15 @@ static void tick_line(void) {
 		if(bs_white_level < 150)
 			bs_white_level = 200;
 		bs_white_level -= 150;
+		stop_moving = 1;
+	}
+
+	// if the user is trying to calibrate, then don't try to move
+	if(stop_moving) {
+		leds_set_circle(0,0,0,0,0,0,0,0);
+		vmVariables.target[0] = 0;
+		vmVariables.target[1] = 0;
+		return;
 	}
 	
 	if(vmVariables.ground_delta[0] < bs_black_level)
