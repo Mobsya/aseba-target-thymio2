@@ -30,6 +30,7 @@
 #include "playback.h"
 #include "rf.h"
 #include "ir_prox.h"
+#include "sd.h"
 #include <skel-usb.h>
 
 
@@ -51,6 +52,9 @@ static unsigned int vm_active;
 	
 static int rc5_speed_l;
 static int rc5_speed_t;
+
+static unsigned int bs_black_level = 260;
+static unsigned int bs_white_level = 400;
 
 
 static void set_body_rgb(unsigned int r, unsigned int g, unsigned int b) {
@@ -188,6 +192,21 @@ static void exit_mode(enum mode m) {
 			vmVariables.target[1] = 0;
 			break;
 		case MODE_LINE:
+			if (!sd_user_open("_BLWHLVL.DAT")) {
+				unsigned int black = 0;
+				unsigned int white = 0;
+
+				sd_user_read((unsigned char *) &black, sizeof(bs_black_level));
+				sd_user_read((unsigned char *) &white, sizeof(bs_white_level));
+
+				if (black != bs_black_level || white != bs_white_level) {
+					sd_user_seek(0);
+					sd_user_write((unsigned char *) &bs_black_level, sizeof(bs_black_level));
+					sd_user_write((unsigned char *) &bs_white_level, sizeof(bs_white_level));
+				}
+				sd_user_open(NULL);
+			}
+
 			vmVariables.target[0] = 0;
 			vmVariables.target[1] = 0;
 			behavior_stop(B_LEDS_PROX);
@@ -241,6 +260,11 @@ static void init_mode(enum mode m) {
 			vmVariables.sound_tresh = 246;
 			break;
 		case MODE_LINE:
+			if (!sd_user_open("_BLWHLVL.DAT")) {
+				sd_user_read((unsigned char *) &bs_black_level, sizeof(bs_black_level));
+				sd_user_read((unsigned char *) &bs_white_level, sizeof(bs_white_level));
+				sd_user_open(NULL);
+			}
 			behavior_start(B_LEDS_PROX);
 			break;
 		case MODE_RC5:
@@ -665,8 +689,7 @@ static void tick_sound(void) {
 }
 
 static void tick_line(void) {
-	static unsigned int black_level = 260;
-	static unsigned int white_level = 400;
+
 #define STATE_BLACK 0
 #define STATE_WHITE 1
 	static unsigned char s[2];
@@ -687,25 +710,25 @@ static void tick_line(void) {
 	
 // Calibration feature
 	if(buttons_state[0] && buttons_state[3]) {
-		black_level = (vmVariables.ground_delta[0] + vmVariables.ground_delta[1]) / 2;
-		black_level += 150;
+		bs_black_level = (vmVariables.ground_delta[0] + vmVariables.ground_delta[1]) / 2;
+		bs_black_level += 150;
 	}
 	
 	if(buttons_state[1] && buttons_state[4]) {
-		white_level = (vmVariables.ground_delta[0] + vmVariables.ground_delta[1]) / 2;
-		if(white_level < 150)
-			white_level = 200;
-		white_level -= 150;
+		bs_white_level = (vmVariables.ground_delta[0] + vmVariables.ground_delta[1]) / 2;
+		if(bs_white_level < 150)
+			bs_white_level = 200;
+		bs_white_level -= 150;
 	}
 	
-	if(vmVariables.ground_delta[0] < black_level)
+	if(vmVariables.ground_delta[0] < bs_black_level)
 		s[0] = STATE_BLACK;
-	if(vmVariables.ground_delta[0] > white_level)
+	if(vmVariables.ground_delta[0] > bs_white_level)
 		s[0] = STATE_WHITE;
 	
-	if(vmVariables.ground_delta[1] < black_level)
+	if(vmVariables.ground_delta[1] < bs_black_level)
 		s[1] = STATE_BLACK;
-	if(vmVariables.ground_delta[1] > white_level)
+	if(vmVariables.ground_delta[1] > bs_white_level)
 		s[1] = STATE_WHITE;
 	
 	
