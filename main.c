@@ -33,8 +33,9 @@ History:
 5: Limit motor current in soft, improve button detection, change timer use
 6: Fix bug on MacOSX 10.7+, improve RC5 processing
 7: IR Communication, SD access from VM, others improvments
+8: Motors back EMF calibration, line following black/white level calibration storage in SD, emtpy bytecode detection, minors fixes
 */
-#define FW_VERSION 7
+#define FW_VERSION 8
 
 /* Firmware variant. Each variant of the firmware has it own number */
 
@@ -43,7 +44,7 @@ History:
 1: Development one
 
 */
-#define FW_VARIANT 0
+#define FW_VARIANT 1
 
 #include <p24Fxxxx.h>
 #include <clock/clock.h>
