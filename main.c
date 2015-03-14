@@ -34,8 +34,9 @@ History:
 6: Fix bug on MacOSX 10.7+, improve RC5 processing
 7: IR Communication, SD access from VM, others improvments
 8: Motors back EMF calibration, line following black/white level calibration storage in SD, emtpy bytecode detection, minors fixes
+9: Modulo division by zero bug fix
 */
-#define FW_VERSION 8
+#define FW_VERSION 9
 
 /* Firmware variant. Each variant of the firmware has it own number */
 
