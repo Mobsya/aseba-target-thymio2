@@ -45,7 +45,7 @@ History:
 1: Development one
 
 */
-#define FW_VARIANT 1
+#define FW_VARIANT 0
 
 #include <p24Fxxxx.h>
 #include <clock/clock.h>
