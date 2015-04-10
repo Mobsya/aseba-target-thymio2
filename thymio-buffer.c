@@ -196,7 +196,10 @@ int AsebaUsbBulkRecv(unsigned char *data, unsigned char size) {
 	
 	if(connection_mode != MODE_USB)
 		return 0;
-
+	
+	// we have received a packet, meaning that the computer is connected, so reset reconnection delay
+	reconnection_delay = 0;
+	
 	size_t free = get_free(&AsebaFifo.rx);
 	
 	if(size > free)
