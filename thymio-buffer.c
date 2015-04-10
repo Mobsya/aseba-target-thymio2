@@ -50,6 +50,10 @@ static struct {
 #define MODE_RF			0x0
 static unsigned char connection_mode;
 
+// We have a delay on reconnection
+#define RECONNECTION_DELAY 100
+unsigned int reconnection_delay = 0;
+
 /* Basic assumption in order to protect concurrent access to the fifos:
 	- If the code in "main()" access the fifo it need to disable the interrupts 
 */
@@ -136,6 +140,7 @@ void AsebaFifoCheckConnectionMode(void) {
 		fifo_reset(&AsebaFifo.tx);
 		fifo_reset(&AsebaFifo.rx);
 		connection_mode = MODE_USB;
+		reconnection_delay = RECONNECTION_DELAY;
 		return;
 	}
 
@@ -171,7 +176,7 @@ unsigned char AsebaTxReady(unsigned char *data) {
 	size_t size = get_used(&AsebaFifo.tx);
 	
 	// Do not send anything on usb if we are not in usb mode
-	if(size == 0 || connection_mode != MODE_USB) {
+	if(size == 0 || connection_mode != MODE_USB || reconnection_delay > 0) {
 		tx_busy = 0;
 		debug = 0;
 		return 0;
