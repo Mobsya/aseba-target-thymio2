@@ -51,7 +51,7 @@ static struct {
 static unsigned char connection_mode;
 
 // We have a delay on reconnection
-#define RECONNECTION_DELAY 100
+#define RECONNECTION_DELAY 23
 unsigned int reconnection_delay = 0;
 
 /* Basic assumption in order to protect concurrent access to the fifos:
