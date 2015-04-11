@@ -34,8 +34,9 @@ History:
 6: Fix bug on MacOSX 10.7+, improve RC5 processing
 7: IR Communication, SD access from VM, others improvments
 8: Motors back EMF calibration, line following black/white level calibration storage in SD, emtpy bytecode detection, minors fixes
+9: Modulo division by zero bug fix, native.c fix
 */
-#define FW_VERSION 8
+#define FW_VERSION 9
 
 /* Firmware variant. Each variant of the firmware has it own number */
 
@@ -164,6 +165,7 @@ static void timer_slow(void) {
 }
 
 static unsigned int timer[2];
+extern unsigned int reconnection_delay;
 
 static void timer_1khz(int timer_id) {
 	int i;
@@ -191,6 +193,11 @@ static void timer_1khz(int timer_id) {
 	if(++timer_62ms >= 62) {
 		timer_62ms = 0;
 		timer_slow();
+	}
+	
+	// Decrease reconnection delay if any
+	if(reconnection_delay > 0) {
+		--reconnection_delay;
 	}
 	
 	for(i = 0; i < 2; i++) {
