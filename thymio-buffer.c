@@ -126,7 +126,7 @@ unsigned char AsebaFifoTxPeek(void) {
 int AsebaFifoTxEmpty(void) {
 	return !get_used(&AsebaFifo.tx);
 }	 
-extern struct _vmVariables vmVariables;
+
 void AsebaFifoCheckConnectionMode(void) {
 	if(usb_uart_serial_port_open()) {
 		if(connection_mode == MODE_USB)
@@ -140,8 +140,7 @@ void AsebaFifoCheckConnectionMode(void) {
 		fifo_reset(&AsebaFifo.tx);
 		fifo_reset(&AsebaFifo.rx);
 		connection_mode = MODE_USB;
-		reconnection_delay = RECONNECTION_DELAY;
-                vmVariables.target[0] = 100;
+		reconnection_delay = RECONNECTION_DELAY;             
 		return;
 	}
 
@@ -158,7 +157,6 @@ void AsebaFifoCheckConnectionMode(void) {
 			rf_set_link(RF_UP);
 		
 		connection_mode = MODE_RF;
-                vmVariables.target[0] = 0;
 		return;
 	}
 
@@ -167,7 +165,6 @@ void AsebaFifoCheckConnectionMode(void) {
 	fifo_reset(&AsebaFifo.rx);
 	
 	connection_mode = MODE_DISCONNECTED;
-        vmVariables.target[0] = 0;
 }
 
 /* USB interrupt part */
