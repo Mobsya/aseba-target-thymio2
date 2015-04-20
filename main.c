@@ -400,7 +400,7 @@ int main(void)
 	// Warning: We cannot use the SD before the analog init as some pin are on the analog port.
 	analog_init(TIMER_ANALOG, PRIO_SENSORS);
 
-    wait_valid_vbat(); 
+        wait_valid_vbat();
         
 	log_init(); // We will need to read vbat to be sure we can flash.
 
