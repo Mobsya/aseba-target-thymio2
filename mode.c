@@ -153,7 +153,7 @@ static void exit_mode(enum mode m) {
 	
 	switch(m) {
 		case MODE_MENU:
-			behavior_stop(B_PAIRING);
+			behavior_stop(B_SETTING);
 			break;
 		case MODE_FOLLOW:
 			prox_disable_network();
@@ -237,7 +237,7 @@ static void init_mode(enum mode m) {
 	
 	switch(m) {
 		case MODE_MENU:
-		    behavior_start(B_PAIRING);
+                        behavior_start(B_SETTING);
 			break;
 		case MODE_FOLLOW:
 			behavior_start(B_LEDS_PROX);
@@ -921,7 +921,7 @@ void mode_tick(void) {
 			exit_mode(current_mode);
 			if(_selecting == MODE_MENU) {
 				// Special case, if we select the mode menu stuff
-				behavior_stop(B_MODE | B_PAIRING);
+				behavior_stop(B_MODE | B_SETTING);
 				init_vm_mode();
 				return;
 			}

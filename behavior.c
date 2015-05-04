@@ -397,7 +397,33 @@ static void pairing_tick(void) {
 		dbnc = 0;
 	}	
 	
-}	
+}
+
+static void setting_tick(void) {
+	static unsigned char dbnc;
+	static unsigned char all_off;
+        static unsigned char setting_start;
+	all_off = !(buttons_state[0] | buttons_state[1] | buttons_state[2]
+		| buttons_state[3] | buttons_state[4]);
+
+	if(buttons_state[1] && buttons_state[4]) {
+		if(++dbnc > 100) {
+			if(dbnc == 101) {
+                            setting_start=1;
+                            behavior_stop(B_MODE);
+                            leds_set_top(15,15,15);
+			}
+			dbnc = 102;
+		}
+	} else {
+		dbnc = 0;
+	}
+
+        if (setting_start==1) {
+            
+        }
+
+}
 
 void _ISR _INT4Interrupt(void) {
 	_INT4IF = 0;
@@ -434,6 +460,9 @@ void _ISR _INT4Interrupt(void) {
 		
 	if(ENABLED(B_PAIRING))
 		pairing_tick();
+
+        if(ENABLED(B_SETTING))
+		setting_tick();
 }
 
 void behavior_init(int prio) {

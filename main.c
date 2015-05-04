@@ -34,7 +34,7 @@ History:
 6: Fix bug on MacOSX 10.7+, improve RC5 processing
 7: IR Communication, SD access from VM, others improvments
 8: Motors back EMF calibration, line following black/white level calibration storage in SD, emtpy bytecode detection, minors fixes
-9: Modulo division by zero bug fix, native.c fix
+9: Modulo division by zero bug fix, native.c fixes, disconnection improvement, add setting mode
 */
 #define FW_VERSION 9
 
