@@ -371,33 +371,30 @@ static void behavior_leds_ntc(void ) {
 	}
 }
 
-static void pairing_tick(void) {
+
+
+static void setting_tick(void) {
 	static unsigned char dbnc;
-	static unsigned char all_off;
+        static unsigned char setting_start;
 
-	if(buttons_state[0] | buttons_state[1] | 
-		buttons_state[3] | buttons_state[4] && all_off && 
-		(rf_get_status() & RF_PAIRING_MODE)) {
-		rf_pairing_stop();
-	}
-
-	all_off = !(buttons_state[0] | buttons_state[1] | buttons_state[2]
-		| buttons_state[3] | buttons_state[4]);
-	
 	if(buttons_state[1] && buttons_state[4]) {
 		if(++dbnc > 100) {
 			if(dbnc == 101) {
-				if(!(rf_get_status() & RF_PAIRING_MODE)) {
-					rf_pairing_start();
-				}
-			}	
+                            setting_start=1;
+                            behavior_stop(B_MODE);
+                            leds_set_top(15,15,15);
+			}
 			dbnc = 102;
 		}
 	} else {
 		dbnc = 0;
-	}	
-	
-}	
+	}
+
+        if (setting_start==1) {
+            
+        }
+
+}
 
 void _ISR _INT4Interrupt(void) {
 	_INT4IF = 0;
@@ -432,8 +429,8 @@ void _ISR _INT4Interrupt(void) {
 	if(ENABLED(B_TEST))
 		test_mode_tick();
 		
-	if(ENABLED(B_PAIRING))
-		pairing_tick();
+	if(ENABLED(B_SETTING))
+		setting_tick();
 }
 
 void behavior_init(int prio) {
@@ -445,9 +442,6 @@ void behavior_start(int b) {
 		_INT4IF = 0;
 		_INT4IE = 1;
 	}
-	/* If no RF is there, mask the pairing behavior */
-	if((b & B_PAIRING) && !(rf_get_status() & RF_PRESENT))
-		b &= ~B_PAIRING;
 
 	ENABLE(b);
 }
@@ -464,11 +458,7 @@ void behavior_stop(int b) {
 	
 	DISABLE(b);
 	
-	if(b & B_PAIRING) {
-		if(rf_get_status() & RF_PAIRING_MODE) {
-			rf_pairing_stop();
-		}	
-	}	
+	
 	
 	if(!behavior) {
 		// TODO: Zero the when section ?
