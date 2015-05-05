@@ -26,5 +26,11 @@ void button_process(unsigned int b, unsigned int i);
 
 extern char buttons_state[5];
 
+#define BUTTON_FORWARD 3
+#define BUTTON_BACKWARD 0
+#define BUTTON_LEFT 1
+#define BUTTON_RIGHT 4
+#define BUTTON_CENTER 2
+
 #endif
 
