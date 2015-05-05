@@ -373,26 +373,127 @@ static void behavior_leds_ntc(void ) {
 
 
 
+
+
+
 static void setting_tick(void) {
-	static unsigned char dbnc;
-        static unsigned char setting_start;
+    #define SET_MENU (-1)
+    #define SET_VOLUME 0
+    #define SET_MOTOR 1
+    #define SET_RF_PARING 2
+    #define SPEED_STEP 128
+    static unsigned char dbnc;
+    static unsigned char setting_start;
+    static char setting_mode;
+    static char setting_select;
+    static char volume;
+    
 
-	if(buttons_state[1] && buttons_state[4]) {
-		if(++dbnc > 100) {
-			if(dbnc == 101) {
-                            setting_start=1;
-                            behavior_stop(B_MODE);
-                            leds_set_top(15,15,15);
-			}
-			dbnc = 102;
-		}
-	} else {
-		dbnc = 0;
-	}
 
-        if (setting_start==1) {
-            
+    if (setting_start==1) {
+        switch (setting_select) {
+            case SET_VOLUME:
+                leds_set_br(32,0,0);
+                leds_set_bl(32,0,0);
+                break;
+            case SET_MOTOR:
+                leds_set_br(0,32,0);
+                leds_set_bl(0,32,0);
+                break;
+            case SET_RF_PARING:
+                leds_set_br(0,0,32);
+                leds_set_bl(0,0,32);
+                break;
+            }
+       
+        if (setting_mode == SET_MENU){
+            leds_set_top(32,32,32);
         }
+        else {
+            int p = pulse_get();
+            leds_set_top(p,p,p);
+        }
+        switch (setting_mode){
+            case SET_MENU :
+                when (buttons_state[BUTTON_BACKWARD]) {
+                       setting_select--;
+                }
+                when (buttons_state[BUTTON_FORWARD]) {
+                        setting_select++;
+                }
+                when (buttons_state[BUTTON_LEFT]){
+                        setting_select++;
+                }
+                when (buttons_state[BUTTON_RIGHT]){
+                        setting_select--;
+                }
+                if (setting_select<SET_VOLUME)
+                        setting_select=SET_RF_PARING;
+                else if (setting_select>SET_RF_PARING)
+                        setting_select=SET_VOLUME ;
+
+               when (buttons_state[BUTTON_CENTER]){
+                    setting_mode=setting_select;
+                    dbnc=1;
+               }
+               break;
+            case SET_VOLUME:
+                when (buttons_state[BUTTON_BACKWARD]){
+                    volume++;
+                }
+	        when (buttons_state[BUTTON_FORWARD]) {
+                    volume--;
+                }
+                if (volume <0)
+                   volume=0;
+                else if (volume>8 )
+                   volume = 8;
+                settings.sound_shift=volume;
+
+                int led_circle[8];
+                unsigned char i;
+                for(i=0;i<8;i++){
+                    led_circle[i]=4*(1+i-volume);
+                        if (led_circle[i] < 0 )
+                                led_circle[i]=0;
+                    }                                  
+               leds_set_circle(led_circle[7],led_circle[6], led_circle[5], led_circle[4], led_circle[3], led_circle[2], led_circle[1], led_circle[0]);
+
+               when(buttons_state[BUTTON_CENTER]&& !dbnc){
+                    setting_mode=SET_MENU;
+                    leds_set_circle(0,0,0,0,0,0,0,0);
+               }
+               break;
+            case SET_MOTOR:
+               
+               when (buttons_state[BUTTON_CENTER]&& !dbnc){
+                    setting_mode=SET_MENU;
+               }
+               break;
+            case SET_RF_PARING:
+               when (buttons_state[BUTTON_CENTER]&& !dbnc){
+                    setting_mode=SET_MENU;
+               }
+               break;
+
+             }
+    if  (buttons_state[BUTTON_CENTER]==0)
+        dbnc=0;
+     
+    } else {
+        if(buttons_state[1] && buttons_state[4]) {
+            if(++dbnc > 100) {
+                    if(dbnc == 101) {
+                        setting_start=1;
+                        behavior_stop(B_MODE);
+                        setting_mode = SET_MENU;
+                    }
+                    dbnc = 102;
+            }
+        } else {
+            dbnc = 0;
+        }
+    }
 
 }
 

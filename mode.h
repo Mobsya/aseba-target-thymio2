@@ -46,5 +46,6 @@ int mode_get(void);
 // Which manage other behavior. So it has it's own tick 
 void mode_tick(void);
 
+int pulse_get(void);
 
 #endif

@@ -63,7 +63,7 @@ static void set_body_rgb(unsigned int r, unsigned int g, unsigned int b) {
 	leds_set_bl(r,g,b);
 }
 
-static int pulse_get(void) {
+int pulse_get(void) {
 	static char led_pulse;
 	int ret;
 	led_pulse = led_pulse + 1;
@@ -908,6 +908,9 @@ static enum mode next_mode(enum mode m, int i) {
 	
 	return temp;
 }
+
+
+
 static enum mode _selecting;
 void mode_tick(void) {
 	
