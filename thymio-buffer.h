@@ -70,7 +70,7 @@ int AsebaFifoTxEmpty(void);
 void AsebaFifoInit(unsigned char * sendQueue, size_t sendQueueSize, unsigned char * recvQueue, size_t recvQueueSize);
 int AsebaFifoRecvBufferEmpty(void);
 int AsebaFifoTxBusy(void);
-
+extern unsigned int reconnection_delay;
 /*@}*/
 
 #endif

@@ -76,7 +76,7 @@ History:
 #include "log.h"
 #include "rf.h"
 #include "motor.h"
-
+#include "thymio-buffer.h"
 #include <skel-usb.h>
 
 // The real configuration bits are set by the bootloader
@@ -165,7 +165,7 @@ static void timer_slow(void) {
 }
 
 static unsigned int timer[2];
-extern unsigned int reconnection_delay;
+
 
 static void timer_1khz(int timer_id) {
 	int i;
