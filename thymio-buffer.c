@@ -55,7 +55,7 @@ static unsigned char connection_mode;
 unsigned int reconnection_delay = 0;
 
 /* Basic assumption in order to protect concurrent access to the fifos:
-	- If the code in "main()" access the fifo it need to disable the interrupts 
+	- If the code in "main()" access the fifo it need to disable the interrupts
 */
 
 static inline size_t get_used(struct fifo * f) {
@@ -72,8 +72,8 @@ static inline size_t get_free(struct fifo * f) {
 	return f->size - 1 - get_used(f);
 }
 
-/* you MUST ensure that you pass correct size to thoses two function, 
- * no check are done .... 
+/* you MUST ensure that you pass correct size to thoses two function,
+ * no check are done ....
  */
 static inline void memcpy_out_fifo(unsigned char * dest, struct fifo * f, size_t size) {
 	while(size--) {
@@ -98,7 +98,7 @@ static inline void fifo_peek(unsigned char * d, struct fifo * f,size_t size) {
 		if(ct == f->size)
 			ct = 0;
 	}
-}	
+}
 
 static inline void fifo_reset(struct fifo * f) {
 	f->insert = f->consume = 0;
@@ -106,7 +106,7 @@ static inline void fifo_reset(struct fifo * f) {
 
 void AsebaFifoPushToRx(unsigned char c) {
 	memcpy_to_fifo(&AsebaFifo.rx, &c, 1);
-}	
+}
 
 int AsebaFifoRxFull(void) {
 	return !get_free(&AsebaFifo.rx);
@@ -121,26 +121,26 @@ unsigned char AsebaFifoTxPeek(void) {
 	unsigned char c;
 	fifo_peek(&c, &AsebaFifo.tx, 1);
 	return c;
-}	
+}
 
 int AsebaFifoTxEmpty(void) {
 	return !get_used(&AsebaFifo.tx);
-}	 
+}
 
 void AsebaFifoCheckConnectionMode(void) {
-	if(usb_uart_serial_port_open()) {
+    if(usb_uart_serial_port_open()) {
 		if(connection_mode == MODE_USB)
 			return; // Nothing to do ...
 
 		// Put the RF link down if it was up
-		if(rf_get_status() & RF_LINK_UP) 
+		if(rf_get_status() & RF_LINK_UP)
 			rf_set_link(RF_DOWN);
 
 		// We are switching to usb, reset the fifo and make the switch
 		fifo_reset(&AsebaFifo.tx);
 		fifo_reset(&AsebaFifo.rx);
 		connection_mode = MODE_USB;
-		reconnection_delay = RECONNECTION_DELAY;             
+		reconnection_delay = RECONNECTION_DELAY;
 		return;
 	}
 
@@ -148,22 +148,22 @@ void AsebaFifoCheckConnectionMode(void) {
 	if(rf_get_status() & RF_PRESENT) {
 		if(connection_mode == MODE_RF)
 			return; // Nothing to do
-		
+
 		fifo_reset(&AsebaFifo.tx);
 		fifo_reset(&AsebaFifo.rx);
 
 		// We are switching *from* usb, start the RF link
 		if(!(rf_get_status() & RF_LINK_UP))
 			rf_set_link(RF_UP);
-		
+
 		connection_mode = MODE_RF;
 		return;
 	}
 
-	// No RF, No usb ... 
+	// No RF, No usb ...
 	fifo_reset(&AsebaFifo.tx);
 	fifo_reset(&AsebaFifo.rx);
-	
+
 	connection_mode = MODE_DISCONNECTED;
 }
 
@@ -174,17 +174,17 @@ static int debug;
 
 unsigned char AsebaTxReady(unsigned char *data) {
 	size_t size = get_used(&AsebaFifo.tx);
-	
+
 	// Do not send anything on usb if we are not in usb mode
 	if(size == 0 || connection_mode != MODE_USB || reconnection_delay > 0) {
 		tx_busy = 0;
 		debug = 0;
 		return 0;
 	}
-	
+
 	if(size > ASEBA_USB_MTU)
 		size = ASEBA_USB_MTU;
-	
+
 	memcpy_out_fifo(data, &AsebaFifo.tx, size);
 	debug ++;
 	return size;
@@ -193,20 +193,20 @@ unsigned char AsebaTxReady(unsigned char *data) {
 int AsebaUsbBulkRecv(unsigned char *data, unsigned char size) {
 	// Ignore all data if we are not in usb mode
 	AsebaFifoCheckConnectionMode();
-	
+
 	if(connection_mode != MODE_USB)
 		return 0;
-	
+
 	// we have received a packet, meaning that the computer is connected, so reset reconnection delay
 	reconnection_delay = 0;
-	
+
 	size_t free = get_free(&AsebaFifo.rx);
-	
+
 	if(size > free)
 		return 1;
-	
+
 	memcpy_to_fifo(&AsebaFifo.rx, data, size);
-	
+
 	return 0;
 }
 
@@ -220,21 +220,21 @@ void AsebaSendBuffer(AsebaVMState *vm, const uint8 *data, uint16 length) {
 	unsigned char mode = connection_mode;
 
 
-	barrier(); // Force the compiler to capture mode 
+	barrier(); // Force the compiler to capture mode
 
 
 	// Here we must loop until we can send the data.
 	// BUT if we are disconnected we simply drop the data.
 	if(mode == MODE_DISCONNECTED)
 		return;
-	
+
 	// Sanity check, should never be true
 	if (length < 2)
 		return;
-	
+
 	do {
 		RAISE_IPL(flags, PRIO_COMMUNICATION);
-
+                AsebaFifoCheckConnectionMode();
 		if(mode != connection_mode) {
 			// the connection medium changed under our feet, let's drop this packet
 			// No need to reset the fifo it has already been done.
@@ -247,7 +247,7 @@ void AsebaSendBuffer(AsebaVMState *vm, const uint8 *data, uint16 length) {
 			memcpy_to_fifo(&AsebaFifo.tx, (unsigned char *) &length, 2);
 			memcpy_to_fifo(&AsebaFifo.tx, (unsigned char *) &vm->nodeId, 2);
 			memcpy_to_fifo(&AsebaFifo.tx, (unsigned char *) data, length + 2);
-			
+
 			// Will callback AsebaUsbTxReady
 			if(mode == MODE_USB) {
 				if (!tx_busy) {
@@ -255,10 +255,10 @@ void AsebaSendBuffer(AsebaVMState *vm, const uint8 *data, uint16 length) {
 					USBCDCKickTx();
 				}
 			}
-			
+
 			length = 0;
 		}
-		
+
 		IRQ_ENABLE(flags);
 	} while(length);
 }
@@ -269,7 +269,7 @@ uint16 AsebaGetBuffer(AsebaVMState *vm, uint8 * data, uint16 maxLength, uint16* 
 	size_t u;
 	// Touching the FIFO, mask the interrupt ...
 	RAISE_IPL(flags, PRIO_COMMUNICATION);
-	
+
 	AsebaFifoCheckConnectionMode();
 
 	u = get_used(&AsebaFifo.rx);
@@ -278,11 +278,11 @@ uint16 AsebaGetBuffer(AsebaVMState *vm, uint8 * data, uint16 maxLength, uint16* 
 	if(u >= 6) {
 		int len;
 		fifo_peek((unsigned char *) &len, &AsebaFifo.rx, 2);
-		
+
 		if (u >= len + 6) {
 			memcpy_out_fifo((unsigned char *) &len, &AsebaFifo.rx, 2);
 			memcpy_out_fifo((unsigned char *) source, &AsebaFifo.rx, 2);
-	
+
 			// msg_type is not in the len but is always present
 			len = len + 2;
 			/* Yay ! We have a complete packet ! */
@@ -292,7 +292,7 @@ uint16 AsebaGetBuffer(AsebaVMState *vm, uint8 * data, uint16 maxLength, uint16* 
 			memcpy_out_fifo(data, &AsebaFifo.rx, len);
 			ret = len;
 		}
-	}	
+	}
 	if(connection_mode == MODE_USB)
 		USBCDCKickRx();
 
@@ -303,21 +303,21 @@ uint16 AsebaGetBuffer(AsebaVMState *vm, uint8 * data, uint16 maxLength, uint16* 
 void AsebaFifoInit(unsigned char * sendQueue, size_t sendQueueSize, unsigned char * recvQueue, size_t recvQueueSize) {
 	AsebaFifo.tx.buffer = sendQueue;
 	AsebaFifo.tx.size = sendQueueSize;
-	
+
 	AsebaFifo.rx.buffer = recvQueue;
 	AsebaFifo.rx.size = recvQueueSize;
 }
 
 int AsebaFifoRecvBufferEmpty(void) {
 	// We are called with interrupt disabled ! Check if rx contain something meaningfull
-	
+
 	int u;
-	
+
 	u = get_used(&AsebaFifo.rx);
 	if(u > 6) {
 		int len;
 		fifo_peek((unsigned char *) &len, &AsebaFifo.rx, 2);
-		if (u >= len + 6) 
+		if (u >= len + 6)
 			return 0;
 	}
 	return 1;

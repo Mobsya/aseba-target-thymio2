@@ -57,12 +57,14 @@ int usb_uart_configured(void) {
 
 int usb_uart_serial_port_open(void) {
 	// Check that:
-	// 	- We are in configured state
+        //      - We are still connected
+        // 	- We are in configured state
 	// 	- We are not in suspend
 	// 	- We have DTE bit set.
+        if(!U1OTGSTATbits.SESVD)
+            control_signal_bitmap.DTE_PRESENT = 0;
 	
-	if((USBGetDeviceState() == CONFIGURED_STATE) && !USBBusIsSuspended &&
-			control_signal_bitmap.DTE_PRESENT)
+	if((USBGetDeviceState() == CONFIGURED_STATE) && !USBBusIsSuspended && control_signal_bitmap.DTE_PRESENT)
 		return 1;
 	else
 		return 0;
