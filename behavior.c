@@ -32,6 +32,7 @@
 #include "mode.h"
 #include "test.h"
 #include "rf.h"
+#include "ir_prox.h"
 #include <skel-usb.h>
 
 
@@ -499,9 +500,11 @@ static void setting_tick(void) {
             case SET_VOLUME:
                 when (buttons_state[BUTTON_BACKWARD]){
                     volume++;
+                    update_calib=1;
                 }
 	        when (buttons_state[BUTTON_FORWARD]) {
                     volume--;
+                    update_calib=1;
                 }
                 if (volume <0)
                    volume=0;
@@ -527,9 +530,11 @@ static void setting_tick(void) {
                 if (vmVariables.target[0]!=0) {
                     when (buttons_state[BUTTON_RIGHT]) {
                         correction+=1;
+                        update_calib=1;
                     }
                     when (buttons_state[BUTTON_LEFT]) {
                         correction-=1;
+                        update_calib=1;
                     }
                     if (correction>=0){
 
@@ -603,7 +608,7 @@ static void setting_tick(void) {
                         setting_mode = SET_MENU;
                         //read alreday state in memory
                         volume=settings.sound_shift;
-                        correction=settings.mot256[1]-256;
+                        correction=settings.mot256[0]-256;
                     }
                     dbnc = 102;
             }

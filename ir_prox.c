@@ -40,7 +40,7 @@
 #define DEFAULT_CALIB 0x7FFF
 
 	
-static unsigned char update_calib;
+unsigned char update_calib;
 static unsigned char prox_calib_counter[N_SENSORS];
 static unsigned char __attribute((near)) pulse_count; // used in interrupt processing. needs to be "near"
 static unsigned char __attribute((near)) last_tx;   // used in interrupt processing. needs to be "near"
