@@ -413,6 +413,20 @@ static void setting_tick(void) {
         else {
             int p = pulse_get();
             leds_set_top(p,p,p);
+             switch (setting_select) {
+            case SET_VOLUME:
+                leds_set_br(p,0,0);
+                leds_set_bl(p,0,0);
+                break;
+            case SET_MOTOR:
+                leds_set_br(0,p,0);
+                leds_set_bl(0,p,0);
+                break;
+            case SET_RF_PARING:
+                leds_set_br(0,0,p);
+                leds_set_bl(0,0,p);
+                break;
+            }
         }
         switch (setting_mode){
             case SET_MENU :
@@ -428,7 +442,7 @@ static void setting_tick(void) {
                 when (buttons_state[BUTTON_RIGHT]){
                         setting_select--;
                 }
-                if (setting_select<SET_VOLUME)
+                if (setting_select<SET_VOLUME)//TODO mask pairing when module is not present (rf_get_status() & RF_PRESENT)
                         setting_select=SET_RF_PARING;
                 else if (setting_select>SET_RF_PARING)
                         setting_select=SET_VOLUME ;
@@ -511,10 +525,14 @@ static void setting_tick(void) {
                 }
 
                when (buttons_state[BUTTON_CENTER]&& !dbnc){
-                    setting_mode=SET_MENU;
-                    leds_set_circle(0,0,0,0,0,0,0,0);
-                    vmVariables.target[0] = 0;
-                    vmVariables.target[1] = 0;
+                    if (vmVariables.target[0]==0) {
+                        setting_mode=SET_MENU;
+                        leds_set_circle(0,0,0,0,0,0,0,0);
+                    }
+                    else {
+                        vmVariables.target[0] = 0;
+                        vmVariables.target[1] = 0;
+                    }
                }
                break;
             case SET_RF_PARING:
@@ -524,8 +542,8 @@ static void setting_tick(void) {
                break;
 
              }
-    if  (buttons_state[BUTTON_CENTER]==0)
-        dbnc=0;
+        if  (buttons_state[BUTTON_CENTER]==0)
+            dbnc=0;
      
     } else {
         if(buttons_state[1] && buttons_state[4]) {
@@ -544,7 +562,6 @@ static void setting_tick(void) {
             dbnc = 0;
         }
     }
-
 }
 
 void _ISR _INT4Interrupt(void) {
