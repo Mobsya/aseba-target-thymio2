@@ -47,5 +47,6 @@ int mode_get(void);
 void mode_tick(void);
 
 int pulse_get(void);
+void init_vm_mode(void);
 
 #endif
