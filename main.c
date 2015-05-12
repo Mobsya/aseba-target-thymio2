@@ -252,6 +252,7 @@ void switch_off(void) {
 	analog_disable();
 	pwm_motor_poweroff();
 	prox_poweroff();
+	save_settings();
 	sound_poweroff();
 	sd_shutdown();
 	leds_poweroff();

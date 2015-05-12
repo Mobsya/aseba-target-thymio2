@@ -38,6 +38,8 @@
 
 #include "skel-usb.h"
 
+static unsigned char update_calib;
+
 
 void AsebaResetIntoBootloader(AsebaVMState *vm) {
 	// If we are called it mean that USB is preset because we got the aseba packet ...
@@ -495,4 +497,16 @@ void __attribute((noreturn)) run_aseba_main_loop(void) {
 			}
 		}
 	}
+}
+
+void save_settings(void) {
+// if calibration is new, and Vbat > 3.3V, then flash
+	if(update_calib && vmVariables.vbat[0] > 655) {
+		AsebaNative__system_settings_flash(NULL);
+		update_calib=0;
+	}
+}
+
+void set_save_settings(void) {
+	update_calib=1;
 }
