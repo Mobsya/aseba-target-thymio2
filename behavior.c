@@ -389,8 +389,9 @@ static void setting_tick(void) {
     static char setting_select;
     static char volume;
     static char correction;
-    
+    static unsigned char blink;
 
+    
 
     if (setting_start==1) {
          // Exit case: Serial port open !
@@ -400,6 +401,8 @@ static void setting_tick(void) {
                 leds_set_br(0,0,0);
                 leds_set_bl(0,0,0);
                 leds_set_circle(0,0,0,0,0,0,0,0);
+                leds_set(0,0);
+                leds_set(1,0);
 		init_vm_mode();
                 vmVariables.target[0] = 0;
                 vmVariables.target[1] = 0;
@@ -407,6 +410,16 @@ static void setting_tick(void) {
                         rf_pairing_stop();
 		return;
 	}
+        // blink rear prox leds
+        if (++blink  > 25) {
+          leds_set(0,32);
+          leds_set(1,32);
+          if (blink > 50) {
+            blink=0;
+            leds_set(0,0);
+            leds_set(1,0);
+            }
+        }
         
         switch (setting_select) {
             case SET_VOLUME:
