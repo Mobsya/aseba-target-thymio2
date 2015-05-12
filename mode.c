@@ -222,7 +222,7 @@ static void exit_mode(enum mode m) {
 	}	
 }
 
-static void init_vm_mode(void) {
+void init_vm_mode(void) {
 	// do a menu mode -> vm mode (exit internal state machine)
 	behavior_start(B_LEDS_ACC);
 	behavior_start(B_LEDS_NTC);

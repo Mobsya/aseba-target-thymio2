@@ -421,6 +421,21 @@ static void setting_tick(void) {
 
 
     if (setting_start==1) {
+         // Exit case: Serial port open !
+	if(usb_uart_serial_port_open() || (rf_get_status() & RF_DATA_RX)) {
+		behavior_stop(B_SETTING);
+                leds_set_top(0,0,0);
+                leds_set_br(0,0,0);
+                leds_set_bl(0,0,0);
+                leds_set_circle(0,0,0,0,0,0,0,0);
+		init_vm_mode();
+                vmVariables.target[0] = 0;
+                vmVariables.target[1] = 0;
+                if (rf_get_status() & RF_PAIRING_MODE)
+                        rf_pairing_stop();
+		return;
+	}
+        
         switch (setting_select) {
             case SET_VOLUME:
                 leds_set_br(32,0,0);
@@ -565,7 +580,12 @@ static void setting_tick(void) {
                }
                break;
             case SET_RF_PARING:
+                if(!(rf_get_status() & RF_PAIRING_MODE)) {
+                    rf_pairing_start();
+                }
                when (buttons_state[BUTTON_CENTER]&& !dbnc){
+                    if (rf_get_status() & RF_PAIRING_MODE)
+                        rf_pairing_stop();
                     setting_mode=SET_MENU;
                }
                break;
