@@ -400,37 +400,34 @@ static void pairing_tick(void) {
 	
 }
 
-
-
-
 static void setting_tick(void) {
-    #define SET_MENU (-1)
-    #define SET_VOLUME 0
-    #define SET_MOTOR 1
-    #define SET_RF_PARING 2
-    #define SPEED_STEP 128
-    #define BLINK 28
-    static unsigned char dbnc;
-    static unsigned char all_off;
-    static unsigned char setting_start;
-    static char setting_mode;
-    static char setting_select;
-    static char volume;
-    static char correction;
-    static unsigned char blink;
+#define SET_MENU (-1)
+#define SET_VOLUME 0
+#define SET_MOTOR 1
+#define SET_RF_PARING 2
+#define SPEED_STEP 128
+#define BLINK 28
+	static unsigned char dbnc;
+	static unsigned char all_off;
+	static unsigned char setting_start;
+	static char setting_mode;
+	static char setting_select;
+	static char volume;
+	static char correction;
+	static unsigned char blink;
 	unsigned char ledrgb[3];
 
-    all_off = !(buttons_state[0] | buttons_state[1] | buttons_state[2]
-            | buttons_state[3] | buttons_state[4]);
-    
+	all_off = !(buttons_state[0] | buttons_state[1] | buttons_state[2]
+			| buttons_state[3] | buttons_state[4]);
 
-    if (setting_start==1) {
+
+	if (setting_start == 1) {
 		// Exit case: Serial port open !
-		if(usb_uart_serial_port_open() || (rf_get_status() & RF_DATA_RX)) {
+		if (usb_uart_serial_port_open() || (rf_get_status() & RF_DATA_RX)) {
 			behavior_stop(B_SETTING);
-			leds_set_body_rgb(0,0,0);
-			leds_set_circle(0,0,0,0,0,0,0,0);
-			leds_set_prox_h(0,0,0,0,0,0,0,0);
+			leds_set_body_rgb(0, 0, 0);
+			leds_set_circle(0, 0, 0, 0, 0, 0, 0, 0);
+			leds_set_prox_h(0, 0, 0, 0, 0, 0, 0, 0);
 			vmVariables.target[0] = 0;
 			vmVariables.target[1] = 0;
 			if (rf_get_status() & RF_PAIRING_MODE)
@@ -438,202 +435,210 @@ static void setting_tick(void) {
 			init_vm_mode();
 			return;
 		}
-                      
-        switch (setting_select) {
-            case SET_VOLUME:
-                leds_set_body_rgb(32, 15,0);
-                break;
-            case SET_MOTOR:
-                leds_set_body_rgb(15, 32,0);
+
+		switch (setting_select) {
+			case SET_VOLUME:
+				leds_set_body_rgb(32, 15, 0);
 				break;
-            case SET_RF_PARING:
-				leds_set_body_rgb(15, 0,32);
-                break;
-            }
-       
-        if (setting_mode == SET_MENU){
+			case SET_MOTOR:
+				leds_set_body_rgb(15, 32, 0);
+				break;
+			case SET_RF_PARING:
+				leds_set_body_rgb(15, 0, 32);
+				break;
+		}
+
+		if (setting_mode == SET_MENU) {
 			// blink rear prox leds
-			if (++blink  == BLINK) {
-				leds_set_prox_h(32,32,32,32,32,32,32,32);
+			if (++blink == BLINK) {
+				leds_set_prox_h(32, 32, 32, 32, 32, 32, 32, 32);
 			}
-			if (blink > BLINK*2) {
-				blink=0;
-				leds_set_prox_h(0,0,0,0,0,0,0,0);
+			if (blink > BLINK * 2) {
+				blink = 0;
+				leds_set_prox_h(0, 0, 0, 0, 0, 0, 0, 0);
 			}
-        }
-        else {
-            int p = pulse_get();
-			p = pulse_get();//pulse twice faster
-            p = pulse_get();//pulse 3 time faster
-			leds_set_prox_h(p,p,p,p,p,p,p,p);
-            switch (setting_select) {
+		} else {
+			int p = pulse_get();
+			p = pulse_get(); //pulse twice faster
+			p = pulse_get(); //pulse 3 time faster
+			leds_set_prox_h(p, p, p, p, p, p, p, p);
+			switch (setting_select) {
 				case SET_VOLUME: //(32, 15,0)
-					ledrgb[0]=(32*p)>>5;
-					ledrgb[1]=(15*p)>>5;
-					ledrgb[2]=0;
+					ledrgb[0] = (32 * p) >> 5;
+					ledrgb[1] = (15 * p) >> 5;
+					ledrgb[2] = 0;
 					break;
 				case SET_MOTOR://(15, 32,0)
-				   ledrgb[0]=(15*p)>>5;
-					ledrgb[1]=(32*p)>>5;
-					ledrgb[2]=0;
+					ledrgb[0] = (15 * p) >> 5;
+					ledrgb[1] = (32 * p) >> 5;
+					ledrgb[2] = 0;
 					break;
 				case SET_RF_PARING://(15, 0,32)
-					ledrgb[0]=(15*p)>>5;
-					ledrgb[1]=0;
-					ledrgb[2]=(32*p)>>5;
+					ledrgb[0] = (15 * p) >> 5;
+					ledrgb[1] = 0;
+					ledrgb[2] = (32 * p) >> 5;
 					break;
-            }
-			leds_set_body_rgb(ledrgb[0],ledrgb[1],ledrgb[2]);
+			}
+			leds_set_body_rgb(ledrgb[0], ledrgb[1], ledrgb[2]);
 		}
-        
-        switch (setting_mode){
-            case SET_MENU :
-                when (buttons_state[BUTTON_BACKWARD]) {
-                       setting_select--;
-                }
-                when (buttons_state[BUTTON_FORWARD]) {
-                        setting_select++;
-                }
-                when (buttons_state[BUTTON_LEFT]){
-                        setting_select++;
-                }
-                when (buttons_state[BUTTON_RIGHT]){
-                        setting_select--;
-                }
-                if (setting_select<SET_VOLUME)
+
+		switch (setting_mode) {
+			case SET_MENU:
+				when(buttons_state[BUTTON_BACKWARD])
+			{
+				setting_select--;
+			}
+
+				when(buttons_state[BUTTON_FORWARD]) {
+					setting_select++;
+				}
+
+				when(buttons_state[BUTTON_LEFT]) {
+					setting_select++;
+				}
+
+				when(buttons_state[BUTTON_RIGHT]) {
+					setting_select--;
+				}
+				if (setting_select < SET_VOLUME)
 					if ((rf_get_status() & RF_PRESENT))//mask pairing when module is not present
-                        setting_select=SET_RF_PARING;
+						setting_select = SET_RF_PARING;
 					else
-						setting_select=SET_MOTOR;
-                else if ((setting_select>SET_MOTOR)&&!(rf_get_status() & RF_PRESENT))
-                        setting_select=SET_VOLUME ;
-				else if (setting_select>SET_RF_PARING)
-                        setting_select=SET_VOLUME ;
+						setting_select = SET_MOTOR;
+				else if ((setting_select > SET_MOTOR) && !(rf_get_status() & RF_PRESENT))
+					setting_select = SET_VOLUME;
+				else if (setting_select > SET_RF_PARING)
+					setting_select = SET_VOLUME;
 
-               when (buttons_state[BUTTON_CENTER]){
-                    setting_mode=setting_select;
-                    dbnc=1;
-               }
-               break;
-            case SET_VOLUME:
-                when (buttons_state[BUTTON_BACKWARD]){
-                    volume++;
-                    update_calib=1;
-                }
-	        when (buttons_state[BUTTON_FORWARD]) {
-                    volume--;
-                    update_calib=1;
-                }
-                if (volume <0)
-                   volume=0;
-                else if (volume>8 )
-                   volume = 8;
-                settings.sound_shift=volume;
+				when(buttons_state[BUTTON_CENTER]) {
+					setting_mode = setting_select;
+					dbnc = 1;
+				}
+				break;
+			case SET_VOLUME:
+				when(buttons_state[BUTTON_BACKWARD])
+			{
+				volume++;
+				update_calib = 1;
+			}
 
-                int led_circle[8];
-                unsigned char i;
-                for(i=0;i<8;i++){
-                    led_circle[i]=4*(1+i-volume);
-                        if (led_circle[i] < 0 )
-                                led_circle[i]=0;
-                    }                                  
-               leds_set_circle(led_circle[7],led_circle[6], led_circle[5], led_circle[4], led_circle[3], led_circle[2], led_circle[1], led_circle[0]);
+				when(buttons_state[BUTTON_FORWARD]) {
+					volume--;
+					update_calib = 1;
+				}
+				if (volume < 0)
+					volume = 0;
+				else if (volume > 8)
+					volume = 8;
+				settings.sound_shift = volume;
 
-               when(buttons_state[BUTTON_CENTER]&& !dbnc){
-                    setting_mode=SET_MENU;
-                    leds_set_circle(0,0,0,0,0,0,0,0);
-               }
-               break;
-            case SET_MOTOR:
-                if (vmVariables.target[0]!=0) {
-                    when (buttons_state[BUTTON_RIGHT]) {
-                        correction+=1;
-                        update_calib=1;
-                    }
-                    when (buttons_state[BUTTON_LEFT]) {
-                        correction-=1;
-                        update_calib=1;
-                    }
-                    if (correction>=0){
+				int led_circle[8];
+				unsigned char i;
+				for (i = 0; i < 8; i++) {
+					led_circle[i] = 4 * (1 + i - volume);
+					if (led_circle[i] < 0)
+						led_circle[i] = 0;
+				}
+				leds_set_circle(led_circle[7], led_circle[6], led_circle[5], led_circle[4], led_circle[3], led_circle[2], led_circle[1], led_circle[0]);
 
-                        if (correction>31) {
-                            leds_set_circle(0,31,correction-31,0,0,0,0,0);
-                            if (correction>50)  //bound correction
-                                correction=50;
-                        }else
-                            leds_set_circle(0,correction,0,0,0,0,0,0);
-                    }
-                    else{
-                        if (correction<-31) {
-                            leds_set_circle(0,0,0,0,0,0,(-correction-31),31);
-                            if(correction<-50)
-                                correction=-50;
-                        }else
-                            leds_set_circle(0,0,0,0,0,0,0,-correction);
-                    }
-                    settings.mot256[0]=256+correction;
-                    settings.mot256[1]=256-correction;
-                }
-                when (buttons_state[BUTTON_BACKWARD]){
-                    vmVariables.target[0]-=SPEED_STEP;
-                    vmVariables.target[1]-=SPEED_STEP;
-                    if (vmVariables.target[0]<=-3*SPEED_STEP) {
-			vmVariables.target[0]=-3*SPEED_STEP;
-			vmVariables.target[1]=-3*SPEED_STEP;
-                    }
-                }
-	        when (buttons_state[BUTTON_FORWARD]) {
-                    vmVariables.target[0]+=SPEED_STEP;
-                    vmVariables.target[1]+=SPEED_STEP;
-                    if (vmVariables.target[0]>=3*SPEED_STEP) {
-			vmVariables.target[0]=3*SPEED_STEP;
-			vmVariables.target[1]=3*SPEED_STEP;
-                    }
-                }
+				when(buttons_state[BUTTON_CENTER] && !dbnc) {
+					setting_mode = SET_MENU;
+					leds_set_circle(0, 0, 0, 0, 0, 0, 0, 0);
+				}
+				break;
+			case SET_MOTOR:
+				if (vmVariables.target[0] != 0) {
 
-               when (buttons_state[BUTTON_CENTER]&& !dbnc){
-                    if (vmVariables.target[0]==0) {
-                        setting_mode=SET_MENU;
-                        leds_set_circle(0,0,0,0,0,0,0,0);
-                    }
-                    else {
-                        vmVariables.target[0] = 0;
-                        vmVariables.target[1] = 0;
-                    }
-               }
-               break;
-            case SET_RF_PARING:
-                if(!(rf_get_status() & RF_PAIRING_MODE)) {
-                    rf_pairing_start();
-                }
-               when (buttons_state[BUTTON_CENTER]&& !dbnc){
-                    if (rf_get_status() & RF_PAIRING_MODE)
-                        rf_pairing_stop();
-                    setting_mode=SET_MENU;
-               }
-               break;
+					when(buttons_state[BUTTON_RIGHT]) {
+						correction += 1;
+						update_calib = 1;
+					}
 
-             }
-        if  (buttons_state[BUTTON_CENTER]==0)
-            dbnc=0;
-     
-    } else {
-        if(buttons_state[1] && buttons_state[4]) {
-            if(++dbnc > 100) {
-                    if(dbnc == 101) {
-                        setting_start=1;
-                        behavior_stop(B_MODE);
-                        setting_mode = SET_MENU;
-                        //read values in memory
-                        volume=settings.sound_shift;
-                        correction=settings.mot256[0]-256;
-                    }
-                    dbnc = 102;
-            }
-        } else {
-            dbnc = 0;
-        }
-    }
+					when(buttons_state[BUTTON_LEFT]) {
+						correction -= 1;
+						update_calib = 1;
+					}
+					if (correction >= 0) {
+
+						if (correction > 31) {
+							leds_set_circle(0, 31, correction - 31, 0, 0, 0, 0, 0);
+							if (correction > 50) //bound correction
+								correction = 50;
+						} else
+							leds_set_circle(0, correction, 0, 0, 0, 0, 0, 0);
+					} else {
+						if (correction<-31) {
+							leds_set_circle(0, 0, 0, 0, 0, 0, (-correction - 31), 31);
+							if (correction<-50)
+								correction = -50;
+						} else
+							leds_set_circle(0, 0, 0, 0, 0, 0, 0, -correction);
+					}
+					settings.mot256[0] = 256 + correction;
+					settings.mot256[1] = 256 - correction;
+				}
+
+				when(buttons_state[BUTTON_BACKWARD]) {
+					vmVariables.target[0] -= SPEED_STEP;
+					vmVariables.target[1] -= SPEED_STEP;
+					if (vmVariables.target[0] <= -3 * SPEED_STEP) {
+						vmVariables.target[0] = -3 * SPEED_STEP;
+						vmVariables.target[1] = -3 * SPEED_STEP;
+					}
+				}
+
+				when(buttons_state[BUTTON_FORWARD]) {
+					vmVariables.target[0] += SPEED_STEP;
+					vmVariables.target[1] += SPEED_STEP;
+					if (vmVariables.target[0] >= 3 * SPEED_STEP) {
+						vmVariables.target[0] = 3 * SPEED_STEP;
+						vmVariables.target[1] = 3 * SPEED_STEP;
+					}
+				}
+
+				when(buttons_state[BUTTON_CENTER] && !dbnc) {
+					if (vmVariables.target[0] == 0) {
+						setting_mode = SET_MENU;
+						leds_set_circle(0, 0, 0, 0, 0, 0, 0, 0);
+					} else {
+						vmVariables.target[0] = 0;
+						vmVariables.target[1] = 0;
+					}
+				}
+				break;
+			case SET_RF_PARING:
+				if (!(rf_get_status() & RF_PAIRING_MODE)) {
+					rf_pairing_start();
+				}
+
+				when(buttons_state[BUTTON_CENTER] && !dbnc) {
+					if (rf_get_status() & RF_PAIRING_MODE)
+						rf_pairing_stop();
+					setting_mode = SET_MENU;
+				}
+				break;
+
+		}
+		if (buttons_state[BUTTON_CENTER] == 0)
+			dbnc = 0;
+
+	} else {
+		if (buttons_state[1] && buttons_state[4]) {
+			if (++dbnc > 100) {
+				if (dbnc == 101) {
+					setting_start = 1;
+					behavior_stop(B_MODE);
+					setting_mode = SET_MENU;
+					//read values in memory
+					volume = settings.sound_shift;
+					correction = settings.mot256[0] - 256;
+				}
+				dbnc = 102;
+			}
+		} else {
+			dbnc = 0;
+		}
+	}
 }
 
 void _ISR _INT4Interrupt(void) {
@@ -672,7 +677,7 @@ void _ISR _INT4Interrupt(void) {
 	if(ENABLED(B_PAIRING))
 		pairing_tick();
 
-        if(ENABLED(B_SETTING))
+	if(ENABLED(B_SETTING))
 		setting_tick();
 }
 

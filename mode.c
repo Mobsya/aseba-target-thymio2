@@ -231,7 +231,7 @@ static void init_mode(enum mode m) {
 	
 	switch(m) {
 		case MODE_MENU:
-                        behavior_start(B_SETTING);
+			behavior_start(B_SETTING);
 			break;
 		case MODE_FOLLOW:
 			behavior_start(B_LEDS_PROX);

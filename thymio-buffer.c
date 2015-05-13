@@ -128,12 +128,12 @@ int AsebaFifoTxEmpty(void) {
 }
 
 void AsebaFifoCheckConnectionMode(void) {
-    if(usb_uart_serial_port_open()) {
-		if(connection_mode == MODE_USB)
+	if (usb_uart_serial_port_open()) {
+		if (connection_mode == MODE_USB)
 			return; // Nothing to do ...
 
 		// Put the RF link down if it was up
-		if(rf_get_status() & RF_LINK_UP)
+		if (rf_get_status() & RF_LINK_UP)
 			rf_set_link(RF_DOWN);
 
 		// We are switching to usb, reset the fifo and make the switch
@@ -145,15 +145,15 @@ void AsebaFifoCheckConnectionMode(void) {
 	}
 
 	// No usb, so try RF.
-	if(rf_get_status() & RF_PRESENT) {
-		if(connection_mode == MODE_RF)
+	if (rf_get_status() & RF_PRESENT) {
+		if (connection_mode == MODE_RF)
 			return; // Nothing to do
 
 		fifo_reset(&AsebaFifo.tx);
 		fifo_reset(&AsebaFifo.rx);
 
 		// We are switching *from* usb, start the RF link
-		if(!(rf_get_status() & RF_LINK_UP))
+		if (!(rf_get_status() & RF_LINK_UP))
 			rf_set_link(RF_UP);
 
 		connection_mode = MODE_RF;
@@ -234,7 +234,7 @@ void AsebaSendBuffer(AsebaVMState *vm, const uint8 *data, uint16 length) {
 
 	do {
 		RAISE_IPL(flags, PRIO_COMMUNICATION);
-                AsebaFifoCheckConnectionMode();
+		AsebaFifoCheckConnectionMode();
 		if(mode != connection_mode) {
 			// the connection medium changed under our feet, let's drop this packet
 			// No need to reset the fifo it has already been done.

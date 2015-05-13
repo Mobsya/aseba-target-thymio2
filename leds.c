@@ -229,9 +229,8 @@ void leds_set_bl(unsigned char r, unsigned char g, unsigned char b) {
 	leds_set(LED_B_BOT_L, b);
 }
 
-void leds_set_prox_h(unsigned char l1, unsigned char l2, unsigned char l3, unsigned char l4, unsigned char l5, unsigned char l6, unsigned char l7, unsigned char l8)
-{
-    	leds_set(LED_FRONT_IR_0, l1);
+void leds_set_prox_h(unsigned char l1, unsigned char l2, unsigned char l3, unsigned char l4, unsigned char l5, unsigned char l6, unsigned char l7, unsigned char l8) {
+	leds_set(LED_FRONT_IR_0, l1);
 	leds_set(LED_FRONT_IR_1, l2);
 	leds_set(LED_FRONT_IR_2A,l3);
 	leds_set(LED_FRONT_IR_2B,l4);

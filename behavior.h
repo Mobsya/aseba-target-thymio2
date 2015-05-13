@@ -44,13 +44,13 @@ void behavior_start(int b);
 void behavior_stop(int b);
 int behavior_enabled(int b);
 
-#define B_ALL 			0xFFFF
-#define B_SOUND_BUTTON 		(1 << 0)
-#define B_LEDS_BUTTON 		(1 << 1)
+#define B_ALL			0xFFFF
+#define B_SOUND_BUTTON	(1 << 0)
+#define B_LEDS_BUTTON	(1 << 1)
 #define B_LEDS_PROX		(1 << 2)
 #define B_LEDS_SD		(1 << 3)
 #define B_LEDS_MIC		(1 << 4)
-#define B_LEDS_BATTERY		(1 << 5)
+#define B_LEDS_BATTERY	(1 << 5)
 #define B_LEDS_RC5		(1 << 6)
 #define B_MOTORS		(1 << 7)
 #define B_LEDS_ACC		(1 << 8)
@@ -58,7 +58,7 @@ int behavior_enabled(int b);
 #define B_MODE			(1 << 10)
 #define B_TEST			(1 << 11)
 #define B_PAIRING		(1 << 12)
-#define B_SETTING               (1 << 13)
+#define B_SETTING		(1 << 13)
 #define B_MAX			B_SETTING
 
 #define B_ALWAYS		(B_LEDS_BATTERY | B_LEDS_RC5 | B_LEDS_SD | B_SOUND_BUTTON | B_LEDS_BUTTON)

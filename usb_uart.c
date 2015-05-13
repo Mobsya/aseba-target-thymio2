@@ -19,7 +19,7 @@ Software License Agreement:
  IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
  CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
 
-*/
+ */
 
 /* This file is not released under LGPLv3 as some Microchip code is used.
  */
@@ -43,28 +43,28 @@ Software License Agreement:
 #define CHARGE_500MA  _LATF0
 
 
-void usbInterrupt(void);  // Implemented in usb_function_cdc
+void usbInterrupt(void); // Implemented in usb_function_cdc
 
 void usb_uart_init(void) {
 	USBDeviceInit();
 }
 
 int usb_uart_configured(void) {
-	if(USBGetDeviceState() == CONFIGURED_STATE)
+	if (USBGetDeviceState() == CONFIGURED_STATE)
 		return 1;
 	return 0;
 }
 
 int usb_uart_serial_port_open(void) {
 	// Check that:
-        //      - We are still connected
-        // 	- We are in configured state
+	//      - We are still connected
+	// 	- We are in configured state
 	// 	- We are not in suspend
 	// 	- We have DTE bit set.
-        if(!U1OTGSTATbits.SESVD)
-            control_signal_bitmap.DTE_PRESENT = 0;
-	
-	if((USBGetDeviceState() == CONFIGURED_STATE) && !USBBusIsSuspended && control_signal_bitmap.DTE_PRESENT)
+	if (!U1OTGSTATbits.SESVD)
+		control_signal_bitmap.DTE_PRESENT = 0;
+
+	if ((USBGetDeviceState() == CONFIGURED_STATE) && !USBBusIsSuspended && control_signal_bitmap.DTE_PRESENT)
 		return 1;
 	else
 		return 0;
@@ -72,40 +72,38 @@ int usb_uart_serial_port_open(void) {
 
 // Call this regularly, it manage the connection/disconnection of usb and charge enable
 // It's absolutly not time-critical
-void usb_uart_tick(void)
-{   
+
+void usb_uart_tick(void) {
 	int vbus = U1OTGSTATbits.SESVD;
-// --- Attaching/detaching part
+	// --- Attaching/detaching part
 	// If we are detached and we sens vbus, then attach
-	if(vbus && (USBGetDeviceState() == DETACHED_STATE))
-	{
+	if (vbus && (USBGetDeviceState() == DETACHED_STATE)) {
 		USBDeviceAttach();
 	}
-	
+
 	// If we are not detached and we don't sens vbus, then detach 
-	if(!vbus)
-	{
+	if (!vbus) {
 		USBDeviceDetach();
-                control_signal_bitmap.DTE_PRESENT=0; //clean DTR/DTE
+		control_signal_bitmap.DTE_PRESENT = 0; //clean DTR/DTE
 	}
-	
-	
-// --- Charge managment part 
+
+
+	// --- Charge managment part
 
 	// If we are configured, enable 500mA charge
-	if((USBGetDeviceState() == CONFIGURED_STATE) && !USBBusIsSuspended)
+	if ((USBGetDeviceState() == CONFIGURED_STATE) && !USBBusIsSuspended)
 		CHARGE_500MA = 1;
 	else
 		CHARGE_500MA = 0;
-		
+
 	// Make sure the enable the charge when not suspended.
-	if(!USBBusIsSuspended || (USBGetDeviceState() != CONFIGURED_STATE))
+	if (!USBBusIsSuspended || (USBGetDeviceState() != CONFIGURED_STATE))
 		CHARGE_ENABLE = 1;
-	
+
 	// Make sure to disable charge while in suspend
-	if(USBBusIsSuspended && (USBGetDeviceState() == CONFIGURED_STATE))
+	if (USBBusIsSuspended && (USBGetDeviceState() == CONFIGURED_STATE))
 		CHARGE_ENABLE = 0;
-} 
+}
 
 
 
@@ -142,12 +140,11 @@ void usb_uart_tick(void)
  *
  * Note:            None
  *****************************************************************************/
-void USBCBSuspend(void)
-{
+void USBCBSuspend(void) {
 	//Example power saving code.  Insert appropriate code here for the desired
 	//application behavior.  If the microcontroller will be put to sleep, a
 	//process similar to that shown below may be used:
-	
+
 	//ConfigureIOPinsForLowPower();
 	//SaveStateOfAllInterruptEnableBits();
 	//DisableAllInterruptEnableBits();
@@ -160,7 +157,7 @@ void USBCBSuspend(void)
 	//cleared inside the usb_device.c file.  Clearing USBActivityIF here will cause 
 	//things to not work as intended.	
 
-	CHARGE_ENABLE = 0; 
+	CHARGE_ENABLE = 0;
 }
 
 /******************************************************************************
@@ -184,8 +181,7 @@ void USBCBSuspend(void)
  *
  * Note:            None
  *****************************************************************************/
-void USBCBWakeFromSuspend(void)
-{
+void USBCBWakeFromSuspend(void) {
 	// If clock switching or other power savings measures were taken when
 	// executing the USBCBSuspend() function, now would be a good time to
 	// switch back to normal full power run mode conditions.  The host allows
@@ -194,7 +190,7 @@ void USBCBWakeFromSuspend(void)
 	// packets.  In order to do this, the USB module must receive proper
 	// clocking (IE: 48MHz clock must be available to SIE for full speed USB
 	// operation).
-	
+
 	CHARGE_ENABLE = 1;
 }
 
@@ -216,10 +212,9 @@ void USBCBWakeFromSuspend(void)
  *
  * Note:            None
  *******************************************************************/
-void USBCB_SOF_Handler(void)
-{
-    // No need to clear UIRbits.SOFIF to 0 here.
-    // Callback caller is already doing that.
+void USBCB_SOF_Handler(void) {
+	// No need to clear UIRbits.SOFIF to 0 here.
+	// Callback caller is already doing that.
 
 }
 
@@ -240,10 +235,9 @@ void USBCB_SOF_Handler(void)
  *
  * Note:            None
  *******************************************************************/
-void USBCBErrorHandler(void)
-{
-    // No need to clear UEIR to 0 here.
-    // Callback caller is already doing that.
+void USBCBErrorHandler(void) {
+	// No need to clear UEIR to 0 here.
+	// Callback caller is already doing that.
 
 	// Typically, user firmware does not need to do anything special
 	// if a USB error occurs.  For example, if the host sends an OUT
@@ -257,11 +251,10 @@ void USBCBErrorHandler(void)
 	// data loss occurs.  The system will typically recover
 	// automatically, without the need for application firmware
 	// intervention.
-	
+
 	// Nevertheless, this callback function is provided, such as
 	// for debugging purposes.
 }
-
 
 /*******************************************************************
  * Function:        void USBCBCheckOtherReq(void)
@@ -291,11 +284,9 @@ void USBCBErrorHandler(void)
  *
  * Note:            None
  *******************************************************************/
-void USBCBCheckOtherReq(void)
-{
-    USBCheckCDCRequest();
+void USBCBCheckOtherReq(void) {
+	USBCheckCDCRequest();
 }//end
-
 
 /*******************************************************************
  * Function:        void USBCBStdSetDscHandler(void)
@@ -316,11 +307,9 @@ void USBCBCheckOtherReq(void)
  *
  * Note:            None
  *******************************************************************/
-void USBCBStdSetDscHandler(void)
-{
-    // Must claim session ownership if supporting this request
+void USBCBStdSetDscHandler(void) {
+	// Must claim session ownership if supporting this request
 }//end
-
 
 /*******************************************************************
  * Function:        void USBCBInitEP(void)
@@ -342,9 +331,8 @@ void USBCBStdSetDscHandler(void)
  *
  * Note:            None
  *******************************************************************/
-void USBCBInitEP(void)
-{
-    CDCInitEP();
+void USBCBInitEP(void) {
+	CDCInitEP();
 }
 
 
@@ -375,8 +363,8 @@ void USBCBInitEP(void)
  * Note:            None
  *******************************************************************/
 #if defined(ENABLE_EP0_DATA_RECEIVED_CALLBACK)
-void USBCBEP0DataReceived(void)
-{
+
+void USBCBEP0DataReceived(void) {
 }
 #endif
 
@@ -401,51 +389,49 @@ void USBCBEP0DataReceived(void)
  *
  * Note:            None
  *******************************************************************/
-BOOL USER_USB_CALLBACK_EVENT_HANDLER(USB_EVENT event, void *pdata, WORD size)
-{
-    switch(event)
-    {
-        case EVENT_TRANSFER:
-            //Add application specific callback task or callback function here if desired.
-            // Check which endpoint is terminated;
-   //         USBCBTransfertDoneHandler(pdata);
-   			usbInterrupt();
-            break;
-        case EVENT_SOF:
-            USBCB_SOF_Handler();
-            break;
-        case EVENT_SUSPEND:
-            USBCBSuspend();
-            break;
-        case EVENT_RESUME:
-            USBCBWakeFromSuspend();
-            break;
-        case EVENT_CONFIGURED: 
-            USBCBInitEP();
-            break;
-        case EVENT_SET_DESCRIPTOR:
-            USBCBStdSetDscHandler();
-            break;
-        case EVENT_EP0_REQUEST:
-            USBCBCheckOtherReq();
-            break;
-        case EVENT_BUS_ERROR:
-            USBCBErrorHandler();
-            break;
-        case EVENT_TRANSFER_TERMINATED:
-            //Add application specific callback task or callback function here if desired.
-            //The EVENT_TRANSFER_TERMINATED event occurs when the host performs a CLEAR
-            //FEATURE (endpoint halt) request on an application endpoint which was 
-            //previously armed (UOWN was = 1).  Here would be a good place to:
-            //1.  Determine which endpoint the transaction that just got terminated was 
-            //      on, by checking the handle value in the *pdata.
-            //2.  Re-arm the endpoint if desired (typically would be the case for OUT 
-            //      endpoints).
-            USBCBTransfertDoneHandler(pdata);
-            
-            break;
-        default:
-            break;
-    }      
-    return TRUE; 
+BOOL USER_USB_CALLBACK_EVENT_HANDLER(USB_EVENT event, void *pdata, WORD size) {
+	switch (event) {
+		case EVENT_TRANSFER:
+			//Add application specific callback task or callback function here if desired.
+			// Check which endpoint is terminated;
+			//         USBCBTransfertDoneHandler(pdata);
+			usbInterrupt();
+			break;
+		case EVENT_SOF:
+			USBCB_SOF_Handler();
+			break;
+		case EVENT_SUSPEND:
+			USBCBSuspend();
+			break;
+		case EVENT_RESUME:
+			USBCBWakeFromSuspend();
+			break;
+		case EVENT_CONFIGURED:
+			USBCBInitEP();
+			break;
+		case EVENT_SET_DESCRIPTOR:
+			USBCBStdSetDscHandler();
+			break;
+		case EVENT_EP0_REQUEST:
+			USBCBCheckOtherReq();
+			break;
+		case EVENT_BUS_ERROR:
+			USBCBErrorHandler();
+			break;
+		case EVENT_TRANSFER_TERMINATED:
+			//Add application specific callback task or callback function here if desired.
+			//The EVENT_TRANSFER_TERMINATED event occurs when the host performs a CLEAR
+			//FEATURE (endpoint halt) request on an application endpoint which was
+			//previously armed (UOWN was = 1).  Here would be a good place to:
+			//1.  Determine which endpoint the transaction that just got terminated was
+			//      on, by checking the handle value in the *pdata.
+			//2.  Re-arm the endpoint if desired (typically would be the case for OUT
+			//      endpoints).
+			USBCBTransfertDoneHandler(pdata);
+
+			break;
+		default:
+			break;
+	}
+	return TRUE;
 }
