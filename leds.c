@@ -228,3 +228,22 @@ void leds_set_bl(unsigned char r, unsigned char g, unsigned char b) {
 	leds_set(LED_G_BOT_L, g);
 	leds_set(LED_B_BOT_L, b);
 }
+
+void leds_set_prox_h(unsigned char l1, unsigned char l2, unsigned char l3, unsigned char l4, unsigned char l5, unsigned char l6, unsigned char l7, unsigned char l8)
+{
+    	leds_set(LED_FRONT_IR_0, l1);
+	leds_set(LED_FRONT_IR_1, l2);
+	leds_set(LED_FRONT_IR_2A,l3);
+	leds_set(LED_FRONT_IR_2B,l4);
+	leds_set(LED_FRONT_IR_3, l5);
+	leds_set(LED_FRONT_IR_4, l6);
+	leds_set(LED_IR_BACK_L,  l7);
+	leds_set(LED_IR_BACK_R,  l8);
+}
+
+
+void leds_set_body_rgb(unsigned int r, unsigned int g, unsigned int b) {
+	leds_set_top(r,g,b);
+	leds_set_br(r,g,b);
+	leds_set_bl(r,g,b);
+}

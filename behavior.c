@@ -383,6 +383,7 @@ static void setting_tick(void) {
     #define SET_MOTOR 1
     #define SET_RF_PARING 2
     #define SPEED_STEP 128
+    #define BLINK 28
     static unsigned char dbnc;
     static unsigned char setting_start;
     static char setting_mode;
@@ -390,73 +391,72 @@ static void setting_tick(void) {
     static char volume;
     static char correction;
     static unsigned char blink;
+	unsigned char ledrgb[3];
 
     
 
     if (setting_start==1) {
-         // Exit case: Serial port open !
-	if(usb_uart_serial_port_open() || (rf_get_status() & RF_DATA_RX)) {
-		behavior_stop(B_SETTING);
-                leds_set_top(0,0,0);
-                leds_set_br(0,0,0);
-                leds_set_bl(0,0,0);
-                leds_set_circle(0,0,0,0,0,0,0,0);
-                leds_set(0,0);
-                leds_set(1,0);
-		init_vm_mode();
-                vmVariables.target[0] = 0;
-                vmVariables.target[1] = 0;
-                if (rf_get_status() & RF_PAIRING_MODE)
-                        rf_pairing_stop();
-		return;
-	}
-        // blink rear prox leds
-        if (++blink  > 25) {
-          leds_set(0,32);
-          leds_set(1,32);
-          if (blink > 50) {
-            blink=0;
-            leds_set(0,0);
-            leds_set(1,0);
-            }
-        }
-        
+		// Exit case: Serial port open !
+		if(usb_uart_serial_port_open() || (rf_get_status() & RF_DATA_RX)) {
+			behavior_stop(B_SETTING);
+			leds_set_body_rgb(0,0,0);
+			leds_set_circle(0,0,0,0,0,0,0,0);
+			leds_set_prox_h(0,0,0,0,0,0,0,0);
+			vmVariables.target[0] = 0;
+			vmVariables.target[1] = 0;
+			if (rf_get_status() & RF_PAIRING_MODE)
+				rf_pairing_stop();
+			init_vm_mode();
+			return;
+		}
+                      
         switch (setting_select) {
             case SET_VOLUME:
-                leds_set_br(32,0,0);
-                leds_set_bl(32,0,0);
+                leds_set_body_rgb(32, 15,0);
                 break;
             case SET_MOTOR:
-                leds_set_br(0,32,0);
-                leds_set_bl(0,32,0);
-                break;
+                leds_set_body_rgb(15, 32,0);
+				break;
             case SET_RF_PARING:
-                leds_set_br(0,0,32);
-                leds_set_bl(0,0,32);
+				leds_set_body_rgb(15, 0,32);
                 break;
             }
        
         if (setting_mode == SET_MENU){
-            leds_set_top(32,32,32);
+			// blink rear prox leds
+			if (++blink  == BLINK) {
+				leds_set_prox_h(32,32,32,32,32,32,32,32);
+			}
+			if (blink > BLINK*2) {
+				blink=0;
+				leds_set_prox_h(0,0,0,0,0,0,0,0);
+			}
         }
         else {
             int p = pulse_get();
-            leds_set_top(p,p,p);
-             switch (setting_select) {
-            case SET_VOLUME:
-                leds_set_br(p,0,0);
-                leds_set_bl(p,0,0);
+			p = pulse_get();//pulse twice faster
+            p = pulse_get();//pulse 3 time faster
+			leds_set_prox_h(p,p,p,p,p,p,p,p);
+            switch (setting_select) {
+            case SET_VOLUME: //(32, 15,0)
+                ledrgb[0]=(32*p)>>5;
+				ledrgb[1]=(15*p)>>5;
+				ledrgb[2]=0;
                 break;
-            case SET_MOTOR:
-                leds_set_br(0,p,0);
-                leds_set_bl(0,p,0);
+            case SET_MOTOR://(15, 32,0)
+               ledrgb[0]=(15*p)>>5;
+				ledrgb[1]=(32*p)>>5;
+				ledrgb[2]=0;
                 break;
-            case SET_RF_PARING:
-                leds_set_br(0,0,p);
-                leds_set_bl(0,0,p);
+            case SET_RF_PARING://(15, 0,32)
+                ledrgb[0]=(15*p)>>5;
+				ledrgb[1]=0;
+				ledrgb[2]=(32*p)>>5;
                 break;
             }
-        }
+			leds_set_body_rgb(ledrgb[0],ledrgb[1],ledrgb[2]);
+		}
+        
         switch (setting_mode){
             case SET_MENU :
                 when (buttons_state[BUTTON_BACKWARD]) {

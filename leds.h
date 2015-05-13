@@ -38,6 +38,9 @@ void leds_set_circle(unsigned char l1, unsigned char l2, unsigned char l3, unsig
 void leds_set_top(unsigned char r, unsigned char g, unsigned char b);
 void leds_set_br(unsigned char r, unsigned char g, unsigned char b);
 void leds_set_bl(unsigned char r, unsigned char g, unsigned char b);
+void leds_set_body_rgb(unsigned int r, unsigned int g, unsigned int b);
+
+void leds_set_prox_h(unsigned char l1, unsigned char l2, unsigned char l3, unsigned char l4, unsigned char l5, unsigned char l6, unsigned char l7, unsigned char l8);
 
 enum leds {
 	LED_IR_BACK_L,		/* 0 */

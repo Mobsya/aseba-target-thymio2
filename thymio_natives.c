@@ -308,14 +308,7 @@ void set_hprox_leds(AsebaVMState *vm) {
 
 	behavior_stop(B_LEDS_PROX);
 	
-	leds_set(LED_FRONT_IR_0, l1);
-	leds_set(LED_FRONT_IR_1, l2);
-	leds_set(LED_FRONT_IR_2A,l3);
-	leds_set(LED_FRONT_IR_2B,l4);
-	leds_set(LED_FRONT_IR_3, l5);
-	leds_set(LED_FRONT_IR_4, l6);
-	leds_set(LED_IR_BACK_L,  l7);
-	leds_set(LED_IR_BACK_R,  l8);
+	leds_set_prox_h(l1,l2,l3,l4,l5,l6,l7,l8);
 	
 }
 
