@@ -484,10 +484,9 @@ static void setting_tick(void) {
 
 		switch (setting_mode) {
 			case SET_MENU:
-				when(buttons_state[BUTTON_BACKWARD])
-			{
-				setting_select--;
-			}
+				when(buttons_state[BUTTON_BACKWARD]) {
+					setting_select--;
+				}
 
 				when(buttons_state[BUTTON_FORWARD]) {
 					setting_select++;
@@ -516,11 +515,10 @@ static void setting_tick(void) {
 				}
 				break;
 			case SET_VOLUME:
-				when(buttons_state[BUTTON_BACKWARD])
-			{
-				volume++;
-				update_calib = 1;
-			}
+				when(buttons_state[BUTTON_BACKWARD]) {
+					volume++;
+					update_calib = 1;
+				}
 
 				when(buttons_state[BUTTON_FORWARD]) {
 					volume--;
