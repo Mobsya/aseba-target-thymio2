@@ -57,13 +57,7 @@ static unsigned int bs_black_level = 260;
 static unsigned int bs_white_level = 400;
 
 
-static void set_body_rgb(unsigned int r, unsigned int g, unsigned int b) {
-	leds_set_top(r,g,b);
-	leds_set_br(r,g,b);
-	leds_set_bl(r,g,b);
-}
-
-static int pulse_get(void) {
+int pulse_get(void) {
 	static char led_pulse;
 	int ret;
 	led_pulse = led_pulse + 1;
@@ -137,7 +131,7 @@ static void set_mode_color(enum mode m) {
 }
 
 static void exit_mode(enum mode m) {
-	set_body_rgb(0,0,0);
+	leds_set_body_rgb(0,0,0);
 	leds_set_circle(0,0,0,0,0,0,0,0);
 	leds_set(LED_FRONT_IR_0, 0);
 	leds_set(LED_FRONT_IR_1, 0);
@@ -153,7 +147,7 @@ static void exit_mode(enum mode m) {
 	
 	switch(m) {
 		case MODE_MENU:
-			behavior_stop(B_PAIRING);
+			behavior_stop(B_SETTING);
 			break;
 		case MODE_FOLLOW:
 			prox_disable_network();
@@ -222,7 +216,7 @@ static void exit_mode(enum mode m) {
 	}	
 }
 
-static void init_vm_mode(void) {
+void init_vm_mode(void) {
 	// do a menu mode -> vm mode (exit internal state machine)
 	behavior_start(B_LEDS_ACC);
 	behavior_start(B_LEDS_NTC);
@@ -237,7 +231,7 @@ static void init_mode(enum mode m) {
 	
 	switch(m) {
 		case MODE_MENU:
-		    behavior_start(B_PAIRING);
+			behavior_start(B_SETTING);
 			break;
 		case MODE_FOLLOW:
 			behavior_start(B_LEDS_PROX);
@@ -346,7 +340,7 @@ static void tick_follow(void) {
 		leds_set_bl(rgb[2],rgb[0],rgb[1]);
 		leds_set_br(rgb[1],rgb[2],rgb[0]);
 	} else
-		set_body_rgb(0,pulse_get(),0);
+		leds_set_body_rgb(0,pulse_get(),0);
 
 	if(does_see_friend) {
 		led_state += led_delta;
@@ -521,7 +515,7 @@ static void tick_acc(void) {
 			leds_set_top(0,0,0);
 		}
 	} else {
-		set_body_rgb(pulse_get(),0,0);
+		leds_set_body_rgb(pulse_get(),0,0);
 	}	
 	
 	if(vmVariables.acc_tap) {
@@ -908,6 +902,9 @@ static enum mode next_mode(enum mode m, int i) {
 	
 	return temp;
 }
+
+
+
 static enum mode _selecting;
 void mode_tick(void) {
 	
@@ -921,7 +918,7 @@ void mode_tick(void) {
 			exit_mode(current_mode);
 			if(_selecting == MODE_MENU) {
 				// Special case, if we select the mode menu stuff
-				behavior_stop(B_MODE | B_PAIRING);
+				behavior_stop(B_MODE | B_SETTING);
 				init_vm_mode();
 				return;
 			}
