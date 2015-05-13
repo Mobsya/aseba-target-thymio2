@@ -57,12 +57,6 @@ static unsigned int bs_black_level = 260;
 static unsigned int bs_white_level = 400;
 
 
-static void set_body_rgb(unsigned int r, unsigned int g, unsigned int b) {
-	leds_set_top(r,g,b);
-	leds_set_br(r,g,b);
-	leds_set_bl(r,g,b);
-}
-
 int pulse_get(void) {
 	static char led_pulse;
 	int ret;
@@ -137,7 +131,7 @@ static void set_mode_color(enum mode m) {
 }
 
 static void exit_mode(enum mode m) {
-	set_body_rgb(0,0,0);
+	leds_set_body_rgb(0,0,0);
 	leds_set_circle(0,0,0,0,0,0,0,0);
 	leds_set(LED_FRONT_IR_0, 0);
 	leds_set(LED_FRONT_IR_1, 0);
@@ -346,7 +340,7 @@ static void tick_follow(void) {
 		leds_set_bl(rgb[2],rgb[0],rgb[1]);
 		leds_set_br(rgb[1],rgb[2],rgb[0]);
 	} else
-		set_body_rgb(0,pulse_get(),0);
+		leds_set_body_rgb(0,pulse_get(),0);
 
 	if(does_see_friend) {
 		led_state += led_delta;
@@ -521,7 +515,7 @@ static void tick_acc(void) {
 			leds_set_top(0,0,0);
 		}
 	} else {
-		set_body_rgb(pulse_get(),0,0);
+		leds_set_body_rgb(pulse_get(),0,0);
 	}	
 	
 	if(vmVariables.acc_tap) {
