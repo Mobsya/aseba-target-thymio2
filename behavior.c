@@ -437,21 +437,21 @@ static void setting_tick(void) {
 			p = body_color_pulse_get(); //pulse 3 time faster
 			leds_set_prox_h(p,p,p,p,p,p,p,p);
             switch (setting_select) {
-            case SET_VOLUME: //(32, 15,0)
-                ledrgb[0]=(32*p)>>5;
-				ledrgb[1]=(15*p)>>5;
-				ledrgb[2]=0;
-                break;
-            case SET_MOTOR://(15, 32,0)
-               ledrgb[0]=(15*p)>>5;
-				ledrgb[1]=(32*p)>>5;
-				ledrgb[2]=0;
-                break;
-            case SET_RF_PARING://(15, 0,32)
-                ledrgb[0]=(15*p)>>5;
-				ledrgb[1]=0;
-				ledrgb[2]=(32*p)>>5;
-                break;
+				case SET_VOLUME: //(32, 15,0)
+					ledrgb[0]=(32*p)>>5;
+					ledrgb[1]=(15*p)>>5;
+					ledrgb[2]=0;
+					break;
+				case SET_MOTOR://(15, 32,0)
+				   ledrgb[0]=(15*p)>>5;
+					ledrgb[1]=(32*p)>>5;
+					ledrgb[2]=0;
+					break;
+				case SET_RF_PARING://(15, 0,32)
+					ledrgb[0]=(15*p)>>5;
+					ledrgb[1]=0;
+					ledrgb[2]=(32*p)>>5;
+					break;
             }
 			leds_set_body_rgb(ledrgb[0],ledrgb[1],ledrgb[2]);
 		}
@@ -470,9 +470,14 @@ static void setting_tick(void) {
                 when (buttons_state[BUTTON_RIGHT]){
                         setting_select--;
                 }
-                if (setting_select<SET_VOLUME)//TODO mask pairing when module is not present (rf_get_status() & RF_PRESENT)
+                if (setting_select<SET_VOLUME)
+					if ((rf_get_status() & RF_PRESENT))//mask pairing when module is not present
                         setting_select=SET_RF_PARING;
-                else if (setting_select>SET_RF_PARING)
+					else
+						setting_select=SET_MOTOR;
+                else if ((setting_select>SET_MOTOR)&&!(rf_get_status() & RF_PRESENT))
+                        setting_select=SET_VOLUME ;
+				else if (setting_select>SET_RF_PARING)
                         setting_select=SET_VOLUME ;
 
                when (buttons_state[BUTTON_CENTER]){
@@ -589,7 +594,7 @@ static void setting_tick(void) {
                         setting_start=1;
                         behavior_stop(B_MODE);
                         setting_mode = SET_MENU;
-                        //read alreday state in memory
+                        //read values in memory
                         volume=settings.sound_shift;
                         correction=settings.mot256[0]-256;
                     }
