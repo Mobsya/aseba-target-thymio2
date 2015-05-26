@@ -57,7 +57,7 @@ static unsigned int bs_black_level = 260;
 static unsigned int bs_white_level = 400;
 
 
-int pulse_get(void) {
+int body_color_pulse_get(void) {
 	static char led_pulse;
 	int ret;
 	led_pulse = led_pulse + 1;
@@ -340,7 +340,7 @@ static void tick_follow(void) {
 		leds_set_bl(rgb[2],rgb[0],rgb[1]);
 		leds_set_br(rgb[1],rgb[2],rgb[0]);
 	} else
-		leds_set_body_rgb(0,pulse_get(),0);
+		leds_set_body_rgb(0,body_color_pulse_get(),0);
 
 	if(does_see_friend) {
 		led_state += led_delta;
@@ -423,7 +423,7 @@ static void tick_explorer(void) {
 	unsigned char l[8] = {0,0,0,0,0,0,0,0};
 	unsigned char fixed;
 	
-	int p = pulse_get();
+	int p = body_color_pulse_get();
 	leds_set_top(p,p,0);
 
 	/* circle led managment */
@@ -515,7 +515,7 @@ static void tick_acc(void) {
 			leds_set_top(0,0,0);
 		}
 	} else {
-		leds_set_body_rgb(pulse_get(),0,0);
+		leds_set_body_rgb(body_color_pulse_get(),0,0);
 	}	
 	
 	if(vmVariables.acc_tap) {
@@ -677,7 +677,7 @@ static void tick_sound(void) {
 			leds_set_br(0,0,0);
 		}
 	} else
-		leds_set_top(0,0,pulse_get());
+		leds_set_top(0,0,body_color_pulse_get());
 		
 	
 }
@@ -699,7 +699,7 @@ static void tick_line(void) {
 
 #define SPEED_LINE 300
 
-	int p = pulse_get();
+	int p = body_color_pulse_get();
 
 	leds_set_top(0, p, p);
 	
@@ -787,7 +787,7 @@ static void tick_line(void) {
 #define RC5_SPEED_SAT (RC5_SPEED_STEP*4)
 
 static void tick_rc5(void) {
-	int p = pulse_get();
+	int p = body_color_pulse_get();
 
 	leds_set_top(p,0,p);
 

@@ -431,11 +431,10 @@ static void setting_tick(void) {
 				blink=0;
 				leds_set_prox_h(0,0,0,0,0,0,0,0);
 			}
-        }
-        else {
-            int p = pulse_get();
-			p = pulse_get();//pulse twice faster
-            p = pulse_get();//pulse 3 time faster
+		} else {
+			int p = body_color_pulse_get();
+			p = body_color_pulse_get(); //pulse twice faster
+			p = body_color_pulse_get(); //pulse 3 time faster
 			leds_set_prox_h(p,p,p,p,p,p,p,p);
             switch (setting_select) {
             case SET_VOLUME: //(32, 15,0)
