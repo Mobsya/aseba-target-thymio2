@@ -29,7 +29,5 @@ int ir_prox_tick(unsigned int time);
 void prox_enable_network(void);
 void prox_disable_network(void);
 
-
-
 #endif
 

@@ -40,7 +40,6 @@
 
 static unsigned char update_calib;
 
-
 void AsebaResetIntoBootloader(AsebaVMState *vm) {
 	// If we are called it mean that USB is preset because we got the aseba packet ...
 	// FIXME: No the case anymore !

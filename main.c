@@ -166,6 +166,7 @@ static void timer_slow(void) {
 
 static unsigned int timer[2];
 
+
 static void timer_1khz(int timer_id) {
 	int i;
 	static unsigned char timer_20ms;
@@ -395,7 +396,7 @@ int main(void)
 	// Warning: We cannot use the SD before the analog init as some pin are on the analog port.
 	analog_init(TIMER_ANALOG, PRIO_SENSORS);
 
-    wait_valid_vbat(); 
+        wait_valid_vbat();
         
 	log_init(); // We will need to read vbat to be sure we can flash.
 
