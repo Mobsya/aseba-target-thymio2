@@ -40,7 +40,7 @@
 #define DEFAULT_CALIB 0x7FFF
 
 	
-static unsigned char update_calib;
+
 static unsigned char prox_calib_counter[N_SENSORS];
 static unsigned char __attribute((near)) pulse_count; // used in interrupt processing. needs to be "near"
 static unsigned char __attribute((near)) last_tx;   // used in interrupt processing. needs to be "near"
@@ -64,7 +64,7 @@ static int _calib(int value, int i) {
 		if(++prox_calib_counter[i] > 3) {
 			if(value < settings.prox_min[i]) {
 				settings.prox_min[i] = value;
-				update_calib = 1;
+				set_save_settings();
 			} else
 				prox_calib_counter[i] = 0;
 		}
@@ -442,10 +442,7 @@ void prox_poweroff(void) {
 	
 	va_put();
         
-	// if calibration is new, and Vbat > 3.3V, then flash
-	if(update_calib && vmVariables.vbat[0] > 655) {
-		AsebaNative__system_settings_flash(NULL);
-	}
+	
 }
 
 void prox_enable_network(void) {

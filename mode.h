@@ -46,5 +46,7 @@ int mode_get(void);
 // Which manage other behavior. So it has it's own tick 
 void mode_tick(void);
 
+int body_color_pulse_get(void);
+void init_vm_mode(void);
 
 #endif

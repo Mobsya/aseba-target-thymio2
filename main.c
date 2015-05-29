@@ -34,8 +34,9 @@ History:
 6: Fix bug on MacOSX 10.7+, improve RC5 processing
 7: IR Communication, SD access from VM, others improvments
 8: Motors back EMF calibration, line following black/white level calibration storage in SD, emtpy bytecode detection, minors fixes
+9: Modulo division by zero bug fix, native.c fixes, disconnection improvement, add setting mode
 */
-#define FW_VERSION 8
+#define FW_VERSION 9
 
 /* Firmware variant. Each variant of the firmware has it own number */
 
@@ -165,6 +166,7 @@ static void timer_slow(void) {
 
 static unsigned int timer[2];
 
+
 static void timer_1khz(int timer_id) {
 	int i;
 	static unsigned char timer_20ms;
@@ -251,6 +253,7 @@ void switch_off(void) {
 	analog_disable();
 	pwm_motor_poweroff();
 	prox_poweroff();
+	save_settings();
 	sound_poweroff();
 	sd_shutdown();
 	leds_poweroff();
@@ -393,7 +396,7 @@ int main(void)
 	// Warning: We cannot use the SD before the analog init as some pin are on the analog port.
 	analog_init(TIMER_ANALOG, PRIO_SENSORS);
 
-    wait_valid_vbat(); 
+        wait_valid_vbat();
         
 	log_init(); // We will need to read vbat to be sure we can flash.
 

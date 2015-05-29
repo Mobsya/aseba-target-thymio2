@@ -121,7 +121,7 @@ unsigned char AsebaFifoTxPeek(void) {
 
 int AsebaFifoTxEmpty(void) {
 	return !get_used(&AsebaFifo.tx);
-}	 
+}	
 
 void AsebaFifoCheckConnectionMode(void) {
 	if(usb_uart_serial_port_open()) {
@@ -152,6 +152,7 @@ void AsebaFifoCheckConnectionMode(void) {
 			rf_set_link(RF_UP);
 		
 		connection_mode = MODE_RF;
+
 		return;
 	}
 
@@ -160,6 +161,7 @@ void AsebaFifoCheckConnectionMode(void) {
 	fifo_reset(&AsebaFifo.rx);
 	
 	connection_mode = MODE_DISCONNECTED;
+
 }
 
 /* USB interrupt part */
@@ -226,7 +228,7 @@ void AsebaSendBuffer(AsebaVMState *vm, const uint8 *data, uint16 length) {
 	
 	do {
 		RAISE_IPL(flags, PRIO_COMMUNICATION);
-
+		AsebaFifoCheckConnectionMode();
 		if(mode != connection_mode) {
 			// the connection medium changed under our feet, let's drop this packet
 			// No need to reset the fifo it has already been done.

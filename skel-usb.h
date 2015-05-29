@@ -103,4 +103,11 @@ void resume_sleep(void);
 
 extern struct private_settings settings;
 
+
+//This function save internal setting if there where update.  It is called at poweroff. 
+void save_settings(void);
+
+//This function is called to validate the need to save changes in settings.
+void set_save_settings(void);
+
 #endif
