@@ -33,7 +33,7 @@
 #define REG_FIFO		0xFF
 #define REG_FIFO_LEN 	0xFD
 #define REG_STATUS		0xFC
-#define I2C_REG_VERSION	0xFB
+#define REG_VERSION		0xFB
 #define REG_POWEROFF	0x7F
 #define REG_FLASH_SETTINGS	0x7E
 #define REG_PAIRING		0x06
@@ -135,7 +135,23 @@ void rf_set_link(unsigned int link_status) {
 		status |= RF_LINK_UP;
 		return;
 	}
-}	
+}
+
+/* To test module interface, not planed to give this function to user
+void rf_set_channel(unsigned char channel)
+{
+	if(!(status & RF_PRESENT))
+		return;
+	
+	if(channel<3){//channel can be 0,1,2
+		if (status & RF_LINK_UP)
+			write(REG_CTRL,((channel + 1)<<3)+2);
+		else
+			write(REG_CTRL,(channel + 1)<<3);
+	}
+}
+*/
+
 
 #define I2C_IDLE 			0
 #define I2C_ADDRESS 		1
