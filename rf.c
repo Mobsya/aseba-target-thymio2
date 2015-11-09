@@ -33,7 +33,9 @@
 #define REG_FIFO		0xFF
 #define REG_FIFO_LEN 	0xFD
 #define REG_STATUS		0xFC
+#define I2C_REG_VERSION	0xFB
 #define REG_POWEROFF	0x7F
+#define REG_FLASH_SETTINGS	0x7E
 #define REG_PAIRING		0x06
 #define REG_PANID_H		0x05
 #define REG_PANID_L		0x04
@@ -71,7 +73,12 @@ unsigned int rf_get_node_id(void) {
 	unsigned int id = 1;
 	read(REG_NODEID_L, (unsigned char *) &id, sizeof(id));
 	return id;
-}	
+}
+
+void rf_set_node_id(unsigned int id) {
+	write(REG_NODEID_L, (unsigned char) id&0xFF);
+	write(REG_NODEID_H, (unsigned char) (id>>8));
+}
 
 void rf_init(int bus) {
 	unsigned int flags;
@@ -343,3 +350,8 @@ void rf_wakeup(void) {
 void rf_poweroff(void) {
 	write(REG_POWEROFF, /* whatever */ 0x0);
 }
+
+void rf_flash_setting(void) {
+	write(REG_FLASH_SETTINGS, /* whatever */ 0x0);
+}
+

@@ -27,6 +27,8 @@ void rf_init(int bus);
 
 /* Return the Aseba node ID of the RF part */
 unsigned int rf_get_node_id(void);
+/* Set the Aseba node ID of the RF part */
+void rf_set_node_id(unsigned int id);
 
 /* Poll the rf status, should be called at the I2C access priority level */
 void rf_poll(void);
@@ -55,6 +57,7 @@ void rf_set_link(unsigned int link_status);
 
 void rf_schedule_acc_read(void);
 void rf_poweroff(void);
+void rf_flash_setting(void);
 
 // Do some OOB on SCL to wakeup the CC2533.
 void rf_wakeup(void);
