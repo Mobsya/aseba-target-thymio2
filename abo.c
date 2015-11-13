@@ -125,10 +125,10 @@ int abo_load(FIL * f) {
 	if(read != sizeof(t) || t != vmVariables.fwversion[0])
 		return -5;
 		
-	// Node ID
+	// Node ID (relax this test, RF Thymio has dynamic ID)
 	f_read(f, &t, sizeof(t), &read);
-	if(read != sizeof(t) || t != vmVariables.id)
-		return -6;
+	/*if(read != sizeof(t) || t != vmVariables.id)
+		return -6;*/
 	
 			
 	// Node name (CRC)
