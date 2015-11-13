@@ -162,16 +162,17 @@ void mma7660_set_mode(int hz, int tap_en) {
 		write(SR, hz);
 		
 	// Write the Tap detection register
-	// All axis, treshold: 12 counts
+	// Axe Y and Z, treshold: 12 counts
 	if(tap_en)
-		write(TAP_DETECT, 11);
+		//Disable X axis due to the vibration of motors
+		write(TAP_DETECT, 11+0x20);
 	else
 		write(TAP_DETECT,  0xE0);
 	
 	//write the tap debounce register
-	// 12 counts debouce
+	// 21 counts debouce
 	if(tap_en) 
-		write(TAP_DEBOUNCE, 11);
+		write(TAP_DEBOUNCE, 20);
 	else
 		write(TAP_DEBOUNCE, 0);
 /*		
