@@ -35,7 +35,7 @@ History:
 7: IR Communication, SD access from VM, others improvments
 8: Motors back EMF calibration, line following black/white level calibration storage in SD, emtpy bytecode detection, minors fixes
 9: Modulo division by zero bug fix, native.c fixes, disconnection improvement, add setting mode
-10: Change wireless nodeID, acc sensitivity, clean VM on load 
+10: Change wireless nodeID, acc sensitivity, clean VM on load, aseba protocole version 5
 */
 #define FW_VERSION 10
 
