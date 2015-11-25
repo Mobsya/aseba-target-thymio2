@@ -33,7 +33,9 @@
 #define REG_FIFO		0xFF
 #define REG_FIFO_LEN 	0xFD
 #define REG_STATUS		0xFC
+#define REG_VERSION		0xFB
 #define REG_POWEROFF	0x7F
+#define REG_FLASH_SETTINGS	0x7E
 #define REG_PAIRING		0x06
 #define REG_PANID_H		0x05
 #define REG_PANID_L		0x04
@@ -71,7 +73,12 @@ unsigned int rf_get_node_id(void) {
 	unsigned int id = 1;
 	read(REG_NODEID_L, (unsigned char *) &id, sizeof(id));
 	return id;
-}	
+}
+
+void rf_set_node_id(unsigned int id) {
+	write(REG_NODEID_L, (unsigned char) id&0xFF);
+	write(REG_NODEID_H, (unsigned char) (id>>8));
+}
 
 void rf_init(int bus) {
 	unsigned int flags;
@@ -128,7 +135,23 @@ void rf_set_link(unsigned int link_status) {
 		status |= RF_LINK_UP;
 		return;
 	}
-}	
+}
+
+/* To test module interface, not planed to give this function to user
+void rf_set_channel(unsigned char channel)
+{
+	if(!(status & RF_PRESENT))
+		return;
+	
+	if(channel<3){//channel can be 0,1,2
+		if (status & RF_LINK_UP)
+			write(REG_CTRL,((channel + 1)<<3)+2);
+		else
+			write(REG_CTRL,(channel + 1)<<3);
+	}
+}
+*/
+
 
 #define I2C_IDLE 			0
 #define I2C_ADDRESS 		1
@@ -343,3 +366,8 @@ void rf_wakeup(void) {
 void rf_poweroff(void) {
 	write(REG_POWEROFF, /* whatever */ 0x0);
 }
+
+void rf_flash_setting(void) {
+	write(REG_FLASH_SETTINGS, /* whatever */ 0x0);
+}
+

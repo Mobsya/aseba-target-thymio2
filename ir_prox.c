@@ -452,5 +452,8 @@ void prox_enable_network(void) {
 
 void prox_disable_network(void) {
 	enable_network = 0;
+	CLEAR_EVENT(EVENT_DATA);
+	vmVariables.rx_data = 0;
+	vmVariables.ir_tx_data = 0;
 }
 

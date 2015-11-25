@@ -29,6 +29,7 @@
 #include "behavior.h"
 #include "tone.h"
 #include "ir_prox.h"
+#include "rf.h"
 
 AsebaNativeFunctionDescription AsebaNativeDescription_set_led = {
 	"_leds.set",
@@ -544,4 +545,19 @@ void thymio_native_sd_seek(AsebaVMState * vm) {
 	unsigned int status = AsebaNativePopArg(vm);
 
 	vm->variables[status] = sd_user_seek(seek * 2);
+}
+
+AsebaNativeFunctionDescription AsebaNativeDescription_rf_nodeid = {
+	"_rf.nodeid",
+	"Set Wireless Node ID",
+	{
+		{1, "nodeID"},
+		{0,0},
+	}
+};
+
+void set_rf_nodeid(AsebaVMState * vm) {
+	unsigned int nodeid = vm->variables[AsebaNativePopArg(vm)];
+	rf_set_node_id(nodeid);
+	rf_flash_setting();
 }

@@ -35,8 +35,9 @@ History:
 7: IR Communication, SD access from VM, others improvments
 8: Motors back EMF calibration, line following black/white level calibration storage in SD, emtpy bytecode detection, minors fixes
 9: Modulo division by zero bug fix, native.c fixes, disconnection improvement, add setting mode
+10: Change wireless nodeID, acc sensitivity, clean VM on load, aseba protocole version 5
 */
-#define FW_VERSION 9
+#define FW_VERSION 10
 
 /* Firmware variant. Each variant of the firmware has it own number */
 
@@ -48,6 +49,7 @@ History:
 #define FW_VARIANT 1
 
 #include <p24Fxxxx.h>
+#include <string.h>
 #include <clock/clock.h>
 #include <timer/timer.h>
 #include <gpio/gpio.h>
@@ -490,3 +492,24 @@ int main(void)
 	run_aseba_main_loop();
 }
 
+
+
+void AsebaVMResetCB(AsebaVMState *vm) {
+	leds_set_circle(0,0,0,0,0,0,0,0);
+	leds_set_body_rgb(0,0,0);
+	leds_set(LED_SOUND,0);
+	leds_set(LED_RC,0);
+	behavior_start(B_LEDS_ACC);
+	behavior_start(B_LEDS_NTC);
+	behavior_start(B_LEDS_MIC);
+	behavior_start(B_LEDS_PROX);
+	behavior_start(B_SOUND_BUTTON);
+	behavior_start(B_LEDS_MIC);
+	behavior_start(B_LEDS_RC5);
+	prox_disable_network();
+	memset(vm->variables, 0, vm->variablesSize*sizeof(sint16));
+	vmVariables.id = vmState.nodeId;
+	vmVariables.productid = PRODUCT_ID;
+	vmVariables.fwversion[0] = FW_VERSION;
+	vmVariables.fwversion[1] = FW_VARIANT;	
+}
