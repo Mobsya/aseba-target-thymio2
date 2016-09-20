@@ -463,7 +463,7 @@ int main(void)
 			idle_without_aseba();
 	}
 	
-	while(behavior_enabled(B_MODE)) 
+	while(behavior_enabled(B_MODE|B_SETTING)) 
 		idle_without_aseba();
 	
 	// If usb did not put us out of behavior mode, then start the rf link
