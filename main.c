@@ -507,6 +507,8 @@ void AsebaVMResetCB(AsebaVMState *vm) {
 	behavior_start(B_LEDS_MIC);
 	behavior_start(B_LEDS_RC5);
 	prox_disable_network();
+	events_flags[0] = 0;
+	events_flags[1] = 0;
 	memset(vm->variables, 0, vm->variablesSize*sizeof(sint16));
 	vmVariables.id = vmState.nodeId;
 	vmVariables.productid = PRODUCT_ID;
