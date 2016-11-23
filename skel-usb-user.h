@@ -143,6 +143,7 @@ struct private_settings {
 	int sound_shift;
         int prox_min[7];
         int mot256[2];
+	int prox_ground_max[2];
 	int settings[80];
 };
 	
