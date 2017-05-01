@@ -488,6 +488,10 @@ int main(void)
 	for(i = 0; i < 3; i++)
 		AsebaGetRandom();
 	
+	//test if SD card is present
+	vmVariables.sd_present = !sd_user_open("_TESTSD");
+	sd_user_open(NULL);
+	
 	// Give full control to aseba. No way out (except reset).
 	run_aseba_main_loop();
 }
@@ -513,5 +517,7 @@ void AsebaVMResetCB(AsebaVMState *vm) {
 	vmVariables.id = vmState.nodeId;
 	vmVariables.productid = PRODUCT_ID;
 	vmVariables.fwversion[0] = FW_VERSION;
-	vmVariables.fwversion[1] = FW_VARIANT;	
+	vmVariables.fwversion[1] = FW_VARIANT;
+	vmVariables.sd_present = !sd_user_open("_TESTSD");
+	sd_user_open(NULL);	
 }

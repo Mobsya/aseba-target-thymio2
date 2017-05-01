@@ -101,6 +101,7 @@ struct _vmVariables {
 	
 	sint16 acc_tap;
 	
+	sint16 sd_present;
 	/*****
 	---> PUT YOUR VARIABLES HERE <---
 	******/
