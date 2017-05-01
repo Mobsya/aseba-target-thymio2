@@ -32,18 +32,16 @@
 #define DEFAULT_CALIB 0x7FFF
 
 static unsigned char prox_calib_max_counter[2];
+static int prox_ground_max[2]; // the calibratoin is not store in settings
 
 static int _calib(int value, int i) {
 	int ret;
 	
-	if (settings.prox_ground_max[i] == DEFAULT_CALIB)//default value sould be low for max
-		settings.prox_ground_max[i]=0;
-	if(value + CALIB_HISTERES > settings.prox_ground_max[i]) {
+	if(value + CALIB_HISTERES > prox_ground_max[i]) {
 		if(++prox_calib_max_counter[i] > 3) {
-			if(value > settings.prox_ground_max[i]) {
-				settings.prox_ground_max[i] = value;
-				set_save_settings();
-			} else
+			if(value > prox_ground_max[i])
+				prox_ground_max[i] = value;
+			else
 				prox_calib_max_counter[i] = 0;
 		}
 	} else
@@ -51,10 +49,10 @@ static int _calib(int value, int i) {
 	// Cast to unsigned so the compiler optimise by a shift
 	// We checked that the value was positive, so it's safe.
 
-	if (settings.prox_ground_max[i] == 0)
+	if (prox_ground_max[i] == 0)
 		ret = value;
 	else
-		ret =(long)value * 1024 / (settings.prox_ground_max[i]);
+		ret =(long)value * 1024 / (prox_ground_max[i]);
 
 	if(ret < 0)
 		ret = 0;
@@ -73,7 +71,7 @@ static int perform_calib(unsigned int raw, int i) {
 			// On the fly recalibration
 			return _calib(value,i);
 	} else {
-			// Calibration disabled
+			// Calibration disabled if settings are negative
 			return value;
 	}
 }

@@ -53,8 +53,8 @@ static unsigned int vm_active;
 static int rc5_speed_l;
 static int rc5_speed_t;
 
-static unsigned int bs_black_level = 260;
-static unsigned int bs_white_level = 400;
+static unsigned int bs_black_level = 400;
+static unsigned int bs_white_level = 450;
 
 
 int body_color_pulse_get(void) {
