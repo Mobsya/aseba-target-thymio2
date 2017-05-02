@@ -92,6 +92,9 @@ void thymio_native_sd_seek(AsebaVMState * vm);
 extern AsebaNativeFunctionDescription AsebaNativeDescription_rf_nodeid;
 void set_rf_nodeid(AsebaVMState * vm);
 
+extern AsebaNativeFunctionDescription AsebaNativeDescription_duration;
+void sound_duration(AsebaVMState *vm);
+
 #define THYMIO_NATIVES_DESCRIPTIONS \
 	&AsebaNativeDescription_set_led, \
 	&AsebaNativeDescription_record, \
@@ -115,7 +118,8 @@ void set_rf_nodeid(AsebaVMState * vm);
         &AsebaNativeDescription_sd_write, \
         &AsebaNativeDescription_sd_read, \
         &AsebaNativeDescription_sd_seek, \
-	&AsebaNativeDescription_rf_nodeid
+	&AsebaNativeDescription_rf_nodeid, \
+	&AsebaNativeDescription_duration
 	
 #define THYMIO_NATIVES_FUNCTIONS \
 	set_led, \
@@ -140,7 +144,8 @@ void set_rf_nodeid(AsebaVMState * vm);
         thymio_native_sd_write, \
         thymio_native_sd_read, \
         thymio_native_sd_seek, \
-	set_rf_nodeid
+	set_rf_nodeid, \
+	sound_duration
 
 
 #endif

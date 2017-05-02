@@ -100,4 +100,23 @@ void wav_finalize_header(FIL * file, unsigned long size) {
 		return;
 		
 	f_write(file, &size, 4, &ret);
-}	
+}
+
+unsigned long wav_header_read_duration(FIL * file) {
+	unsigned int read;
+	//sanity checks about the integrity of the wave file
+	f_read(file, read_buffer, sizeof(read_buffer), &read);
+	if(read != sizeof(read_buffer)) 
+		return 0;
+	
+	if(read_buffer[1] - 36 != read_buffer[10])
+		return 0;
+	
+	if(read_buffer[6] != read_buffer[7])
+		return 0;
+		
+	if(read_buffer[6] < 7800 || read_buffer[6] > 8000)
+		return 0;
+				
+	return read_buffer[10];
+}

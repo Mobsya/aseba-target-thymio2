@@ -79,6 +79,16 @@ AsebaNativeFunctionDescription AsebaNativeDescription_replay = {
 	}
 };
 
+AsebaNativeFunctionDescription AsebaNativeDescription_duration = {
+	"sound.duration",
+	"Give duration in 1/10s of rN.wav",
+	{
+		{1,"N"},
+		{1,"duration"},		
+		{0,0},
+	}
+};
+
 AsebaNativeFunctionDescription AsebaNativeDescription_sound_system = {
 	"sound.system",
 	"Start playback of system sound N",
@@ -153,6 +163,16 @@ void sound_replay(AsebaVMState *vm) {
 		prepare_name(number, &name[1]);
 		play_user_sound(name);
 	}
+}
+
+void sound_duration(AsebaVMState *vm) {
+	char name[13] = {'r'};
+	int number = vm->variables[AsebaNativePopArg(vm)];
+	unsigned int durationIndex = AsebaNativePopArg(vm);
+	
+	prepare_name(number, &name[1]);	
+	vm->variables[durationIndex] = sd_read_duration(name);
+	
 }
 
 void sound_system(AsebaVMState *vm) {
