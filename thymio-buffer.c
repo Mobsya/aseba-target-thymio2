@@ -225,7 +225,12 @@ void AsebaSendBuffer(AsebaVMState *vm, const uint8 *data, uint16 length) {
 	// Sanity check, should never be true
 	if (length < 2)
 		return;
-	
+	// Cannot send big user packet for Thymio.
+	const uint16 MAX_BUFF_SIZE = ((32+2)*2);
+	if ((data[1]<0x80)&&(length > MAX_BUFF_SIZE)){
+		AsebaVMEmitNodeSpecificError(vm, "Argument array size is too large (>32)");
+		return;
+	}
 	do {
 		RAISE_IPL(flags, PRIO_COMMUNICATION);
 		AsebaFifoCheckConnectionMode();
