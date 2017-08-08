@@ -521,10 +521,10 @@ AsebaNativeFunctionDescription AsebaNativeDescription_sd_write = {
 void thymio_native_sd_write(AsebaVMState * vm) {
 	// variable pos
 	unsigned char * data = (unsigned char *) (vm->variables + AsebaNativePopArg(vm));
-	uint16 status = AsebaNativePopArg(vm);
+	uint16_t status = AsebaNativePopArg(vm);
 
 	// variable size
-	uint16 length = AsebaNativePopArg(vm) * 2;
+	uint16_t length = AsebaNativePopArg(vm) * 2;
 
 	vm->variables[status] = sd_user_write(data,length) / 2;
 }
@@ -542,10 +542,10 @@ AsebaNativeFunctionDescription AsebaNativeDescription_sd_read = {
 void thymio_native_sd_read(AsebaVMState * vm) {
 	// variable pos
 	unsigned char * data = (unsigned char *) (vm->variables + AsebaNativePopArg(vm));
-	uint16 status = AsebaNativePopArg(vm);
+	uint16_t status = AsebaNativePopArg(vm);
 
 	// variable size
-	uint16 length = AsebaNativePopArg(vm) * 2;
+	uint16_t length = AsebaNativePopArg(vm) * 2;
 
 	vm->variables[status] = sd_user_read(data,length) / 2;
 }

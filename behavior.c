@@ -301,7 +301,7 @@ static void behavior_leds_rc5(void) {
 	}
 }
 
-sint16 aseba_atan2(sint16 y, sint16 x); // We use a function which should be private to aseba native ...
+int16_t aseba_atan2(int16_t y, int16_t x); // We use a function which should be private to aseba native ...
 
 static void behavior_leds_acc(void) {
 	static int previous_led;

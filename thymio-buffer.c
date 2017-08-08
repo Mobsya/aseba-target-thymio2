@@ -209,7 +209,7 @@ int AsebaUsbBulkRecv(unsigned char *data, unsigned char size) {
 
 /* main() part */
 
-void AsebaSendBuffer(AsebaVMState *vm, const uint8 *data, uint16 length) {
+void AsebaSendBuffer(AsebaVMState *vm, const uint8_t *data, uint16_t length) {
 	int flags;
 	unsigned char mode = connection_mode;
 
@@ -226,7 +226,7 @@ void AsebaSendBuffer(AsebaVMState *vm, const uint8 *data, uint16 length) {
 	if (length < 2)
 		return;
 	// Cannot send big user packet for Thymio.
-	const uint16 MAX_BUFF_SIZE = ((32+2)*2);
+	const uint16_t MAX_BUFF_SIZE = ((32+2)*2);
 	if ((data[1]<0x80)&&(length > MAX_BUFF_SIZE)){
 		AsebaVMEmitNodeSpecificError(vm, "Argument array size is too large (>32)");
 		return;
@@ -262,9 +262,9 @@ void AsebaSendBuffer(AsebaVMState *vm, const uint8 *data, uint16 length) {
 	} while(length);
 }
 
-uint16 AsebaGetBuffer(AsebaVMState *vm, uint8 * data, uint16 maxLength, uint16* source) {
+uint16_t AsebaGetBuffer(AsebaVMState *vm, uint8_t * data, uint16_t maxLength, uint16_t* source) {
 	int flags;
-	uint16 ret = 0;
+	uint16_t ret = 0;
 	size_t u;
 	// Touching the FIFO, mask the interrupt ...
 	RAISE_IPL(flags, PRIO_COMMUNICATION);

@@ -49,64 +49,64 @@
 
 struct _vmVariables {
 	// NodeID
-	sint16 id;
+	int16_t id;
 	// source
-	sint16 source;
+	int16_t source;
 	// args
-	sint16 args[VM_VARIABLES_ARG_SIZE];
+	int16_t args[VM_VARIABLES_ARG_SIZE];
 	// fwversion
-	sint16 fwversion[2];
+	int16_t fwversion[2];
 	// Product ID
-	sint16 productid;
+	int16_t productid;
 
 	
-	sint16 buttons[5];
+	int16_t buttons[5];
 	
-	sint16 buttons_state[5];
+	int16_t buttons_state[5];
 
-	sint16 buttons_mean[5];
-	sint16 buttons_noise[5];
+	int16_t buttons_mean[5];
+	int16_t buttons_noise[5];
 	
-	sint16 prox[7];
-        sint16 sensor_data[7];
-        sint16 intensity[7];
-        sint16 rx_data;
-        sint16 ir_tx_data;
+	int16_t prox[7];
+        int16_t sensor_data[7];
+        int16_t intensity[7];
+        int16_t rx_data;
+        int16_t ir_tx_data;
 
 
-	sint16 ground_ambiant[2];
-	sint16 ground_reflected[2];
-	sint16 ground_delta[2];
+	int16_t ground_ambiant[2];
+	int16_t ground_reflected[2];
+	int16_t ground_delta[2];
 	
-	sint16 target[2];
+	int16_t target[2];
 	
-	sint16 vbat[2];
-	sint16 imot[2];
+	int16_t vbat[2];
+	int16_t imot[2];
 	
-	sint16 uind[2];
-	sint16 pwm[2];
+	int16_t uind[2];
+	int16_t pwm[2];
 	
-	sint16 acc[3];
+	int16_t acc[3];
 	
-	sint16 ntc;
+	int16_t ntc;
 	
-	sint16 rc5_address;
-	sint16 rc5_command;
+	int16_t rc5_address;
+	int16_t rc5_command;
 	
-	sint16 sound_level;
-	sint16 sound_tresh;
-	sint16 sound_mean;
+	int16_t sound_level;
+	int16_t sound_tresh;
+	int16_t sound_mean;
 	
-	sint16 timers[2];
+	int16_t timers[2];
 	
-	sint16 acc_tap;
+	int16_t acc_tap;
 	
-	sint16 sd_present;
+	int16_t sd_present;
 	/*****
 	---> PUT YOUR VARIABLES HERE <---
 	******/
 	
-	sint16 freeSpace[VM_VARIABLES_FREE_SPACE];
+	int16_t freeSpace[VM_VARIABLES_FREE_SPACE];
 };
 
 enum Event

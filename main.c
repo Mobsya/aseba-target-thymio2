@@ -513,7 +513,7 @@ void AsebaVMResetCB(AsebaVMState *vm) {
 	prox_disable_network();
 	events_flags[0] = 0;
 	events_flags[1] = 0;
-	memset(vm->variables, 0, vm->variablesSize*sizeof(sint16));
+	memset(vm->variables, 0, vm->variablesSize*sizeof(int16_t));
 	vmVariables.id = vmState.nodeId;
 	vmVariables.productid = PRODUCT_ID;
 	vmVariables.fwversion[0] = FW_VERSION;
