@@ -36,8 +36,9 @@ History:
 8: Motors back EMF calibration, line following black/white level calibration storage in SD, emtpy bytecode detection, minors fixes
 9: Modulo division by zero bug fix, native.c fixes, disconnection improvement, add setting mode
 10: Change wireless nodeID, acc sensitivity, clean VM on load, aseba protocole version 5
+11: Fix reset, add SD card function, limit user message size, adapt to c99
 */
-#define FW_VERSION 10
+#define FW_VERSION 11
 
 /* Firmware variant. Each variant of the firmware has it own number */
 
