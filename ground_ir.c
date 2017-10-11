@@ -49,7 +49,7 @@ static int _calib(int value, int i) {
 	// Cast to unsigned so the compiler optimise by a shift
 	// We checked that the value was positive, so it's safe.
 
-	if (prox_ground_max[i] == 0)
+	if (prox_ground_max[i] < 500)
 		ret = value;
 	else
 		ret =(long)value * 1024 / (prox_ground_max[i]);
