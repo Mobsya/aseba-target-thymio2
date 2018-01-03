@@ -1,0 +1,3 @@
+[submodule "molole"]
+	path = molole
+	url = https://github.com/epfl-mobots/molole
