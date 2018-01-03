@@ -36,28 +36,28 @@
     This file contains all of functions, macros, definitions, variables,
     datatypes, etc. that are required for usage with the CDC function
     driver. This file should be included in projects that use the CDC
-    \function driver.  This file should also be included into the 
+    \function driver.  This file should also be included into the
     usb_descriptors.c file and any other user file that requires access to the
     CDC interface.
-    
-    
-    
+
+
+
     This file is located in the "\<Install Directory\>\\Microchip\\Include\\USB"
     directory.
 
   Description:
     USB CDC Function Driver File
-    
+
     This file contains all of functions, macros, definitions, variables,
     datatypes, etc. that are required for usage with the CDC function
     driver. This file should be included in projects that use the CDC
-    \function driver.  This file should also be included into the 
+    \function driver.  This file should also be included into the
     usb_descriptors.c file and any other user file that requires access to the
     CDC interface.
-    
+
     This file is located in the "\<Install Directory\>\\Microchip\\Include\\USB"
     directory.
-    
+
     When including this file in a new project, this file can either be
     referenced from the directory in which it was installed or copied
     directly into the user application folder. If the first method is
@@ -67,18 +67,18 @@
     application folder is located in the same folder as the Microchip
     folder (like the current demo folders), then the following include
     paths need to be added to the application's project:
-    
+
     .
-    
+
     ..\\..\\Microchip\\Include
-    
+
     If a different directory structure is used, modify the paths as
     required. An example using absolute paths instead of relative paths
     would be the following:
-    
+
     C:\\Microchip Solutions\\Microchip\\Include
-    
-    C:\\Microchip Solutions\\My Demo Application                       
+
+    C:\\Microchip Solutions\\My Demo Application
 
 ********************************************************************/
 
@@ -86,7 +86,7 @@
  Change History:
   Rev    Description
   ----   -----------
-  2.3    Decricated the mUSBUSARTIsTxTrfReady() macro.  It is 
+  2.3    Decricated the mUSBUSARTIsTxTrfReady() macro.  It is
          replaced by the USBUSARTIsTxTrfReady() function.
 
   2.6    Minor definition changes
@@ -100,7 +100,7 @@
 
 /** I N C L U D E S **********************************************************/
 #include <GenericTypeDefs.h>
-#include <USB/usb.h>
+#include <usb/usb.h>
 #include <usb_config.h>
 
 /** D E F I N I T I O N S ****************************************************/
@@ -167,7 +167,7 @@
 #define DSC_FN_USB_TERMINAL         0x09
 /* more.... see Table 25 in USB CDC Specification 1.1 */
 
-#if defined(USB_CDC_SET_LINE_CODING_HANDLER) 
+#if defined(USB_CDC_SET_LINE_CODING_HANDLER)
     #define LINE_CODING_TARGET &cdc_notice.SetLineCoding._byte[0]
     #define LINE_CODING_PFUNC &USB_CDC_SET_LINE_CODING_HANDLER
 #else
@@ -216,7 +216,7 @@
 /******************************************************************************
     Function:
         void CDCSetBaudRate(DWORD baudRate)
-        
+
     Summary:
         This macro is used set the baud rate reported back to the host during
         a get line coding request. (optional)
@@ -232,57 +232,57 @@
 
         This function is optional for CDC devices that do not actually convert
         the USB traffic to a hardware UART.
-        
+
     PreCondition:
         None
-        
+
     Parameters:
         DWORD baudRate - The desired baudrate
-        
+
     Return Values:
         None
-        
+
     Remarks:
         None
-  
+
  *****************************************************************************/
 #define CDCSetBaudRate(baudRate) {line_coding.dwDTERate.Val=baudRate;}
 
 /******************************************************************************
     Function:
         void CDCSetCharacterFormat(BYTE charFormat)
-        
+
     Summary:
-        This macro is used manually set the character format reported back to 
+        This macro is used manually set the character format reported back to
         the host during a get line coding request. (optional)
 
     Description:
-        This macro is used manually set the character format reported back to 
+        This macro is used manually set the character format reported back to
         the host during a get line coding request.
 
         Typical Usage:
         <code>
             CDCSetCharacterFormat(19200);
         </code>
-        
+
         This function is optional for CDC devices that do not actually convert
         the USB traffic to a hardware UART.
 
     PreCondition:
         None
-        
+
     Parameters:
         BYTE charFormat - number of stop bits.  Available options are:
          * NUM_STOP_BITS_1 - 1 Stop bit
          * NUM_STOP_BITS_1_5 - 1.5 Stop bits
          * NUM_STOP_BITS_2 - 2 Stop bits
-        
+
     Return Values:
         None
-        
+
     Remarks:
         None
-  
+
  *****************************************************************************/
 #define CDCSetCharacterFormat(charFormat) {line_coding.bCharFormat=charFormat;}
 #define NUM_STOP_BITS_1     0   //1 stop bit - used by CDCSetLineCoding() and CDCSetCharacterFormat()
@@ -292,26 +292,26 @@
 /******************************************************************************
     Function:
         void CDCSetParity(BYTE parityType)
-        
+
     Summary:
-        This function is used manually set the parity format reported back to 
+        This function is used manually set the parity format reported back to
         the host during a get line coding request. (optional)
 
     Description:
-        This macro is used manually set the parity format reported back to 
+        This macro is used manually set the parity format reported back to
         the host during a get line coding request.
 
         Typical Usage:
         <code>
             CDCSetParity(PARITY_NONE);
         </code>
-        
+
         This function is optional for CDC devices that do not actually convert
         the USB traffic to a hardware UART.
 
     PreCondition:
         None
-        
+
     Parameters:
         BYTE parityType - Type of parity.  The options are the following:
             * PARITY_NONE
@@ -319,13 +319,13 @@
             * PARITY_EVEN
             * PARITY_MARK
             * PARITY_SPACE
-        
+
     Return Values:
         None
-        
+
     Remarks:
         None
-  
+
  *****************************************************************************/
 #define CDCSetParity(parityType) {line_coding.bParityType=parityType;}
 #define PARITY_NONE     0 //no parity - used by CDCSetLineCoding() and CDCSetParity()
@@ -337,61 +337,61 @@
 /******************************************************************************
     Function:
         void CDCSetDataSize(BYTE dataBits)
-        
+
     Summary:
-        This function is used manually set the number of data bits reported back 
+        This function is used manually set the number of data bits reported back
         to the host during a get line coding request. (optional)
 
     Description:
-        This function is used manually set the number of data bits reported back 
+        This function is used manually set the number of data bits reported back
         to the host during a get line coding request.
 
         Typical Usage:
         <code>
             CDCSetDataSize(8);
         </code>
-        
+
         This function is optional for CDC devices that do not actually convert
         the USB traffic to a hardware UART.
 
     PreCondition:
         None
-        
+
     Parameters:
         BYTE dataBits - number of data bits.  The options are 5, 6, 7, 8, or 16.
-        
+
     Return Values:
         None
-        
+
     Remarks:
         None
-  
+
  *****************************************************************************/
 #define CDCSetDataSize(dataBits) {line_coding.bDataBits=dataBits;}
 
 /******************************************************************************
     Function:
         void CDCSetLineCoding(DWORD baud, BYTE format, BYTE parity, BYTE dataSize)
-        
+
     Summary:
-        This function is used to manually set the data reported back 
+        This function is used to manually set the data reported back
         to the host during a get line coding request. (optional)
 
     Description:
-        This function is used to manually set the data reported back 
+        This function is used to manually set the data reported back
         to the host during a get line coding request.
 
         Typical Usage:
         <code>
             CDCSetLineCoding(19200, NUM_STOP_BITS_1, PARITY_NONE, 8);
         </code>
-        
+
         This function is optional for CDC devices that do not actually convert
         the USB traffic to a hardware UART.
 
     PreCondition:
         None
-        
+
     Parameters:
         DWORD baud - The desired baudrate
         BYTE format - number of stop bits.  Available options are:
@@ -405,13 +405,13 @@
             * PARITY_MARK
             * PARITY_SPACE
         BYTE dataSize - number of data bits.  The options are 5, 6, 7, 8, or 16.
-        
+
     Return Values:
         None
-        
+
     Remarks:
         None
-  
+
  *****************************************************************************/
 #define CDCSetLineCoding(baud,format,parity,dataSize) {\
             CDCSetBaudRate(baud);\

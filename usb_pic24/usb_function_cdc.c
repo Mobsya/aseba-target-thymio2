@@ -31,28 +31,28 @@
     PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
     IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
     CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
-    
+
   Summary:
     This file contains all of functions, macros, definitions, variables,
     datatypes, etc. that are required for usage with the CDC function
     driver. This file should be included in projects that use the CDC
     \function driver.
-    
-    
-    
+
+
+
     This file is located in the "\<Install Directory\>\\Microchip\\USB\\CDC
     Device Driver" directory.
   Description:
     USB CDC Function Driver File
-    
+
     This file contains all of functions, macros, definitions, variables,
     datatypes, etc. that are required for usage with the CDC function
     driver. This file should be included in projects that use the CDC
     \function driver.
-    
+
     This file is located in the "\<Install Directory\>\\Microchip\\USB\\CDC
     Device Driver" directory.
-    
+
     When including this file in a new project, this file can either be
     referenced from the directory in which it was installed or copied
     directly into the user application folder. If the first method is
@@ -62,25 +62,25 @@
     application folder is located in the same folder as the Microchip
     folder (like the current demo folders), then the following include
     paths need to be added to the application's project:
-    
+
     ..\\Include
-    
+
     .
-    
+
     If a different directory structure is used, modify the paths as
     required. An example using absolute paths instead of relative paths
     would be the following:
-    
+
     C:\\Microchip Solutions\\Microchip\\Include
-    
-    C:\\Microchip Solutions\\My Demo Application                                 
+
+    C:\\Microchip Solutions\\My Demo Application
   ********************************************************************************/
 
 /********************************************************************
  Change History:
   Rev    Description
   ----   -----------
-  2.3    Decricated the mUSBUSARTIsTxTrfReady() macro.  It is 
+  2.3    Decricated the mUSBUSARTIsTxTrfReady() macro.  It is
          replaced by the USBUSARTIsTxTrfReady() function.
 
   2.6    Minor definition changes
@@ -88,7 +88,7 @@
   2.6a   No Changes
 
   2.7    Fixed error in the part support list of the variables section
-         where the address of the CDC variables are defined.  The 
+         where the address of the CDC variables are defined.  The
          PIC18F2553 was incorrectly named PIC18F2453 and the PIC18F4558
          was incorrectly named PIC18F4458.
 
@@ -100,7 +100,7 @@
 ********************************************************************/
 
 /** I N C L U D E S **********************************************************/
-#include "USB/usb.h"
+#include "usb/usb.h"
 #include "usb_function_cdc.h"
 #include <transport/microchip_usb/usb-buffer.h>
 
@@ -128,23 +128,23 @@ CTRL_TRF_RETURN USB_SECTION USB_CDC_SET_LINE_CODING_HANDLER(CTRL_TRF_PARAMS);
 /******************************************************************************
  	Function:
  		void USBCheckCDCRequest(void)
- 
+
  	Description:
  		This routine checks the setup data packet to see if it
  		knows how to handle it
- 		
+
  	PreCondition:
  		None
 
 	Parameters:
 		None
-		
+
 	Return Values:
 		None
-		
+
 	Remarks:
 		None
-		 
+
   *****************************************************************************/
 void USBCheckCDCRequest(void)
 {
@@ -164,7 +164,7 @@ void USBCheckCDCRequest(void)
      */
     if((SetupPkt.bIntfID != CDC_COMM_INTF_ID)&&
        (SetupPkt.bIntfID != CDC_DATA_INTF_ID)) return;
-    
+
     switch(SetupPkt.bRequest)
     {
         //****** These commands are required ******//
@@ -189,7 +189,7 @@ void USBCheckCDCRequest(void)
             outPipes[0].pFunc = LINE_CODING_PFUNC;
             outPipes[0].info.bits.busy = 1;
             break;
-            
+
         case GET_LINE_CODING:
             USBEP0SendRAMPtr(
                 (BYTE*)&line_coding,
@@ -239,28 +239,28 @@ void handle_rx_urb(USB_HANDLE urb) {
 	   if yes: Rearm the URB
 	   if not: Do not rearm the URB let it as is. wait until aseba consume the previous one
 	*/
-	if(urb == NULL) 
+	if(urb == NULL)
 		urb = CDCDataOutHandle;
-	
+
 	len = USBHandleGetLength(urb);
-	
-	
+
+
 	if(len > 0 && AsebaUsbBulkRecv(cdc_data_rx, len)) {
 		rx_blocked = 1;
 		// Don't rearm, wait until Aseba call USBCDCKickRx()
 		return;
 	}
-	
+
 	// Mark the packet as processed.
 	((volatile BDT_ENTRY*)urb)->CNT = 0;
-	
+
 	// Rearm
 	CDCDataOutHandle = USBRxOnePacket(CDC_DATA_EP,(BYTE*)cdc_data_rx,sizeof(cdc_data_rx));
 }
 
 void handle_tx_urb(void) {
 	unsigned char size = AsebaTxReady(cdc_data_tx);
-	
+
 	if(size) {
 		CDCDataInHandle = USBTxOnePacket(CDC_DATA_EP,(BYTE *)cdc_data_tx,size);
 	} else {
@@ -286,14 +286,14 @@ int USBTXBusy(void) {
 void USBCDCKickTx(void) {
 	if(USBHandleBusy(CDCDataInHandle))
 		return;
-		
+
 	handle_tx_urb();
-}	
+}
 
 void USBCDCKickRx(void) {
 	if(!rx_blocked)
 		return;
-	
+
 	if(USBHandleBusy(CDCDataOutHandle))
 		return;
 
@@ -312,7 +312,7 @@ void usbInterrupt(void) {
 /**************************************************************************
   Function:
         void CDCInitEP(void)
-    
+
   Summary:
     This function initializes the CDC function driver. This function should
     be called after the SET_CONFIGURATION command.
@@ -321,11 +321,11 @@ void usbInterrupt(void) {
     the default line coding (baud rate, bit parity, number of data bits,
     and format). This function also enables the endpoints and prepares for
     the first transfer from the host.
-    
+
     This function should be called after the SET_CONFIGURATION command.
     This is most simply done by calling this function from the
     USBCBInitEP() function.
-    
+
     Typical Usage:
     <code>
         void USBCBInitEP(void)
@@ -336,7 +336,7 @@ void usbInterrupt(void) {
   Conditions:
     None
   Remarks:
-    None                                                                   
+    None
   **************************************************************************/
 void CDCInitEP(void)
 {
@@ -362,7 +362,7 @@ void CDCInitEP(void)
 
     CDCDataOutHandle = USBRxOnePacket(CDC_DATA_EP,(BYTE*)&cdc_data_rx,sizeof(cdc_data_rx));
     CDCDataInHandle = NULL;
-    
+
 }//end CDCInitEP
 
 
