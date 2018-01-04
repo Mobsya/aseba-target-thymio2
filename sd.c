@@ -190,6 +190,27 @@ void sd_stop_record(void) {
 	IRQ_ENABLE(flags);
 }
 
+int sd_read_duration(const char * file)
+{
+	unsigned int flags;
+	unsigned long duration;
+	RAISE_IPL(flags, SD_PRIO);
+	// Make sure the file is closed
+	f_close(&read_file);
+	if(f_open(&read_file, file, FA_READ) == FR_OK){
+		duration = wav_header_read_duration(&read_file);
+		duration = duration * 5 / 3906; // change in 10th of sec 7812byte/s
+		if ( duration > 32767)
+			duration = 32767;
+	}
+	else 
+		duration = 0;
+	f_close(&read_file);
+	IRQ_ENABLE(flags);
+	
+	return (int) duration;
+}
+
 void sd_log_file(void) {
 	unsigned int flags;
 	

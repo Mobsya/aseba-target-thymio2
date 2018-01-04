@@ -36,8 +36,9 @@ History:
 8: Motors back EMF calibration, line following black/white level calibration storage in SD, emtpy bytecode detection, minors fixes
 9: Modulo division by zero bug fix, native.c fixes, disconnection improvement, add setting mode
 10: Change wireless nodeID, acc sensitivity, clean VM on load, aseba protocole version 5
+11: Fix reset, add SD card function, limit user message size, adapt to c99
 */
-#define FW_VERSION 10
+#define FW_VERSION 11
 
 /* Firmware variant. Each variant of the firmware has it own number */
 
@@ -463,7 +464,7 @@ int main(void)
 			idle_without_aseba();
 	}
 	
-	while(behavior_enabled(B_MODE)) 
+	while(behavior_enabled(B_MODE|B_SETTING)) 
 		idle_without_aseba();
 	
 	// If usb did not put us out of behavior mode, then start the rf link
@@ -488,6 +489,10 @@ int main(void)
 	for(i = 0; i < 3; i++)
 		AsebaGetRandom();
 	
+	//test if SD card is present
+	vmVariables.sd_present = !sd_user_open("_TESTSD");
+	sd_user_open(NULL);
+	
 	// Give full control to aseba. No way out (except reset).
 	run_aseba_main_loop();
 }
@@ -507,9 +512,13 @@ void AsebaVMResetCB(AsebaVMState *vm) {
 	behavior_start(B_LEDS_MIC);
 	behavior_start(B_LEDS_RC5);
 	prox_disable_network();
-	memset(vm->variables, 0, vm->variablesSize*sizeof(sint16));
+	events_flags[0] = 0;
+	events_flags[1] = 0;
+	memset(vm->variables, 0, vm->variablesSize*sizeof(int16_t));
 	vmVariables.id = vmState.nodeId;
 	vmVariables.productid = PRODUCT_ID;
 	vmVariables.fwversion[0] = FW_VERSION;
-	vmVariables.fwversion[1] = FW_VARIANT;	
+	vmVariables.fwversion[1] = FW_VARIANT;
+	vmVariables.sd_present = !sd_user_open("_TESTSD");
+	sd_user_open(NULL);	
 }

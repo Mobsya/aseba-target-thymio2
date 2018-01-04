@@ -135,7 +135,7 @@ static int mem_valid(void) {
 		return 1;
 }
 
-#define A(c_name) (offsetof(struct _vmVariables, c_name)/sizeof(sint16))
+#define A(c_name) (offsetof(struct _vmVariables, c_name)/sizeof(int16_t))
 
 static void check_store(unsigned int i) {
 	switch(i) {

@@ -79,6 +79,16 @@ AsebaNativeFunctionDescription AsebaNativeDescription_replay = {
 	}
 };
 
+AsebaNativeFunctionDescription AsebaNativeDescription_duration = {
+	"sound.duration",
+	"Give duration in 1/10s of rN.wav",
+	{
+		{1,"N"},
+		{1,"duration"},		
+		{0,0},
+	}
+};
+
 AsebaNativeFunctionDescription AsebaNativeDescription_sound_system = {
 	"sound.system",
 	"Start playback of system sound N",
@@ -153,6 +163,16 @@ void sound_replay(AsebaVMState *vm) {
 		prepare_name(number, &name[1]);
 		play_user_sound(name);
 	}
+}
+
+void sound_duration(AsebaVMState *vm) {
+	char name[13] = {'r'};
+	int number = vm->variables[AsebaNativePopArg(vm)];
+	unsigned int durationIndex = AsebaNativePopArg(vm);
+	
+	prepare_name(number, &name[1]);	
+	vm->variables[durationIndex] = sd_read_duration(name);
+	
 }
 
 void sound_system(AsebaVMState *vm) {
@@ -501,10 +521,10 @@ AsebaNativeFunctionDescription AsebaNativeDescription_sd_write = {
 void thymio_native_sd_write(AsebaVMState * vm) {
 	// variable pos
 	unsigned char * data = (unsigned char *) (vm->variables + AsebaNativePopArg(vm));
-	uint16 status = AsebaNativePopArg(vm);
+	uint16_t status = AsebaNativePopArg(vm);
 
 	// variable size
-	uint16 length = AsebaNativePopArg(vm) * 2;
+	uint16_t length = AsebaNativePopArg(vm) * 2;
 
 	vm->variables[status] = sd_user_write(data,length) / 2;
 }
@@ -522,10 +542,10 @@ AsebaNativeFunctionDescription AsebaNativeDescription_sd_read = {
 void thymio_native_sd_read(AsebaVMState * vm) {
 	// variable pos
 	unsigned char * data = (unsigned char *) (vm->variables + AsebaNativePopArg(vm));
-	uint16 status = AsebaNativePopArg(vm);
+	uint16_t status = AsebaNativePopArg(vm);
 
 	// variable size
-	uint16 length = AsebaNativePopArg(vm) * 2;
+	uint16_t length = AsebaNativePopArg(vm) * 2;
 
 	vm->variables[status] = sd_user_read(data,length) / 2;
 }

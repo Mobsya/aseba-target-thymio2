@@ -95,8 +95,8 @@ static AsebaNativeFunctionDescription AsebaNativeDescription__system_settings_re
 };
 
 static void AsebaNative__system_settings_read(AsebaVMState *vm) {
-	uint16 address = vm->variables[AsebaNativePopArg(vm)];
-	uint16 destidx = AsebaNativePopArg(vm);
+	uint16_t address = vm->variables[AsebaNativePopArg(vm)];
+	uint16_t destidx = AsebaNativePopArg(vm);
 	
 	if(address > sizeof(settings)/2 - 1) {
 		AsebaVMEmitNodeSpecificError(vm, "Address out of settings");
@@ -118,8 +118,8 @@ static AsebaNativeFunctionDescription AsebaNativeDescription__system_settings_wr
 };
 
 static void AsebaNative__system_settings_write(AsebaVMState *vm) {
-	uint16 address = vm->variables[AsebaNativePopArg(vm)];
-	uint16 sourceidx = AsebaNativePopArg(vm);
+	uint16_t address = vm->variables[AsebaNativePopArg(vm)];
+	uint16_t sourceidx = AsebaNativePopArg(vm);
 	if(address > sizeof(settings)/2 - 1) {
 		AsebaVMEmitNodeSpecificError(vm, "Address out of settings");
 		return;
@@ -160,15 +160,15 @@ static __attribute((far)) unsigned char sendQueue[SEND_QUEUE_SIZE];
 static __attribute((far)) unsigned char recvQueue[RECV_QUEUE_SIZE];
 
 struct __attribute((far)) _vmVariables vmVariables;
-static __attribute((far)) uint16 vmBytecode[VM_BYTECODE_SIZE];
-static __attribute((far)) sint16 vmStack[VM_STACK_SIZE];
+static __attribute((far)) uint16_t vmBytecode[VM_BYTECODE_SIZE];
+static __attribute((far)) int16_t vmStack[VM_STACK_SIZE];
 
 AsebaVMState vmState = {
 	0,
 	VM_BYTECODE_SIZE,
 	vmBytecode,
-	sizeof(vmVariables) / sizeof(sint16),
-	(sint16*) &vmVariables,
+	sizeof(vmVariables) / sizeof(int16_t),
+	(int16_t*) &vmVariables,
 	
 	VM_STACK_SIZE,
 	vmStack,
@@ -179,7 +179,7 @@ void AsebaIdle(void) {
 	// Should never be called
 }
 
-void AsebaNativeFunction(AsebaVMState * vm, uint16 id)
+void AsebaNativeFunction(AsebaVMState * vm, uint16_t id)
 {
 	nativeFunctions[id](vm);
 }

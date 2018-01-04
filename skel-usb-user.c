@@ -77,6 +77,8 @@ const AsebaVMDescription vmDescription = {
 		{2, "timer.period"},
 		
 		{1, "acc._tap"},
+				
+		{1, "sd.present"},		
 		/******
 		 ---> PUT YOUR VARIABLES DESCRIPTIONS HERE <---
 		first value is the number of element in the array (1 if not an array)
