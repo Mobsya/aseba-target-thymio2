@@ -85,7 +85,7 @@ set_property(SOURCE leds_low.s PROPERTY LANGUAGE C)
 
 add_definitions(-DASEBA_LIMITED_MESSAGE_SIZE -DASEBA_ASSERT)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mcpu=${MICROCHIP_MCU_MODEL} -Os -mlarge-code -fomit-frame-pointer -fno-strict-aliasing")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Os -mlarge-code -fomit-frame-pointer -fno-strict-aliasing -mcpu=${MICROCHIP_MCU_MODEL}")
 
 #Fix a bug when building on linux, is that still needed ?
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-peephole2")
@@ -106,7 +106,6 @@ set(CMAKE_LINKER "${MICROCHIP_XC16_PATH}/bin/xc16-ld")
 
 
 string(APPEND CMAKE_C_LINK_FLAGS
-    " -mcpu=${MICROCHIP_MCU_MODEL}"
     " -Wl,--script,p${MICROCHIP_MCU_MODEL}.gld"
 )
 
