@@ -2,11 +2,11 @@
 # David Sherman 2018-01-08
 #
 # Build using
-#     docker build docker -t aseba/mplabx .
+#     docker build -t aseba/mplabx .
 # For an interactive shell, run using
-#     docker run -it -w /var/jenkins_home --entrypoint /bin/bash aseba/mplabx
+#     docker run -it -w /var/jenkins_home aseba/mplabx /bin/bash --login
 
-FROM jenkins
+FROM jenkins:latest
 
 USER root
 
@@ -44,6 +44,9 @@ RUN curl -fSL -A 'Mozilla/5.0' -o /tmp/plib16-install.run \
 
 # Add MPLABX to default PATH
 RUN echo 'export PATH=/opt/microchip/xc16/bin:${PATH}' >> /etc/profile.d/mplabx.sh
+# Add a version self link to help cmake-microchip find us
+RUN XYZZY=$(find /opt/microchip/xc16 -name Uninstall-xc16-v\* -executable -print) && \
+    ln -s . /opt/microchip/xc16/${XYZZY#*/Uninstall-xc16-}
 
 # Switch to user 'jenkins'
 USER jenkins
