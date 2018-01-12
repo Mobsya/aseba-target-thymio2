@@ -50,7 +50,7 @@ pipeline {
 			steps {
 				unstash 'build'
 				dir('build') {
-					archiveArtifacts 'aseba-target-thymio2'
+					archiveArtifacts 'aseba-target-thymio2*'
 				}
 			}
 		}
