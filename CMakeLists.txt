@@ -20,7 +20,7 @@ endif()
 
 message("ASEBA_DIR : ${ASEBA_DIR}")
 
-add_executable(aseba-target-thymio2
+add_executable(aseba-target-thymio2.cof
     abo.c
     analog.c
     behavior.c
@@ -85,7 +85,7 @@ set_property(SOURCE leds_low.s PROPERTY LANGUAGE C)
 
 add_definitions(-DASEBA_LIMITED_MESSAGE_SIZE -DASEBA_ASSERT)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Os -mlarge-code -fomit-frame-pointer -fno-strict-aliasing -mcpu=${MICROCHIP_MCU_MODEL}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Os -mlarge-code -fomit-frame-pointer -fno-strict-aliasing -mcpu=${MICROCHIP_MCU_MODEL}  -omf=coff")
 
 #Fix a bug when building on linux, is that still needed ?
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-peephole2")
@@ -95,7 +95,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-peephole2")
 #set_target_properties(aseba-target-thymio2 PROPERTIES LINK_DEPENDS ${LINKER_SCRIPT} )
 
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mlarge-code --stack=16 --check-sections --data-init --pack-data --isr --no-gc-section")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --fill-upper=0 --stackguard=16 --no-force-link --smart-io --report-mem")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --fill-upper=0 --stackguard=16 --no-force-link --smart-io --report-mem -omf=coff")
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/molole" "${CMAKE_CURRENT_SOURCE_DIR}/usb_pic24" "${CMAKE_CURRENT_SOURCE_DIR}" "${ASEBA_DIR}/vm/" "${ASEBA_DIR}")
 
@@ -109,3 +109,4 @@ string(APPEND CMAKE_C_LINK_FLAGS
     " -Wl,--script,p${MICROCHIP_MCU_MODEL}.gld"
 )
 
+add_custom_command(TARGET aseba-target-thymio2.cof POST_BUILD COMMAND ${MICROCHIP_XC16_PATH}/bin/xc16-bin2hex -omf=coff $<TARGET_FILE:aseba-target-thymio2.cof>)
