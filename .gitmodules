@@ -1,0 +1,6 @@
+[submodule "molole"]
+	path = molole
+	url = https://github.com/epfl-mobots/molole
+[submodule "cmake-microchip"]
+	path = cmake-microchip
+	url = https://github.com/aseba-community/cmake-microchip
