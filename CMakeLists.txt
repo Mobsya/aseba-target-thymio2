@@ -108,3 +108,18 @@ string(APPEND CMAKE_C_LINK_FLAGS
 )
 
 add_custom_command(TARGET aseba-target-thymio2.cof POST_BUILD COMMAND ${MICROCHIP_XC16_PATH}/bin/xc16-bin2hex -omf=coff $<TARGET_FILE:aseba-target-thymio2.cof>)
+
+
+# Testing of compilation results
+enable_testing()
+
+# Tests: Sanity checks
+add_test(NAME sanity-architecture
+	COMMAND bash -c "${MICROCHIP_XC16_PATH}/bin/bin/coff-objdump \
+		-x $<TARGET_FILE:aseba-target-thymio2.cof> | \
+		grep -q '^architecture: 24FJ128GB106'")
+
+add_test(NAME sanity-symboltable
+	COMMAND bash -c "${MICROCHIP_XC16_PATH}/bin/bin/coff-nm \
+		$<TARGET_FILE:aseba-target-thymio2.cof> | \
+		grep -q -w _AsebaVMRun")
