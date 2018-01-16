@@ -5,9 +5,7 @@
 To compile the firmware from git, you need the following source code:
 
 - [Aseba](http://github.com/aseba-community/aseba), branch master
-- [Molole](https://github.com/epfl-mobots/molole), branch master
-- [aseba-target-thymio2](https://github.com/aseba-community/aseba-target-thymio2) , branch master
-- The USB stack, it is in the **usb_pic24** folder from [this archive](https://aseba.wdfiles.com/local--files/thymiosourcecode/thymio-II-source-fw3.zip).
+- [aseba-target-thymio2](https://github.com/aseba-community/aseba-target-thymio2) , branch master and its submodules
 
 ## Tools 
 
@@ -16,7 +14,15 @@ You need the MPLAB X environment and C compiler:
 - Compiler: [MPLAB XC16](https://www.microchip.com/pagehandler/en_us/devtools/mplabxc/)
 - Legacy Peripheral Libraries:[PIC24/dsPIC® DSCs](https://www.microchip.com/pagehandler/en_us/devtools/mplabxc/)
 
-## Creating a project and compilation
+## Compilation
+
+You can compile using two methods, one using CMake (only compiling) or used the Microchip MPLAB X tool
+
+### CMake
+
+Follow [compilation instructions](cmake.md)
+
+### Use MPLAB X
 
 First, you need to start MPLAB X and create a new project: 
 
