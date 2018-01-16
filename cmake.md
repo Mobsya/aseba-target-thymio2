@@ -21,4 +21,6 @@ The mast 2 steps then become
 * invoke cmake: `cmake -D<path/to/aseba>  -GNinja ..`
 * build: `ninja`
 
+## Upload
+To upload the .hex to the robot, use the [Thymio firmware upgrader](https://www.thymio.org/en:thymioupdate) and not a program such as icd3 or pickit3.
 
