@@ -148,9 +148,9 @@ void leds_init(void) {
 	SPI1CON1bits.DISSDO = 0;
 	SPI1CON1bits.MODE16 = 0;
 	SPI1CON1bits.SMP = 0;
-	SPI1CON1bits.CKE = 0;
+	SPI1CON1bits.CKE = 1; //change data on falling edge
 	SPI1CON1bits.SSEN = 0;
-	SPI1CON1bits.CKP = 0;
+	SPI1CON1bits.CKP = 0; //active state high 
 	SPI1CON1bits.MSTEN = 1;
 	SPI1CON1bits.SPRE = 0b110; // Secondary 2:1. Spi clock 8Mhz
 	SPI1CON1bits.PPRE = 0x3; // Primary 1:1
