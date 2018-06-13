@@ -37,8 +37,9 @@ History:
 9: Modulo division by zero bug fix, native.c fixes, disconnection improvement, add setting mode
 10: Change wireless nodeID, acc sensitivity, clean VM on load, aseba protocole version 5
 11: Fix reset, add SD card function, limit user message size, adapt to c99
+12: SPI fix, update VM description
 */
-#define FW_VERSION 11
+#define FW_VERSION 12
 
 /* Firmware variant. Each variant of the firmware has it own number */
 
