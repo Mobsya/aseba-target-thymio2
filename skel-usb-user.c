@@ -32,6 +32,7 @@ const AsebaVMDescription vmDescription = {
 		{VM_VARIABLES_ARG_SIZE, "event.args"}, // neither this one
 		{2, "_fwversion"}, // Do not event think about changing this one ...
 		{1, "_productId"}, // Robot type
+		{16, "_deviceName"}, //Name of the robot
 		
 		{5, "buttons._raw"},
 		{1, "button.backward"},

@@ -98,7 +98,7 @@ static void AsebaNative__system_settings_read(AsebaVMState *vm) {
 	uint16_t address = vm->variables[AsebaNativePopArg(vm)];
 	uint16_t destidx = AsebaNativePopArg(vm);
 	
-	if(address > sizeof(settings)/2 - 1) {
+	if(address > sizeof(settings)/2 - 1 - sizeof(settings.device_name)/2) {
 		AsebaVMEmitNodeSpecificError(vm, "Address out of settings");
 		return;
 	}
@@ -120,7 +120,7 @@ static AsebaNativeFunctionDescription AsebaNativeDescription__system_settings_wr
 static void AsebaNative__system_settings_write(AsebaVMState *vm) {
 	uint16_t address = vm->variables[AsebaNativePopArg(vm)];
 	uint16_t sourceidx = AsebaNativePopArg(vm);
-	if(address > sizeof(settings)/2 - 1) {
+	if(address > sizeof(settings)/2 - 1 - sizeof(settings.device_name)/2) {
 		AsebaVMEmitNodeSpecificError(vm, "Address out of settings");
 		return;
 	}
@@ -222,6 +222,7 @@ unsigned char  aseba_flash[PAGE_PER_CHUNK*3][INSTRUCTIONS_PER_PAGE * 2] __attrib
 unsigned char aseba_settings_flash[INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), noload, section(".aseba_settings"), address(FLASH_END - 0x1000 - 0x400)));
 #warning "the settings page is NOT initialised"
 
+
 void AsebaWriteBytecode(AsebaVMState *vm) {
 	// Look for the lowest number of use
 	unsigned long min = 0xFFFFFFFF;
@@ -294,6 +295,15 @@ void AsebaWriteBytecode(AsebaVMState *vm) {
 
 }
 
+void AsebaSetDeviceName(AsebaVMState*, uint8_t* name, uint8_t len) {
+	memcpy(vmVariables.device_name, name, len);
+	memset(vmVariables.device_name+len,  0, sizeof(vmVariables.device_name) - len);
+	
+	memcpy(settings.device_name, name, len);
+	memset(settings.device_name+len,  0, sizeof(settings.device_name) - len);
+	
+}
+
 const static unsigned int _magic_[8] = {0xDE, 0xAD, 0xCA, 0xFE, 0xBE, 0xEF, 0x04, 0x02};
 void AsebaNative__system_settings_flash(AsebaVMState *vm) {
 	// Look for the last "Magic" we know, this is the most up to date conf
@@ -357,7 +367,7 @@ static int load_code_from_flash(AsebaVMState *vm) {
 
 int load_settings_from_flash(void) {
 	// Max size 95 int, min 1 int
-	COMPILATION_ASSERT(sizeof(settings) < ((INSTRUCTIONS_PER_ROW*3) - 2));
+	COMPILATION_ASSERT(sizeof(settings) < ((INSTRUCTIONS_PER_ROW*6) - 2));
 	COMPILATION_ASSERT(sizeof(settings) > 1);
 
 	// The the last "known" magic found
@@ -382,6 +392,7 @@ int load_settings_from_flash(void) {
 	
 	return 0;
 }
+
 // END of bytecode into flash section
 
 

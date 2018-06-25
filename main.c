@@ -436,6 +436,8 @@ int main(void)
 	vmVariables.fwversion[0] = FW_VERSION;
 	vmVariables.fwversion[1] = FW_VARIANT;
 	
+	memcpy(vmVariables.device_name, settings.device_name, sizeof (settings.device_name));
+	
 	// SD file is more important than internal flash
 	if(!sd_load_aseba_code()) {
 		log_set_flag(LOG_FLAG_VMCODESD);
@@ -521,5 +523,7 @@ void AsebaVMResetCB(AsebaVMState *vm) {
 	vmVariables.fwversion[0] = FW_VERSION;
 	vmVariables.fwversion[1] = FW_VARIANT;
 	vmVariables.sd_present = !sd_user_open("_TESTSD");
-	sd_user_open(NULL);	
+	
+  sd_user_open(NULL);
+  memcpy(vmVariables.device_name, settings.device_name, sizeof (settings.device_name));
 }

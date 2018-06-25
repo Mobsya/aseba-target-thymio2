@@ -59,6 +59,7 @@ struct _vmVariables {
 	// Product ID
 	int16_t productid;
 
+	char device_name[32];
 	
 	int16_t buttons[5];
 	
@@ -146,6 +147,5 @@ struct private_settings {
         int mot256[2];
 	int prox_ground_max[2];
 	int settings[80];
+	char device_name[32];
 };
-	
-
