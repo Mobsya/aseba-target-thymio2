@@ -43,4 +43,6 @@ int wav_create_header(FIL * file);
 // Write the wav header. Size is the payload size (== number of sample)
 void wav_finalize_header(FIL * file, unsigned long size);
 
+// Read the duration if wav file is in correct format
+unsigned long wav_header_read_duration(FIL * file);
 #endif

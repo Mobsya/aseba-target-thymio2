@@ -28,6 +28,53 @@
 #define PULSE_L _LATD6
 #define PULSE_R _LATE4
 
+#define CALIB_HISTERES 20
+#define DEFAULT_CALIB 0x7FFF
+
+static unsigned char prox_calib_max_counter[2];
+static int prox_ground_max[2]; // the calibratoin is not store in settings
+
+static int _calib(int value, int i) {
+	int ret;
+	
+	if(value + CALIB_HISTERES > prox_ground_max[i]) {
+		if(++prox_calib_max_counter[i] > 3) {
+			if(value > prox_ground_max[i])
+				prox_ground_max[i] = value;
+			else
+				prox_calib_max_counter[i] = 0;
+		}
+	} else
+		prox_calib_max_counter[i] = 0;
+	// Cast to unsigned so the compiler optimise by a shift
+	// We checked that the value was positive, so it's safe.
+
+	if (prox_ground_max[i] < 500)
+		ret = value;
+	else
+		ret =(long)value * 1024 / (prox_ground_max[i]);
+
+	if(ret < 0)
+		ret = 0;
+
+	return ret;
+}
+
+static int perform_calib(unsigned int raw, int i) {
+	int value;
+	if(raw > 32767)
+		return 0; // Sanity check
+	
+	value = raw;
+
+	if(settings.prox_ground_max[i] >= 0) {
+			// On the fly recalibration
+			return _calib(value,i);
+	} else {
+			// Calibration disabled if settings are negative
+			return value;
+	}
+}
 
 void ground_ir_new(unsigned int r, unsigned int l, unsigned int time) {
 	switch(time) {
@@ -39,13 +86,13 @@ void ground_ir_new(unsigned int r, unsigned int l, unsigned int time) {
 			break;
 		case 53:
 			vmVariables.ground_reflected[0] = r;
-			vmVariables.ground_delta[0] = r - vmVariables.ground_ambiant[0];
+			vmVariables.ground_delta[0] = perform_calib(r - vmVariables.ground_ambiant[0],0);
 			PULSE_R = 0;
 			PULSE_L = 1;
 			break;
 		case 56: 
 			vmVariables.ground_reflected[1] = l;
-			vmVariables.ground_delta[1] = l - vmVariables.ground_ambiant[1];
+			vmVariables.ground_delta[1] = perform_calib(l - vmVariables.ground_ambiant[1],1);
 			PULSE_L = 0;
 
 			SET_EVENT(EVENT_PROX);

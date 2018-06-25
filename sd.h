@@ -29,6 +29,7 @@
 	
 	void sd_start_record(const char * file);
 	void sd_stop_record(void);
+	unsigned long sd_read_duration(const char *file);
 	
 	int sd_test_file_present(void);
 	int sd_load_aseba_code(void);
