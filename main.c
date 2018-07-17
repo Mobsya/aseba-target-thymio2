@@ -380,6 +380,9 @@ int main(void)
 	// We need the settings for the horizontal prox.
 	load_settings_from_flash();
 
+    //Load the name/uuid of the device from flash
+    load_thymio_device_info_from_flash();
+
 
 	for (i = 0; i < 2; i++) {
 		// Settings is definitely wrong....

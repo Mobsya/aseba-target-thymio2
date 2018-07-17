@@ -86,7 +86,7 @@ set_property(SOURCE entry.s PROPERTY LANGUAGE C)
 set_property(SOURCE leds_low.s PROPERTY LANGUAGE C)
 
 
-add_definitions(-DASEBA_LIMITED_MESSAGE_SIZE -DASEBA_ASSERT)
+add_definitions(-DASEBA_LIMITED_MESSAGE_SIZE -DASEBA_ASSERT -DTHYMIO_FIRMWARE_BUILD)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Os -mlarge-code -fomit-frame-pointer -fno-strict-aliasing -mcpu=${MICROCHIP_MCU_MODEL}  -omf=coff -mafrlcsj")
 

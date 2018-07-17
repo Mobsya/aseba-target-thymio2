@@ -147,6 +147,7 @@ void AsebaPutVmToSleep(AsebaVMState *vm) {
 unsigned int events_flags[2];
 
 struct private_settings __attribute__((aligned(2))) settings;
+struct thymio_device_info __attribute__((aligned(1))) thymio_info;
 
 // Nice hack to do a compilation assert with
 #define COMPILATION_ASSERT(e) do { enum { assert_static__ = 1/(e) };} while(0)
@@ -370,6 +371,25 @@ int load_settings_from_flash(void) {
 // END of bytecode into flash section
 
 
+/* Thymio Device info */
+int load_thymio_device_info_from_flash() {
+    //Make sure the memory is 0-out in case it does not exist
+    memset(&thymio_info, 0, sizeof(thymio_info));
+
+    // Max size 95 int, min 1 int
+    COMPILATION_ASSERT(sizeof(thymio_info) < ((INSTRUCTIONS_PER_ROW*3) - 2));
+    COMPILATION_ASSERT(sizeof(thymio_info) > 1);
+    return load_page_from_flash(__builtin_tbladdress(thymio_settings_flash), &thymio_info, sizeof(thymio_info));
+}
+
+int save_thymio_device_info_to_flash() {
+    // Max size 95 int, min 1 int
+    COMPILATION_ASSERT(sizeof(thymio_info) < ((INSTRUCTIONS_PER_ROW*3) - 2));
+    COMPILATION_ASSERT(sizeof(thymio_info) > 1);
+    return write_page_to_flash(__builtin_tbladdress(thymio_settings_flash), &thymio_info, sizeof(thymio_info));
+}
+
+
 #ifdef ASEBA_ASSERT
 void AsebaAssert(AsebaVMState *vm, AsebaAssertReason reason) {
         AsebaVMEmitNodeSpecificError(vm, "VM ASSERT !");
@@ -493,4 +513,69 @@ void save_settings(void) {
 
 void set_save_settings(void) {
 	update_calib=1;
+}
+//Called from the vm, escape hatch to handle messages specific to thymio.
+//Returns true if a message was handled
+int AsebaHandleThymioSpecificMessage(AsebaVMState* vm, uint16_t id, uint16_t* data, uint16_t dataLength) {
+    if(id == ASEBA_MESSAGE_THYMIO_GET_THYMIO_DEVICE_INFO || id == ASEBA_MESSAGE_THYMIO_SET_THYMIO_DEVICE_INFO) {
+        uint8_t* bytes = (uint8_t*)data;
+        uint16_t size  = dataLength * 2;
+        if(size < 1) // We need at least an info type
+            return;
+        uint8_t type = bytes[0];
+        if(type > THYMIO_DEVICE_INFO_ENUM_COUNT) // Send an error ?
+            return;
+
+        if (id == ASEBA_MESSAGE_THYMIO_GET_THYMIO_DEVICE_INFO) {
+            uint8_t size = 0;
+            const uint8_t* buffer = NULL;
+            switch(type) {
+                case THYMIO_DEVICE_INFO_UUID:
+                    buffer = thymio_info.uuid;
+                    size   = sizeof(thymio_info.uuid);
+                    break;
+                case THYMIO_DEVICE_INFO_NAME:
+                     buffer = thymio_info.friendly_name + 1;
+                     size   = *thymio_info.friendly_name;
+                     if(size > sizeof(thymio_info.friendly_name) -1)
+                         size = 0;
+                     break;
+            }
+            if(size > 0 && size < (ASEBA_MAX_PACKET_SIZE + 6)) { // Send an error otherwise ?
+                uint16_t payload_size = 2 + size;
+                uint8_t payload[payload_size];
+                payload[0] = type;
+                payload[1] = size;
+                AsebaSendMessage(vm, ASEBA_MESSAGE_THYMIO_DEVICE_INFO, payload, payload_size);
+            }
+        }
+        else if (id == ASEBA_MESSAGE_THYMIO_SET_THYMIO_DEVICE_INFO) {
+            if(size < 2) // We need at least an info type (1) + size (2)
+                return FALSE;
+            uint8_t payload_size  = bytes[2];
+            const uint8_t* buffer = bytes + 3;
+            if(size > (ASEBA_MAX_PACKET_SIZE + 6) || payload_size < size + 2) {
+                return FALSE;
+            }
+            switch(type) {
+                case THYMIO_DEVICE_INFO_UUID:
+                    if(size == 0) {
+                        memset(thymio_info.uuid, 0, sizeof(thymio_info.uuid));
+                    }
+                    else if(size == sizeof(thymio_info.uuid)) {
+                        memcpy(thymio_info.uuid, buffer, size);
+                    }
+                break;
+                case THYMIO_DEVICE_INFO_NAME:
+                    thymio_info.friendly_name[0] = size;
+                    if(size > 0 && size < sizeof(thymio_info.friendly_name)) {
+                        memcpy(thymio_info.friendly_name, buffer, size);
+                    }
+                break;
+            }
+            save_thymio_device_info_to_flash();
+        }
+        return TRUE;
+    }
+    return FALSE;
 }
