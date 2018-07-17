@@ -79,7 +79,6 @@ add_executable(aseba-target-thymio2.cof
     ${ASEBA_DIR}/vm/natives.c
     ${ASEBA_DIR}/vm/vm.c
     ${ASEBA_DIR}/transport/buffer/vm-buffer.c
-
 )
 
 #tell cmake to build the assembly files
@@ -108,7 +107,7 @@ set(CMAKE_LINKER "${MICROCHIP_XC16_PATH}/bin/xc16-ld")
 
 
 string(APPEND CMAKE_C_LINK_FLAGS
-    " -Wl,--script,p${MICROCHIP_MCU_MODEL}.gld"
+	" -Wl,--script,p${MICROCHIP_MCU_MODEL}.gld -Wl,-Map=aseba-target-thymio2.map"
 )
 
 add_custom_command(TARGET aseba-target-thymio2.cof POST_BUILD COMMAND ${MICROCHIP_XC16_PATH}/bin/xc16-bin2hex -omf=coff $<TARGET_FILE:aseba-target-thymio2.cof>)

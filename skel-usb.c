@@ -35,8 +35,9 @@
 #include "usb_uart.h"
 #include "rf.h"
 #include "log.h"
-
 #include "skel-usb.h"
+#include "memory_layout.h"
+
 
 static unsigned char update_calib;
 
@@ -194,32 +195,14 @@ const AsebaNativeFunctionDescription * const * AsebaGetNativeFunctionsDescriptio
 
 // START of Bytecode into Flash section -----
 
-// A chunk is a bytecode image
-#define PAGE_PER_CHUNK ((VM_BYTECODE_SIZE*2+3 + INSTRUCTIONS_PER_PAGE*3 - 1) / (INSTRUCTIONS_PER_PAGE*3))
-#if PAGE_PER_CHUNK == 0
-#undef PAGE_PER_CHUNK
-#define PAGE_PER_CHUNK 1
-#endif
-
-/* noload will tell the linker to allocate the space but NOT to initialise it. (left unprogrammed)*/
-/* I cannot delare it as an array since it's too large ( > 65535 ) */
-
-// Put everything in the same section, so we are 100% sure that the linker will put them contiguously.
-// Force the address, since the linker sometimes put it in the middle of the code
-#ifndef FLASH_END
-#define FLASH_END 0x15800
-#endif
-
-#define NUMBER_OF_CHUNK 3
-
 unsigned char  aseba_flash[PAGE_PER_CHUNK*3][INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), aligned(INSTRUCTIONS_PER_PAGE * 2), section(".aseba_bytecode")/*, address(FLASH_END - 0x800*/ /* bootloader */ /*- 0x400 *//* settings */ /*- NUMBER_OF_CHUNK*0x400L*PAGE_PER_CHUNK)*//*, noload*/));
 
-// Saveguard the bootloader (4 pages)
-// Done by linker script...
-//unsigned char __bootloader[INSTRUCTIONS_PER_PAGE * 2 * 4 - 2*4/* used by the config words */] __attribute((space(prog), section(".boot"), noload, address(FLASH_END - 0x1000)));
-
 // Put the settings page at a fixed position so it's independant of linker mood.
-unsigned char aseba_settings_flash[INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), noload, section(".aseba_settings"), address(FLASH_END - 0x1000 - 0x400)));
+unsigned char aseba_settings_flash[INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), noload, section(".aseba_settings"), address(ASEBA_SETTINGS_ADDRESS)));
+#warning "the settings page is NOT initialised"
+
+
+unsigned char thymio_settings_flash[INSTRUCTIONS_PER_PAGE * 2] __attribute__ ((space(prog), noload, section(".thymio_settings"), address(THYMIO_SETTINGS_ADDRESS)));
 #warning "the settings page is NOT initialised"
 
 void AsebaWriteBytecode(AsebaVMState *vm) {
@@ -295,35 +278,58 @@ void AsebaWriteBytecode(AsebaVMState *vm) {
 }
 
 const static unsigned int _magic_[8] = {0xDE, 0xAD, 0xCA, 0xFE, 0xBE, 0xEF, 0x04, 0x02};
-void AsebaNative__system_settings_flash(AsebaVMState *vm) {
+
+
+void write_page_to_flash(unsigned long page_addr, void * const data, unsigned size) {
 	// Look for the last "Magic" we know, this is the most up to date conf
 	// Then write the next row with the correct magic.
 	// If no magic is found, erase the page, and then write the first one
 	// If the last magic is found, erase the page and then write the first one
-	
-	unsigned long setting_addr = __builtin_tbladdress(aseba_settings_flash);;
 	int i = 0;
-	unsigned int mag;
-	unsigned long temp;
 	for(i = 0; i < 8; i++) {
-		mag = flash_read_low(setting_addr + INSTRUCTIONS_PER_ROW * 2 * i);
+        unsigned int mag = flash_read_low(page_addr + INSTRUCTIONS_PER_ROW * 2 * i);
 		if(mag != _magic_[i])
 			break;
 	}
 	
 	if(i == 0 || i == 8) {
-		flash_erase_page(setting_addr);
+        flash_erase_page(page_addr);
 		i = 0;
 	}
 	
-	setting_addr += INSTRUCTIONS_PER_ROW * 2 * i;
+    page_addr += INSTRUCTIONS_PER_ROW * 2 * i;
 	
-	flash_prepare_write(setting_addr);
-	temp = (((unsigned long) *((unsigned char * ) &settings)) << 16) | _magic_[i];
+    flash_prepare_write(page_addr);
+    unsigned long temp = (((unsigned long) *((unsigned char * ) data)) << 16) | _magic_[i];
 	
 	flash_write_instruction(temp);
-	flash_write_buffer(((unsigned char *) &settings) + 1, sizeof(settings) - 1);
+    flash_write_buffer(((unsigned char *) data) + 1, size - 1);
 	flash_complete_write();
+}
+
+
+int load_page_from_flash(unsigned long page_addr, void * const data, int sizeofdata) {
+    // The the last "known" magic found
+    int i = 0;
+    for(i = 0; i < 8; i++) {
+        unsigned mag = flash_read_low(page_addr + INSTRUCTIONS_PER_ROW * 2 * i);
+        if(mag != _magic_[i])
+            break;
+    }
+    if(i == 0)
+        // No settings found
+        return -1;
+    i--;
+    page_addr += INSTRUCTIONS_PER_ROW * 2 * i;
+    *((unsigned char *) data) = (unsigned char) (flash_read_high(page_addr) & 0xFF);
+    flash_read_chunk(page_addr + 2, sizeofdata - 1, ((unsigned char *) data) + 1);
+    return 0;
+}
+// END of bytecode into flash section
+
+
+void AsebaNative__system_settings_flash(AsebaVMState* vm) {
+    write_page_to_flash(__builtin_tbladdress(aseba_settings_flash), &settings, sizeof(settings));
 }
 
 static int load_code_from_flash(AsebaVMState *vm) {
@@ -359,28 +365,7 @@ int load_settings_from_flash(void) {
 	// Max size 95 int, min 1 int
 	COMPILATION_ASSERT(sizeof(settings) < ((INSTRUCTIONS_PER_ROW*3) - 2));
 	COMPILATION_ASSERT(sizeof(settings) > 1);
-
-	// The the last "known" magic found
-	unsigned long temp = __builtin_tbladdress(aseba_settings_flash);;
-	int i = 0;
-	unsigned int mag;
-	
-	
-	
-	for(i = 0; i < 8; i++) {
-		mag = flash_read_low(temp + INSTRUCTIONS_PER_ROW * 2 * i);
-		if(mag != _magic_[i])
-			break;
-	}
-	if(i == 0)
-		// No settings found
-		return -1;
-	i--;
-	temp += INSTRUCTIONS_PER_ROW * 2 * i;
-	*((unsigned char *) &settings) = (unsigned char) (flash_read_high(temp) & 0xFF);
-	flash_read_chunk(temp + 2, sizeof(settings) - 1, ((unsigned char *) &settings) + 1);
-	
-	return 0;
+    return load_page_from_flash(__builtin_tbladdress(aseba_settings_flash), &settings, sizeof(settings));
 }
 // END of bytecode into flash section
 
