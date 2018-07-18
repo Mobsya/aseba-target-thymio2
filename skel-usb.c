@@ -382,11 +382,11 @@ int load_thymio_device_info_from_flash() {
     return load_page_from_flash(__builtin_tbladdress(thymio_settings_flash), &thymio_info, sizeof(thymio_info));
 }
 
-int save_thymio_device_info_to_flash() {
+void save_thymio_device_info_to_flash() {
     // Max size 95 int, min 1 int
     COMPILATION_ASSERT(sizeof(thymio_info) < ((INSTRUCTIONS_PER_ROW*3) - 2));
     COMPILATION_ASSERT(sizeof(thymio_info) > 1);
-    return write_page_to_flash(__builtin_tbladdress(thymio_settings_flash), &thymio_info, sizeof(thymio_info));
+    write_page_to_flash(__builtin_tbladdress(thymio_settings_flash), &thymio_info, sizeof(thymio_info));
 }
 
 
@@ -521,10 +521,10 @@ int AsebaHandleThymioSpecificMessage(AsebaVMState* vm, uint16_t id, uint16_t* da
         uint8_t* bytes = (uint8_t*)data;
         uint16_t size  = dataLength * 2;
         if(size < 1) // We need at least an info type
-            return;
+            return FALSE;
         uint8_t type = bytes[0];
         if(type > THYMIO_DEVICE_INFO_ENUM_COUNT) // Send an error ?
-            return;
+            return FALSE;
 
         if (id == ASEBA_MESSAGE_THYMIO_GET_THYMIO_DEVICE_INFO) {
             uint8_t size = 0;
