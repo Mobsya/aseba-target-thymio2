@@ -21,15 +21,16 @@
 
 #define NUMBER_OF_CHUNK 3
 
-#define PAGE_0 LOG_FLASH_ADDRESS
-#define PAGE_1 (PAGE_0 + INSTRUCTIONS_PER_PAGE*2)
-
 // Saveguard the bootloader (4 pages)
 // Done by linker script...
 //unsigned char __bootloader[INSTRUCTIONS_PER_PAGE * 2 * 4 - 2*4/* used by the config words */] __attribute((space(prog), section(".boot"), noload, address(FLASH_END - 0x1000)));
 
-#define ASEBA_SETTINGS_ADDRESS (FLASH_END - 0x1000 - 0x400)
+#define ASEBA_SETTINGS_ADDRESS (FLASH_END - (0x1000 + 0x400))
 #define LOG_FLASH_ADDRESS (ASEBA_SETTINGS_ADDRESS - 0x800)
 #define THYMIO_SETTINGS_ADDRESS (LOG_FLASH_ADDRESS - 0x400)
+
+
+#define PAGE_0 (LOG_FLASH_ADDRESS)
+#define PAGE_1 (PAGE_0 + INSTRUCTIONS_PER_PAGE*2)
 
 #endif

@@ -514,18 +514,16 @@ void save_settings(void) {
 void set_save_settings(void) {
 	update_calib=1;
 }
+
 //Called from the vm, escape hatch to handle messages specific to thymio.
 //Returns true if a message was handled
 int AsebaHandleThymioSpecificMessage(AsebaVMState* vm, uint16_t id, uint16_t* data, uint16_t dataLength) {
     if(id == ASEBA_MESSAGE_THYMIO_GET_THYMIO_DEVICE_INFO || id == ASEBA_MESSAGE_THYMIO_SET_THYMIO_DEVICE_INFO) {
-        uint8_t* bytes = (uint8_t*)data;
-        uint16_t size  = dataLength * 2;
-        if(size < 1) // We need at least an info type
-            return FALSE;
-        uint8_t type = bytes[0];
+        if(dataLength < 1) // We need at least an info type
+            return 0;
+        uint16_t type = bswap16(data[0]);
         if(type > THYMIO_DEVICE_INFO_ENUM_COUNT) // Send an error ?
-            return FALSE;
-
+            return 0;
         if (id == ASEBA_MESSAGE_THYMIO_GET_THYMIO_DEVICE_INFO) {
             uint8_t size = 0;
             const uint8_t* buffer = NULL;
@@ -541,41 +539,42 @@ int AsebaHandleThymioSpecificMessage(AsebaVMState* vm, uint16_t id, uint16_t* da
                          size = 0;
                      break;
             }
-            if(size > 0 && size < (ASEBA_MAX_PACKET_SIZE + 6)) { // Send an error otherwise ?
+            if(size >= 0 && size < (ASEBA_MAX_PACKET_SIZE + 6)) { // Send an error otherwise ?
                 uint16_t payload_size = 2 + size;
                 uint8_t payload[payload_size];
                 payload[0] = type;
                 payload[1] = size;
+                memcpy(payload + 2, buffer, size);
                 AsebaSendMessage(vm, ASEBA_MESSAGE_THYMIO_DEVICE_INFO, payload, payload_size);
             }
         }
         else if (id == ASEBA_MESSAGE_THYMIO_SET_THYMIO_DEVICE_INFO) {
-            if(size < 2) // We need at least an info type (1) + size (2)
-                return FALSE;
-            uint8_t payload_size  = bytes[2];
-            const uint8_t* buffer = bytes + 3;
-            if(size > (ASEBA_MAX_PACKET_SIZE + 6) || payload_size < size + 2) {
-                return FALSE;
+            if(dataLength < 2) // We need at least an info type (1) + size (2)
+                return 0;
+            uint8_t payload_size = (uint8_t)bswap16(data[1]);
+            const uint8_t* buffer = (uint8_t*)data + 2 * sizeof(uint16_t);
+            if(dataLength * 2 > (ASEBA_MAX_PACKET_SIZE + 6) || payload_size  > ((dataLength - 2) * 2) + 1 ) {
+                return 0;
             }
             switch(type) {
                 case THYMIO_DEVICE_INFO_UUID:
-                    if(size == 0) {
+                    if(payload_size == 0) {
                         memset(thymio_info.uuid, 0, sizeof(thymio_info.uuid));
                     }
-                    else if(size == sizeof(thymio_info.uuid)) {
-                        memcpy(thymio_info.uuid, buffer, size);
+                    else if(payload_size == sizeof(thymio_info.uuid)) {
+                        memcpy(thymio_info.uuid, buffer, payload_size);
                     }
                 break;
                 case THYMIO_DEVICE_INFO_NAME:
-                    thymio_info.friendly_name[0] = size;
-                    if(size > 0 && size < sizeof(thymio_info.friendly_name)) {
-                        memcpy(thymio_info.friendly_name, buffer, size);
+                    thymio_info.friendly_name[0] = payload_size;
+                    if(payload_size > 0 && payload_size < sizeof(thymio_info.friendly_name)) {
+                        memcpy(thymio_info.friendly_name + 1, buffer, payload_size);
                     }
                 break;
             }
             save_thymio_device_info_to_flash();
         }
-        return TRUE;
+        return 1;
     }
-    return FALSE;
+    return 0;
 }
