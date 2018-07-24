@@ -38,8 +38,9 @@ History:
 10: Change wireless nodeID, acc sensitivity, clean VM on load, aseba protocole version 5
 11: Fix reset, add SD card function, limit user message size, adapt to c99
 12: SPI fix, update VM description
+13: Store device name and uuid in persistent memory
 */
-#define FW_VERSION 12
+#define FW_VERSION 13
 
 /* Firmware variant. Each variant of the firmware has it own number */
 
