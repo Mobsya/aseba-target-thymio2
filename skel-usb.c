@@ -372,7 +372,7 @@ int load_settings_from_flash(void) {
 
 
 /* Thymio Device info */
-int load_thymio_device_info_from_flash() {
+int load_thymio_device_info_from_flash(void) {
     //Make sure the memory is 0-out in case it does not exist
     memset(&thymio_info, 0, sizeof(thymio_info));
 
@@ -382,7 +382,7 @@ int load_thymio_device_info_from_flash() {
     return load_page_from_flash(__builtin_tbladdress(thymio_settings_flash), &thymio_info, sizeof(thymio_info));
 }
 
-void save_thymio_device_info_to_flash() {
+void save_thymio_device_info_to_flash(void) {
     // Max size 95 int, min 1 int
     COMPILATION_ASSERT(sizeof(thymio_info) < ((INSTRUCTIONS_PER_ROW*3) - 2));
     COMPILATION_ASSERT(sizeof(thymio_info) > 1);
