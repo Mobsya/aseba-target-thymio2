@@ -517,22 +517,22 @@ void set_save_settings(void) {
 
 //Called from the vm, escape hatch to handle messages specific to thymio.
 //Returns true if a message was handled
-int AsebaHandleThymioSpecificMessage(AsebaVMState* vm, uint16_t id, uint16_t* data, uint16_t dataLength) {
-	if(id == ASEBA_MESSAGE_THYMIO_GET_THYMIO_DEVICE_INFO || id == ASEBA_MESSAGE_THYMIO_SET_THYMIO_DEVICE_INFO) {
+int AsebaHandleDeviceInfoMessages(AsebaVMState* vm, uint16_t id, uint16_t* data, uint16_t dataLength) {
+	if(id == ASEBA_MESSAGE_GET_DEVICE_INFO || id == ASEBA_MESSAGE_SET_DEVICE_INFO) {
 		if(dataLength < 1) // We need at least an info type
 			return 0;
 		uint16_t type = bswap16(data[0]);
-		if(type > THYMIO_DEVICE_INFO_ENUM_COUNT) // Send an error ?
+		if(type > DEVICE_INFO_ENUM_COUNT) // Send an error ?
 			return 0;
-		if (id == ASEBA_MESSAGE_THYMIO_GET_THYMIO_DEVICE_INFO) {
+		if (id == ASEBA_MESSAGE_GET_DEVICE_INFO) {
 			uint8_t size = 0;
 			const uint8_t* buffer = NULL;
 			switch(type) {
-				case THYMIO_DEVICE_INFO_UUID:
+				case DEVICE_INFO_UUID:
 					buffer = thymio_info.uuid;
 					size   = sizeof(thymio_info.uuid);
 					break;
-				case THYMIO_DEVICE_INFO_NAME:
+				case DEVICE_INFO_NAME:
 					buffer = thymio_info.friendly_name + 1;
 					size   = *thymio_info.friendly_name;
 					if(size > sizeof(thymio_info.friendly_name) -1)
@@ -545,10 +545,10 @@ int AsebaHandleThymioSpecificMessage(AsebaVMState* vm, uint16_t id, uint16_t* da
 				payload[0] = type;
 				payload[1] = size;
 				memcpy(payload + 2, buffer, size);
-				AsebaSendMessage(vm, ASEBA_MESSAGE_THYMIO_DEVICE_INFO, payload, payload_size);
+				AsebaSendMessage(vm, ASEBA_MESSAGE_DEVICE_INFO, payload, payload_size);
 			}
 		}
-		else if (id == ASEBA_MESSAGE_THYMIO_SET_THYMIO_DEVICE_INFO) {
+		else if (id == ASEBA_MESSAGE_SET_DEVICE_INFO) {
 			if(dataLength < 2) // We need at least an info type (1) + size (2)
 				return 0;
 			uint8_t payload_size = (uint8_t)bswap16(data[1]);
@@ -557,7 +557,7 @@ int AsebaHandleThymioSpecificMessage(AsebaVMState* vm, uint16_t id, uint16_t* da
 				return 0;
 			}
 			switch(type) {
-				case THYMIO_DEVICE_INFO_UUID:
+				case DEVICE_INFO_UUID:
 					if(payload_size == 0) {
 						memset(thymio_info.uuid, 0, sizeof(thymio_info.uuid));
 					}
@@ -565,7 +565,7 @@ int AsebaHandleThymioSpecificMessage(AsebaVMState* vm, uint16_t id, uint16_t* da
 						memcpy(thymio_info.uuid, buffer, payload_size);
 					}
 				break;
-				case THYMIO_DEVICE_INFO_NAME:
+				case DEVICE_INFO_NAME:
 					thymio_info.friendly_name[0] = payload_size;
 					if(payload_size > 0 && payload_size < sizeof(thymio_info.friendly_name)) {
 						memcpy(thymio_info.friendly_name + 1, buffer, payload_size);

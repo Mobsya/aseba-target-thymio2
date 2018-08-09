@@ -49,7 +49,7 @@ Use the following sources:
 Note that if you want to edit the firmware, you should add the following two files from the aseba-target-thymio2 git tree as "Important files": *skel-usb-user.c, skel-usb-user.h*. You should not compile them directly, as they are included from *skel-usb.c/h*. The reason is that *skel-usb.c/h* is target-independent code, while *skel-usb-user.c/h* is target-dependent code.
 
 Project setup:
-- Define common macros: *ASEBA_LIMITED_MESSAGE_SIZE;ASEBA_ASSERT;THYMIO_FIRMWARE_BUILD*
+- Define common macros: *ASEBA_LIMITED_MESSAGE_SIZE;ASEBA_ASSERT*
 - Compiler options: * -Os -mlarge-code -fomit-frame-pointer -fno-strict-aliasing*
 - On, linux add: *-fno-peephole2*, because of a compiler bug (official workaround from microchip).
 - Add molole, usb_pic24, aseba git tree, and aseba-target-thymio2 as include search path.
