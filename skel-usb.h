@@ -85,6 +85,11 @@ void update_aseba_variables_write(void);
 // return non-zero if the settings were NOT found (settings is non-initilised)
 int load_settings_from_flash(void);
 
+// Loads some persistent informations specific to thymio 2
+// This are never used by the device itself but are used by applications using the device.
+// It includes a unique uuid ( initialized on a computer ) as well as a device name that user can modify
+int load_thymio_device_info_from_flash(void);
+
 // This function should switch off everything, absolutly NO interrupt should be generated
 // After the call to this function. The perif. should be in a kind of power-down mode.
 void switch_off(void);
@@ -102,6 +107,7 @@ int prepare_sleep(void);
 void resume_sleep(void);
 
 extern struct private_settings settings;
+extern struct thymio_device_info thymio_info;
 
 
 //This function save internal setting if there where update.  It is called at poweroff. 

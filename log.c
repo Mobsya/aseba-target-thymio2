@@ -34,6 +34,7 @@
 #include "mode.h"
 #include "usb_uart.h"
 #include "sd/ff.h"
+#include "memory_layout.h"
 
 // Run-time part
 
@@ -350,13 +351,7 @@ void AsebaVMRunCB(AsebaVMState *vm) {
 
 
 // Flash write/read part
-
-#define LOG_FLASH_ADDRESS (FLASH_END - 0x1000 - 0x400 - 0x800)
 unsigned char log_flash[INSTRUCTIONS_PER_PAGE * 2*2] __attribute__ ((space(prog), section(".log_flash"), noload, address(LOG_FLASH_ADDRESS)));
-
-#define PAGE_0 LOG_FLASH_ADDRESS
-#define PAGE_1 (PAGE_0 + INSTRUCTIONS_PER_PAGE*2)
-
 
 struct _record {
 	unsigned int __attribute((packed)) poweron;

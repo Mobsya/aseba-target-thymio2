@@ -149,3 +149,12 @@ struct private_settings {
 };
 	
 
+// Persistent data used by the thymio device manager,
+// saved and retrieved with thymio-specific protocol messages from version 12+
+struct thymio_device_info {
+    /* The minimum size is one integer, the maximum size is 95 integer (check done at compilation) */
+    /* a uid is 128 bits = 16 bytes */
+    unsigned char uuid[16];
+    /* A long name so we can put reasonably long utf8 name in it, first reserved for the size*/
+    unsigned char friendly_name[56];
+};
