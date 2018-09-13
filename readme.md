@@ -4,7 +4,7 @@
 
 To compile the firmware from git, you need the following source code:
 
-- [Aseba](http://github.com/aseba-community/aseba), branch master
+- [Aseba](http://github.com/mobsya/aseba), branch master
 - [aseba-target-thymio2](https://github.com/aseba-community/aseba-target-thymio2) , branch master and its submodules
 
 ## Tools 
@@ -44,7 +44,7 @@ Use the following sources:
     *vm/natives.c, vm/vm.c, transport/buffer/vm-buffer.c*
 - from molole git tree:
 
-    *clock/clock.c, error/error.c, flash/flash.c, i2c/i2c.c, i2c/master.c, i2c/master_protocol.c, i2c/slave.c, timer/timer.c*
+    *clock/clock.c, error/error.c, flash/flash.c, i2c/i2c.c, i2c/master.c, i2c/master_protocol.c, timer/timer.c*
 
 Note that if you want to edit the firmware, you should add the following two files from the aseba-target-thymio2 git tree as "Important files": *skel-usb-user.c, skel-usb-user.h*. You should not compile them directly, as they are included from *skel-usb.c/h*. The reason is that *skel-usb.c/h* is target-independent code, while *skel-usb-user.c/h* is target-dependent code.
 
