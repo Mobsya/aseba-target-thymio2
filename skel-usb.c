@@ -161,7 +161,7 @@ const AsebaLocalEventDescription * AsebaGetLocalEventsDescriptions(AsebaVMState 
 static __attribute((far)) unsigned char sendQueue[SEND_QUEUE_SIZE];
 static __attribute((far)) unsigned char recvQueue[RECV_QUEUE_SIZE];
 
-struct __attribute((far)) _vmVariables vmVariables;
+struct __attribute((far)) _vmVariables vmVariables, vmVariablesOld;
 static __attribute((far)) uint16_t vmBytecode[VM_BYTECODE_SIZE];
 static __attribute((far)) int16_t vmStack[VM_STACK_SIZE];
 
@@ -171,7 +171,8 @@ AsebaVMState vmState = {
 	vmBytecode,
 	sizeof(vmVariables) / sizeof(int16_t),
 	(int16_t*) &vmVariables,
-	
+	(int16_t*) &vmVariablesOld,
+
 	VM_STACK_SIZE,
 	vmStack,
 };
