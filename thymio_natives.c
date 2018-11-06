@@ -236,6 +236,9 @@ void set_rgb_top(AsebaVMState *vm) {
 	int b = vm->variables[AsebaNativePopArg(vm)];
 	
 	leds_set_top(r,g,b);
+    vmVariables.ledtoprgb[0]=r;
+    vmVariables.ledtoprgb[1]=g;
+    vmVariables.ledtoprgb[2]=b;
 }
 
 AsebaNativeFunctionDescription AsebaNativeDescription_set_led_rgb_br = {

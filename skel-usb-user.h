@@ -88,6 +88,8 @@ struct _vmVariables {
 	
 	int16_t acc[3];
 	
+    int16_t ledtoprgb[3];
+    
 	int16_t ntc;
 	
 	int16_t rc5_address;

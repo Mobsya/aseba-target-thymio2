@@ -225,6 +225,7 @@ void update_aseba_variables_write(void) {
 	}
 
 	pid_motor_set_target((int *) vmVariables.target);
+    leds_set_top(vmVariables.ledtoprgb[0], vmVariables.ledtoprgb[1], vmVariables.ledtoprgb[2]);
 }	
 
 static void wait_valid_vbat(void) {
