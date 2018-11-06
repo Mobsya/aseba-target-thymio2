@@ -137,7 +137,6 @@ void rf_set_link(unsigned int link_status) {
 	}
 }
 
-/* To test module interface, not planed to give this function to user
 void rf_set_channel(unsigned char channel)
 {
 	if(!(status & RF_PRESENT))
@@ -150,7 +149,6 @@ void rf_set_channel(unsigned char channel)
 			write(REG_CTRL,(channel + 1)<<3);
 	}
 }
-*/
 
 
 #define I2C_IDLE 			0
@@ -371,3 +369,18 @@ void rf_flash_setting(void) {
 	write(REG_FLASH_SETTINGS, /* whatever */ 0x0);
 }
 
+unsigned int rf_get_network_id(void) {
+	unsigned int id = 1;
+	read(REG_PANID_L, (unsigned char *) &id, sizeof(id));
+	return id;
+}
+
+void rf_set_network_id(unsigned int id) {
+	write(REG_PANID_L, (unsigned char) id&0xFF);
+	write(REG_PANID_H, (unsigned char) (id>>8));
+}
+
+void rf_set_conf(unsigned int channel,unsigned int panid){
+    rf_set_channel(channel);
+    rf_set_network_id(panid);        
+}

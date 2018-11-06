@@ -29,6 +29,10 @@ void rf_init(int bus);
 unsigned int rf_get_node_id(void);
 /* Set the Aseba node ID of the RF part */
 void rf_set_node_id(unsigned int id);
+/* Set the configuration of the RF part */
+void rf_set_conf(unsigned int channel,unsigned int panid);
+/* Return the network ID of the RF part */
+unsigned int rf_get_network_id(void);
 
 /* Poll the rf status, should be called at the I2C access priority level */
 void rf_poll(void);
