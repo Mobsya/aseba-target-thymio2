@@ -581,3 +581,20 @@ void set_rf_nodeid(AsebaVMState * vm) {
 	rf_set_node_id(nodeid);
 	rf_flash_setting();
 }
+
+AsebaNativeFunctionDescription AsebaNativeDescription_rf_setup = {
+	"_rf.setup",
+	"Set Wireless Channel and Network",
+	{
+		{1, "channel"},
+        {1, "networkID"},
+		{0,0},
+	}
+};
+
+void set_rf_setup(AsebaVMState * vm) {
+	unsigned int channel = vm->variables[AsebaNativePopArg(vm)];
+    unsigned int networkID = vm->variables[AsebaNativePopArg(vm)];
+	rf_set_conf(channel,networkID);
+	rf_flash_setting();
+}
