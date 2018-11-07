@@ -225,7 +225,9 @@ void update_aseba_variables_write(void) {
 	}
 
 	pid_motor_set_target((int *) vmVariables.target);
-    leds_set_top(vmVariables.ledtoprgb[0], vmVariables.ledtoprgb[1], vmVariables.ledtoprgb[2]);
+    leds_set_top(vmVariables.led_top_rgb[0], vmVariables.led_top_rgb[1], vmVariables.led_top_rgb[2]);
+    leds_set_bl(vmVariables.led_bottom_left_rgb[0], vmVariables.led_bottom_left_rgb[1], vmVariables.led_bottom_left_rgb[2]);
+    leds_set_br(vmVariables.led_bottom_right_rgb[0], vmVariables.led_bottom_right_rgb[1], vmVariables.led_bottom_right_rgb[2]);
 }	
 
 static void wait_valid_vbat(void) {

@@ -88,7 +88,9 @@ struct _vmVariables {
 	
 	int16_t acc[3];
 	
-    int16_t ledtoprgb[3];
+    int16_t led_top_rgb[3];
+    int16_t led_bottom_left_rgb[3];
+    int16_t led_bottom_right_rgb[3];
     
 	int16_t ntc;
 	

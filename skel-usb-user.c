@@ -65,7 +65,9 @@ const AsebaVMDescription vmDescription = {
 		
 		{3, "acc"},
 		
-        {3, "leds.top.rgb"},        
+        {3, "leds.top"},
+        {3, "leds.bottom.left"}, 
+        {3, "leds.bottom.right"},        
                 
 		{1, "temperature"},
 		
