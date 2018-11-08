@@ -217,6 +217,14 @@ void set_led_circle(AsebaVMState *vm) {
 	behavior_stop(B_LEDS_ACC);
 
 	leds_set_circle(l1,l2,l3,l4,l5,l6,l7,l8);
+    vmVariables.led_circle[0]=l1;
+    vmVariables.led_circle[1]=l2;
+    vmVariables.led_circle[2]=l3;
+    vmVariables.led_circle[3]=l4;
+    vmVariables.led_circle[4]=l5;
+    vmVariables.led_circle[5]=l6;
+    vmVariables.led_circle[6]=l7;
+    vmVariables.led_circle[7]=l8; 
 }
 
 AsebaNativeFunctionDescription AsebaNativeDescription_set_led_rgb_top = {

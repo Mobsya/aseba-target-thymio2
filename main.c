@@ -215,6 +215,7 @@ static void timer_1khz(int timer_id) {
 
 void update_aseba_variables_write(void) {
 	static unsigned int old_timer[2];
+    static unsigned int old_circle[8];
 	int i;
 	
 	for(i = 0; i < 2; i++) {
@@ -228,6 +229,14 @@ void update_aseba_variables_write(void) {
     leds_set_top(vmVariables.led_top_rgb[0], vmVariables.led_top_rgb[1], vmVariables.led_top_rgb[2]);
     leds_set_bl(vmVariables.led_bottom_left_rgb[0], vmVariables.led_bottom_left_rgb[1], vmVariables.led_bottom_left_rgb[2]);
     leds_set_br(vmVariables.led_bottom_right_rgb[0], vmVariables.led_bottom_right_rgb[1], vmVariables.led_bottom_right_rgb[2]);
+    for(i=0;i<8;i++){
+        if(vmVariables.led_circle[i] != old_circle[i]){
+            behavior_stop(B_LEDS_ACC);
+            old_circle[i]=vmVariables.led_circle[i];
+            leds_set_circle(vmVariables.led_circle[0],vmVariables.led_circle[1],vmVariables.led_circle[2],vmVariables.led_circle[3],vmVariables.led_circle[4],vmVariables.led_circle[5],vmVariables.led_circle[6],vmVariables.led_circle[7]);
+        }
+    }
+    
 }	
 
 static void wait_valid_vbat(void) {
