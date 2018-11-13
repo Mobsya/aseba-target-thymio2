@@ -44,7 +44,7 @@
 #define VM_VARIABLES_ARG_SIZE 32
 
 /* THE nuber of opcode an aseba script can have */
-#define VM_BYTECODE_SIZE (766+768*2)	// Put here 766+768*a, where a is >= 0
+#define VM_BYTECODE_SIZE (766+768*1)	// Put here 766+768*a, where a is >= 0
 #define VM_STACK_SIZE 32
 
 struct _vmVariables {
