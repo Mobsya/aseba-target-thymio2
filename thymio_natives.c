@@ -217,6 +217,14 @@ void set_led_circle(AsebaVMState *vm) {
 	behavior_stop(B_LEDS_ACC);
 
 	leds_set_circle(l1,l2,l3,l4,l5,l6,l7,l8);
+    vmVariables.led_circle[0]=l1;
+    vmVariables.led_circle[1]=l2;
+    vmVariables.led_circle[2]=l3;
+    vmVariables.led_circle[3]=l4;
+    vmVariables.led_circle[4]=l5;
+    vmVariables.led_circle[5]=l6;
+    vmVariables.led_circle[6]=l7;
+    vmVariables.led_circle[7]=l8; 
 }
 
 AsebaNativeFunctionDescription AsebaNativeDescription_set_led_rgb_top = {
@@ -236,6 +244,9 @@ void set_rgb_top(AsebaVMState *vm) {
 	int b = vm->variables[AsebaNativePopArg(vm)];
 	
 	leds_set_top(r,g,b);
+    vmVariables.led_top_rgb[0]=r;
+    vmVariables.led_top_rgb[1]=g;
+    vmVariables.led_top_rgb[2]=b;
 }
 
 AsebaNativeFunctionDescription AsebaNativeDescription_set_led_rgb_br = {
@@ -255,6 +266,9 @@ void set_rgb_br(AsebaVMState *vm) {
 	int b = vm->variables[AsebaNativePopArg(vm)];
 	
 	leds_set_br(r,g,b);
+    vmVariables.led_bottom_right_rgb[0]=r;
+    vmVariables.led_bottom_right_rgb[1]=g;
+    vmVariables.led_bottom_right_rgb[2]=b;
 }
 AsebaNativeFunctionDescription AsebaNativeDescription_set_led_rgb_bl = {
 	"leds.bottom.left",
@@ -273,6 +287,9 @@ void set_rgb_bl(AsebaVMState *vm) {
 	int b = vm->variables[AsebaNativePopArg(vm)];
 		
 	leds_set_bl(r,g,b);
+    vmVariables.led_bottom_left_rgb[0]=r;
+    vmVariables.led_bottom_left_rgb[1]=g;
+    vmVariables.led_bottom_left_rgb[2]=b;
 }
 
 AsebaNativeFunctionDescription AsebaNativeDescription_set_led_buttons = {
