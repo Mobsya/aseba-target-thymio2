@@ -69,6 +69,7 @@ History:
 #include "pwm_motor.h"
 #include "pid_motor.h"
 #include "mma7660.h"
+#include "lis2de12.h"
 #include "ntc.h"
 #include "rc5.h"
 #include "sd/diskio.h"
@@ -289,7 +290,8 @@ void switch_off(void) {
 	sound_poweroff();
 	sd_shutdown();
 	leds_poweroff();
-	mma7660_suspend();
+	//mma7660_suspend();
+	lis2de12_suspend();
 	rf_poweroff();
 	
 	I2C3CONbits.I2CEN = 0; // Disable i2c.
@@ -443,8 +445,10 @@ int main(void)
 	I2C3CON = 0x9000;
 
 	
-	mma7660_init(I2C_3, MMA7660_DEFAULT_ADDRESS, acc_cb, 0);
-	mma7660_set_mode(MMA7660_120HZ, 1);
+	//mma7660_init(I2C_3, MMA7660_DEFAULT_ADDRESS, acc_cb, 0);
+	//mma7660_set_mode(MMA7660_120HZ, 1);
+	lis2de12_init(I2C_3,LIS2DE12_DEFAULT_ADDRESS, acc_cb, 0);
+	lis2de12_set_mode(LIS2DE12_100HZ, 1);
 	
 	rc5_init(TIMER_RC5, rc5_callback, PRIO_RC5);
 	
