@@ -59,7 +59,7 @@ unsigned int rf_get_status(void);
 void rf_set_link(unsigned int link_status);
 
 
-void rf_schedule_acc_read(void);
+void rf_schedule_acc_read(int acc_type);
 void rf_poweroff(void);
 void rf_flash_setting(void);
 

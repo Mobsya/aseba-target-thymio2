@@ -31,10 +31,10 @@
 
 #define CTRL_REG1			0x20
 #define CTRL_REG2			0x21
-//#define CTRL_REG3			0x22
-//#define CTRL_REG4			0x23
-//#define CTRL_REG5			0x24
-//#define CTRL_REG6			0x25
+#define CTRL_REG3			0x22
+#define CTRL_REG4			0x23
+#define CTRL_REG5			0x24
+#define CTRL_REG6			0x25
 
 #define STATUS_REG			0x27
 /*TODO*/
@@ -53,8 +53,8 @@
 #define TIME_LATENCY		0x3C
 #define TIME_WINDOW			0x3D
 
-#define MODE_CONFIG_OFF	0x00
-#define MODE_CONFIG_ON	0x0F
+#define MODE_CONFIG_OFF		0x00
+#define MODE_CONFIG_ON		0x0F
 
 static __attribute((far)) int i2c_bus;
 static __attribute((far)) int i2c_address;
@@ -110,8 +110,6 @@ int lis2de12_init(int i2c, unsigned char address, lis2de12_cb ucb, int prio) {
 		return 0;
 	/* Configure device */
 	write(CTRL_REG1, MODE_CONFIG_OFF); // Reset
-	write(CTRL_REG2, 0x94); //High pass filter in Normal mode, HPCP 01 and HPCLICK enable
-	write(CLICK_CFG, 0x14); //Single click on y and z 
 	/*  TODO fix interupt 
 	if (prio)
 		write(INT_SETUP, 1 << GINT); //Enable auto interrupt on update (GINT)
@@ -152,13 +150,13 @@ void lis2de12_set_mode(int hz, int tap_en) {
 		// Stop the device
 		return;
 	
-	
-
 	// Write the Tap detection register
 	// Axe Y and Z, treshold: 12 counts
-	if (tap_en)
+	if (tap_en){
 		//Disable X axis due to the vibration of motors
-		write(CLICK_CFG, 0x14); //Single click on y and z 
+		write(CTRL_REG2, 0x94); //High pass filter in Normal mode, HPCP 01 and HPCLICK enable
+		write(CLICK_CFG, 0x14); //Single click on y and z
+	}
 	else
 		write(CLICK_CFG, 0x00);
 	
@@ -168,12 +166,7 @@ void lis2de12_set_mode(int hz, int tap_en) {
 		write(CLICK_THS, 20); //Click treshold
 	else
 		write(CLICK_THS, 0);
-	/*		
-		if(tap_en)
-			write(INT_SETUP, (1 << GINT));
-		else
-			write(INT_SETUP, (1 << GINT));
-	 */
+	
 	hz=hz<<4;
 	// Enable the device
 	write(CTRL_REG1,(hz | MODE_CONFIG_ON));
@@ -189,7 +182,7 @@ void lis2de12_suspend(void) {
 
 	va_put(); // disable LDO
 }
-
+/*
 void _ISR _CNInterrupt(void) {
 	// OK
 	IFS1bits.CNIF = 0;
@@ -204,5 +197,5 @@ void _ISR _CNInterrupt(void) {
 	// Initiate the data transfer
 	lis2de12_read_async();
 
-}
+}*/
 
