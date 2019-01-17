@@ -59,16 +59,12 @@
 static __attribute((far)) int i2c_bus;
 static __attribute((far)) int i2c_address;
 static __attribute((far)) lis2de12_cb cb;
-static __attribute((far)) char data[6];
+static __attribute((far)) char data[4];
 static __attribute((far)) unsigned char reg;
 
 static void lis2de12_i2c_cb(int i2c_id, bool status) {
-	static int relaunched;
-	int tap;
-	
-	tap = 0;//data[3] & 0x20;
-	if (reg==ZOUT)
-		cb((signed char)data[0], (signed char)data[1], (signed char)data[2], tap);
+	if (reg==CLICK_SRC)
+		cb((signed char)data[0], (signed char)data[1], (signed char)data[2], data[3]);
 }
 
 void lis2de12_read_async(void) {
@@ -85,6 +81,9 @@ void lis2de12_read_async(void) {
 	while(i2c_master_is_busy(i2c_bus));
 	reg = ZOUT;
 	i2c_master_transfert_async(i2c_bus, i2c_address, &reg, 1, (unsigned char *) data+2, 1, lis2de12_i2c_cb);
+	while(i2c_master_is_busy(i2c_bus));
+	reg = CLICK_SRC;
+	i2c_master_transfert_async(i2c_bus, i2c_address, &reg, 1, (unsigned char *) data+3, 1, lis2de12_i2c_cb);
 }
 
 static void write(unsigned char reg, unsigned char data) {
@@ -154,18 +153,16 @@ void lis2de12_set_mode(int hz, int tap_en) {
 	// Axe Y and Z, treshold: 12 counts
 	if (tap_en){
 		//Disable X axis due to the vibration of motors
-		write(CTRL_REG2, 0x94); //High pass filter in Normal mode, HPCP 01 and HPCLICK enable
+		write(CTRL_REG2, 0xB4); //High pass filter in Normal mode, HPCP 11 and HPCLICK enable
 		write(CLICK_CFG, 0x14); //Single click on y and z
+		write(CLICK_THS, 48|0x80); //Click treshold and LIR_CLICK is set
 	}
 	else
+	{
+		write(CTRL_REG2, 0x00);
 		write(CLICK_CFG, 0x00);
-	
-	//write the tap debounce register
-	// 21 counts debouce
-	if (tap_en)
-		write(CLICK_THS, 20); //Click treshold
-	else
-		write(CLICK_THS, 0);
+		write(CLICK_THS, 0x00);
+	}
 	
 	hz=hz<<4;
 	// Enable the device

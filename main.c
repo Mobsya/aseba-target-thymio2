@@ -301,8 +301,10 @@ void switch_off(void) {
 	sound_poweroff();
 	sd_shutdown();
 	leds_poweroff();
-	//mma7660_suspend();
-	lis2de12_suspend();
+	if(acc_type)
+		lis2de12_suspend();
+	else
+		mma7660_suspend();
 	rf_poweroff();
 	
 	I2C3CONbits.I2CEN = 0; // Disable i2c.
