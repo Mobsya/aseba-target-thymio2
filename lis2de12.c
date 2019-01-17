@@ -67,8 +67,8 @@ static void lis2de12_i2c_cb(int i2c_id, bool status) {
 	int tap;
 	
 	tap = 0;//data[3] & 0x20;
-	
-	cb((signed char)data[0], (signed char)data[2], (signed char)data[3], tap);
+	if (reg==ZOUT)
+		cb((signed char)data[0], (signed char)data[1], (signed char)data[2], tap);
 }
 
 void lis2de12_read_async(void) {
@@ -78,7 +78,13 @@ void lis2de12_read_async(void) {
 
 	// Read XOUT, YOUT, ZOUT, status and fire the callback
 	reg = XOUT;
-	i2c_master_transfert_async(i2c_bus, i2c_address, &reg, 1, (unsigned char *) data, 6, lis2de12_i2c_cb);
+	i2c_master_transfert_async(i2c_bus, i2c_address, &reg, 1, (unsigned char *) data, 1, lis2de12_i2c_cb);
+	while(i2c_master_is_busy(i2c_bus));
+	reg = YOUT;
+	i2c_master_transfert_async(i2c_bus, i2c_address, &reg, 1, (unsigned char *) data+1, 1, lis2de12_i2c_cb);
+	while(i2c_master_is_busy(i2c_bus));
+	reg = ZOUT;
+	i2c_master_transfert_async(i2c_bus, i2c_address, &reg, 1, (unsigned char *) data+2, 1, lis2de12_i2c_cb);
 }
 
 static void write(unsigned char reg, unsigned char data) {
@@ -89,7 +95,8 @@ static void write(unsigned char reg, unsigned char data) {
 			array, 2, NULL, 0);
 }
 
-void lis2de12_init(int i2c, unsigned char address, lis2de12_cb ucb, int prio) {
+int lis2de12_init(int i2c, unsigned char address, lis2de12_cb ucb, int prio) {
+	char id;
 	i2c_bus = i2c;
 	i2c_address = address;
 	cb = ucb;
@@ -97,7 +104,10 @@ void lis2de12_init(int i2c, unsigned char address, lis2de12_cb ucb, int prio) {
 	va_get(); // Enable Va LDO
 
 	clock_delay_us(1300);
-
+	reg=LIS2DE12_WHO_AM_I;
+	i2c_master_transfert_block(i2c_bus,i2c_address,&reg,1,&id,1);
+	if (id!=LIS2DE12_ID)
+		return 0;
 	/* Configure device */
 	write(CTRL_REG1, MODE_CONFIG_OFF); // Reset
 	write(CTRL_REG2, 0x94); //High pass filter in Normal mode, HPCP 01 and HPCLICK enable
@@ -120,12 +130,13 @@ void lis2de12_init(int i2c, unsigned char address, lis2de12_cb ucb, int prio) {
 		CNEN2bits.CN16IE = 1; // Enable CN16 interrupt
 		IEC1bits.CNIE = 1; // Enable CN interrupt
 	}*/
+	return 1;
 }
 
 void lis2de12_set_mode(int hz, int tap_en) {
 	int flag = IEC1bits.CNIE;
 
-	ERROR_CHECK_RANGE(hz, LIS2DE12_5376HZ, LIS2DE12_0HZ, LIS2DE12_ERROR_INVALID_PARAM);
+	ERROR_CHECK_RANGE(hz, LIS2DE12_0HZ, LIS2DE12_5376HZ, LIS2DE12_ERROR_INVALID_PARAM);
 
 
 	IEC1bits.CNIE = 0;
@@ -163,9 +174,9 @@ void lis2de12_set_mode(int hz, int tap_en) {
 		else
 			write(INT_SETUP, (1 << GINT));
 	 */
-
+	hz=hz<<4;
 	// Enable the device
-	write(CTRL_REG1, ((hz<<4) && MODE_CONFIG_ON));
+	write(CTRL_REG1,(hz | MODE_CONFIG_ON));
 
 	IEC1bits.CNIE = flag;
 }
@@ -178,7 +189,7 @@ void lis2de12_suspend(void) {
 
 	va_put(); // disable LDO
 }
-/*
+
 void _ISR _CNInterrupt(void) {
 	// OK
 	IFS1bits.CNIF = 0;
@@ -193,5 +204,5 @@ void _ISR _CNInterrupt(void) {
 	// Initiate the data transfer
 	lis2de12_read_async();
 
-}*/
+}
 

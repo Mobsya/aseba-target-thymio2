@@ -26,6 +26,7 @@
 #include <clock/clock.h>
 #include "thymio-buffer.h"
 #include "mma7660.h"
+#include "lis2de12.h"
 #include "rf.h"
 
 #define RF_ADDRESS 0x42
@@ -309,7 +310,7 @@ int i2c_cb(int i2c_id, unsigned char ** data, void * user, bool nack) {
 			// Read async will immediatly start a transfert.
 			// We must reset the state machine first.
 			i2c_master_reset(i2c_id);
-			mma7660_read_async();
+			lis2de12_read_async();//TODO fix accelerometre selection
 			return I2C_MASTER_QUIT;
 		} else
 			return I2C_MASTER_DONE;
@@ -327,7 +328,7 @@ void rf_poll(void) {
 		// RF not present or activated
 		if(read_acc) {
 			read_acc = 0;
-			mma7660_read_async();
+			lis2de12_read_async();
 		}
 	} else if(!i2c_master_is_busy(i2c_bus)) {
 		// Try to read data from the device

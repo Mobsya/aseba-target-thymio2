@@ -24,7 +24,7 @@
 
 typedef void (*lis2de12_cb)(int x, int y, int z, int tap);
 
-#define LIS2DE12_DEFAULT_ADDRESS	(0x32)
+#define LIS2DE12_DEFAULT_ADDRESS	(0x19)
 
 // 0Hz == Power-down mode
 #define LIS2DE12_0HZ		0x0
@@ -48,7 +48,7 @@ enum lis2de12_errors {
 // if prio == 0 no interrupt is used (except for i2c transfert) thus you need to call
 // lis2de12_read_async yourself
 // The callback will be called with the same priority as the i2c bus interrupt.
-void lis2de12_init(int i2c, unsigned char address, lis2de12_cb cb, int prio);
+int lis2de12_init(int i2c, unsigned char address, lis2de12_cb cb, int prio);
 void lis2de12_set_mode(int hz, int tap_en);
 
 void lis2de12_read_async(void);
