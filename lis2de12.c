@@ -59,12 +59,38 @@
 static __attribute((far)) int i2c_bus;
 static __attribute((far)) int i2c_address;
 static __attribute((far)) lis2de12_cb cb;
-static __attribute((far)) char data[4];
+static __attribute((far)) char data[126];//6*21 read 21 value from fifo
+static __attribute((far)) unsigned char tap;
 static __attribute((far)) unsigned char reg;
+static void write(unsigned char reg, unsigned char data);
 
 static void lis2de12_i2c_cb(int i2c_id, bool status) {
 	if (reg==CLICK_SRC)
 		cb((signed char)data[0], (signed char)data[1], (signed char)data[2], data[3]);
+}
+
+static void lis2de12_i2c_cb_fifo(int i2c_id, bool status) {
+	if (reg==(FIFO_READ_START|0x80)){//reg==CLICK_SRC
+		int sumx=0;
+		int sumy=0;
+		int sumz=0;
+		int i;
+		for(i=0;i<21;i++){
+			sumx+=data[6*i+1];
+			sumy+=data[6*i+3];
+			sumz+=data[6*i+5];
+		}
+		sumx=sumx>>6; ///21/64=0.328~=0.33 to not divide by 3 afterward ack specific for Thymio 
+		sumy=sumy>>6; 
+		sumz=sumz>>6;
+		cb((signed char)sumx, (signed char)sumy, (signed char)sumz,tap);
+		/*unsigned char fifo_ctrl[3];
+		fifo_ctrl[0]=FIFO_CTRL_REG;1	
+		fifo_ctrl[1]=0x00; //reset FIFO
+		fifo_ctrl[2]=0x80; //reset FIFO
+		reg=0;
+		i2c_master_transfert_async(i2c_bus, i2c_address,fifo_ctrl,3, NULL,0,lis2de12_i2c_cb_fifo);*/
+	}
 }
 
 void lis2de12_read_async(void) {
@@ -84,6 +110,20 @@ void lis2de12_read_async(void) {
 	while(i2c_master_is_busy(i2c_bus));
 	reg = CLICK_SRC;
 	i2c_master_transfert_async(i2c_bus, i2c_address, &reg, 1, (unsigned char *) data+3, 1, lis2de12_i2c_cb);
+}
+
+void lis2de12_read_async_fifo(void) {
+	// Safety: If i2c is busy, ignore this
+	if (i2c_master_is_busy(i2c_bus))
+		return;
+	//read tap
+	reg = CLICK_SRC;
+	i2c_master_transfert_async(i2c_bus, i2c_address, &reg, 1, &tap, 1, lis2de12_i2c_cb_fifo);
+	
+	while(i2c_master_is_busy(i2c_bus));
+	// Read fifo buffer
+	reg = FIFO_READ_START|0x80; //most significant bit enable multiple read and automatic roll back in fifo mode
+	i2c_master_transfert_async(i2c_bus, i2c_address, &reg, 1, (unsigned char *) data, 126, lis2de12_i2c_cb_fifo);
 }
 
 static void write(unsigned char reg, unsigned char data) {
@@ -130,7 +170,7 @@ int lis2de12_init(int i2c, unsigned char address, lis2de12_cb ucb, int prio) {
 	return 1;
 }
 
-void lis2de12_set_mode(int hz, int tap_en) {
+void lis2de12_set_mode(int hz, int tap_en, int fifo) {
 	int flag = IEC1bits.CNIE;
 
 	ERROR_CHECK_RANGE(hz, LIS2DE12_0HZ, LIS2DE12_5376HZ, LIS2DE12_ERROR_INVALID_PARAM);
@@ -153,15 +193,25 @@ void lis2de12_set_mode(int hz, int tap_en) {
 	// Axe Y and Z, treshold: 12 counts
 	if (tap_en){
 		//Disable X axis due to the vibration of motors
-		write(CTRL_REG2, 0xB4); //High pass filter in Normal mode, HPCP 11 and HPCLICK enable
+		write(CTRL_REG2, 0x84); //High pass filter in Normal mode, HPCP 00 and HPCLICK enable
 		write(CLICK_CFG, 0x14); //Single click on y and z
-		write(CLICK_THS, 48|0x80); //Click treshold and LIR_CLICK is set
+		write(CLICK_THS, 127|0x80); //Click treshold and LIR_CLICK is set
+		write(TIME_LIMIT, 5); //Click time 		
 	}
 	else
 	{
 		write(CTRL_REG2, 0x00);
 		write(CLICK_CFG, 0x00);
 		write(CLICK_THS, 0x00);
+		write(TIME_LIMIT,0x00); //Click time 
+	}
+	
+	if (fifo){
+		write(CTRL_REG5, 0x40);//enable FIFO
+		write(FIFO_CTRL_REG, 0x80);//FIFO in stream mode
+	}else{
+		write(CTRL_REG5, 0x00);//enable FIFO
+		write(FIFO_CTRL_REG, 0x00);//FIFO in stream mode
 	}
 	
 	hz=hz<<4;

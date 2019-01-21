@@ -49,9 +49,10 @@ enum lis2de12_errors {
 // lis2de12_read_async yourself
 // The callback will be called with the same priority as the i2c bus interrupt.
 int lis2de12_init(int i2c, unsigned char address, lis2de12_cb cb, int prio);
-void lis2de12_set_mode(int hz, int tap_en);
+void lis2de12_set_mode(int hz, int tap_en, int fifo);
 
 void lis2de12_read_async(void);
+void lis2de12_read_async_fifo(void);
 
 // PM
 void lis2de12_suspend(void);

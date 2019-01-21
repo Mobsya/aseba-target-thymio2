@@ -310,7 +310,7 @@ int i2c_cb(int i2c_id, unsigned char ** data, void * user, bool nack) {
 			// We must reset the state machine first.
 			i2c_master_reset(i2c_id);
 			if(read_acc==2) {
-				lis2de12_read_async();
+				lis2de12_read_async_fifo();
 				read_acc = 0;
 			}else if(read_acc==1){
 				mma7660_read_async();
@@ -332,7 +332,7 @@ void rf_poll(void) {
 	if(!(status & RF_PRESENT) || !(status & RF_LINK_UP)) {
 		// RF not present or activated
 		if(read_acc==2) {
-			lis2de12_read_async();
+			lis2de12_read_async_fifo();
 			read_acc = 0;
 		}else if(read_acc==1){
 			mma7660_read_async();

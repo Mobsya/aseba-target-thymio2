@@ -127,9 +127,9 @@ static void acc_cb(int x, int y, int z, int tap) {
 		vmVariables.acc[1] = y;
 		vmVariables.acc[2] = z;
 	}else{
-		vmVariables.acc[0] = x/3;
-		vmVariables.acc[1] = y/3;
-		vmVariables.acc[2] = z/3;
+		vmVariables.acc[0] = x;//in FIFO no more division
+		vmVariables.acc[1] = y;
+		vmVariables.acc[2] = z;
 	}
 	
 	if(tap) {
@@ -458,7 +458,7 @@ int main(void)
 	I2C3CON = 0x9000;
 
 	if(lis2de12_init(I2C_3,LIS2DE12_DEFAULT_ADDRESS, acc_cb, 0)){
-		lis2de12_set_mode(LIS2DE12_100HZ, 1);
+		lis2de12_set_mode(LIS2DE12_400HZ,1,1);
 		acc_type=LIS2DE12;
 	}else{
 		mma7660_init(I2C_3, MMA7660_DEFAULT_ADDRESS, acc_cb, 0);
