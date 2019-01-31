@@ -131,16 +131,16 @@ void lis2de12_read_async_fifo(void) {
 	// Read fifo buffer
 	reg = FIFO_READ_START|0x80; //most significant bit enable multiple read and automatic roll back in fifo mode
 	i2c_master_transfert_async(i2c_bus, i2c_address, &reg, 1, (unsigned char *) data, 126, lis2de12_i2c_cb_fifo);
-	
-	while(i2c_master_is_busy(i2c_bus));
-/*	//Reset FIFO
+
+/*	//Reset FIFO	
 	unsigned char fifo_ctrl[2];
 	fifo_ctrl[0]=FIFO_CTRL_REG;	
 	reg=0;
 	fifo_ctrl[1]=0x00; //reset FIFO
+	while(i2c_master_is_busy(i2c_bus));
 	i2c_master_transfert_async(i2c_bus, i2c_address,fifo_ctrl,2, NULL,0,lis2de12_i2c_cb_fifo);
 	while(i2c_master_is_busy(i2c_bus));
-	fifo_ctrl[1]=0x80;
+	fifo_ctrl[1]=0x80; //activate FIFO
 	i2c_master_transfert_async(i2c_bus, i2c_address,fifo_ctrl,2, NULL,0,lis2de12_i2c_cb_fifo);*/
 }
 
@@ -207,13 +207,13 @@ void lis2de12_set_mode(int hz, int tap_en, int fifo) {
 		return;
 	
 	// Write the Tap detection register
-	// Axe Y and Z
+	// Axe X and Y
 	if (tap_en){
-		//Disable X axis due to the vibration of motors
-		write(CTRL_REG2, 0x84); //High pass filter in Normal mode, HPCP 00 and HPCLICK enable
-		write(CLICK_CFG, 0x14); //Single click on y and z
-		write(CLICK_THS, 127|0x80); //Click treshold and LIR_CLICK is set
-		write(TIME_LIMIT, 5); //Click time 		
+		//Disable Z axis due to the vibration of motors
+		write(CTRL_REG2, 0xB4); //High pass filter in Normal mode, HPCP 11 and HPCLICK enable 
+		write(CLICK_CFG, 0x05); //Single click on x and y
+		write(CLICK_THS, 80|0x80); //Click treshold and LIR_CLICK is set
+		write(TIME_LIMIT, 10); //Click time 		
 	}
 	else
 	{
