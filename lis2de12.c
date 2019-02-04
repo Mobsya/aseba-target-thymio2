@@ -125,22 +125,6 @@ void lis2de12_read_async_fifo(void) {
 	//read tap
 	reg = CLICK_SRC;
 	i2c_master_transfert_async(i2c_bus, i2c_address, &reg, 1, &tap, 1, lis2de12_i2c_cb_fifo);
-	
-	//while(i2c_master_is_busy(i2c_bus));
-	// Read fifo buffer*/
-	/*reg = FIFO_READ_START|0x80; //most significant bit enable multiple read and automatic roll back in fifo mode
-	i2c_master_transfert_async(i2c_bus, i2c_address, &reg, 1, (unsigned char *) data, 126, lis2de12_i2c_cb_fifo);*/
-
-/*	//Reset FIFO	
-	unsigned char fifo_ctrl[2];
-	fifo_ctrl[0]=FIFO_CTRL_REG;	
-	reg=0;
-	fifo_ctrl[1]=0x00; //reset FIFO
-	while(i2c_master_is_busy(i2c_bus));
-	i2c_master_transfert_async(i2c_bus, i2c_address,fifo_ctrl,2, NULL,0,lis2de12_i2c_cb_fifo);
-	while(i2c_master_is_busy(i2c_bus));
-	fifo_ctrl[1]=0x80; //activate FIFO
-	i2c_master_transfert_async(i2c_bus, i2c_address,fifo_ctrl,2, NULL,0,lis2de12_i2c_cb_fifo);*/
 }
 
 static void write(unsigned char reg, unsigned char data) {
