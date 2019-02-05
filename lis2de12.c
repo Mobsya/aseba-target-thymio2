@@ -146,8 +146,10 @@ int lis2de12_init(int i2c, unsigned char address, lis2de12_cb ucb, int prio) {
 	clock_delay_us(1300);
 	reg=LIS2DE12_WHO_AM_I;
 	i2c_master_transfert_block(i2c_bus,i2c_address,&reg,1,&id,1);
-	if (id!=LIS2DE12_ID)
+	if (id!=LIS2DE12_ID){
+		va_put();//manage Va
 		return 0;
+	}
 	/* Configure device */
 	write(CTRL_REG1, MODE_CONFIG_OFF); // Reset
 	/*  TODO fix interupt 
