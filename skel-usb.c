@@ -523,12 +523,22 @@ int AsebaHandleDeviceInfoMessages(AsebaVMState* vm, uint16_t id, uint16_t* data,
 		if(dataLength < 1) // We need at least an info type
 			return 0;
 		uint16_t type = bswap16(data[0]);
+		uint16_t network_infos[3]; //network, node id, channel
+
 		if(type > DEVICE_INFO_ENUM_COUNT) // Send an error ?
 			return 0;
 		if (id == ASEBA_MESSAGE_GET_DEVICE_INFO) {
 			uint8_t size = 0;
 			const uint8_t* buffer = NULL;
+
 			switch(type) {
+				case DEVICE_INFO_THYMIO2_RF_SETTINGS:
+					size = 3 * sizeof(uint16_t);
+					network_infos[0] = bswap16(rf_get_network_id());
+					network_infos[1] = bswap16(rf_get_node_id());
+					network_infos[2] = -1; // can't read the channel
+					buffer = (uint8_t*) network_infos;
+					break;
 				case DEVICE_INFO_UUID:
 					buffer = thymio_info.uuid;
 					size   = sizeof(thymio_info.uuid);
@@ -553,11 +563,21 @@ int AsebaHandleDeviceInfoMessages(AsebaVMState* vm, uint16_t id, uint16_t* data,
 			if(dataLength < 2) // We need at least an info type (1) + size (2)
 				return 0;
 			uint8_t payload_size = (uint8_t)bswap16(data[1]);
-			const uint8_t* buffer = (uint8_t*)data + 2 * sizeof(uint16_t);
+			const uint8_t* buffer = (uint8_t*)data + 2 * sizeof(uint16_t); // type + size
 			if(dataLength * 2 > (ASEBA_MAX_PACKET_SIZE + 6) || payload_size  > ((dataLength - 2) * 2) + 1 ) {
 				return 0;
 			}
 			switch(type) {
+				case DEVICE_INFO_THYMIO2_RF_SETTINGS:
+					if(payload_size != 6)
+						break;
+					network_infos[0] = bswap16(*(uint16_t*)(buffer));
+					network_infos[1] = bswap16(*(uint16_t*)(buffer + 2));
+					network_infos[2] = bswap16(*(uint16_t*)(buffer + 4));
+					rf_set_node_id(network_infos[1]);
+					rf_set_conf(network_infos[2], network_infos[0]);
+					rf_flash_setting();
+					break;
 				case DEVICE_INFO_UUID:
 					if(payload_size == 0) {
 						memset(thymio_info.uuid, 0, sizeof(thymio_info.uuid));
