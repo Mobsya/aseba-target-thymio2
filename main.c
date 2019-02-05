@@ -38,7 +38,7 @@ History:
 10: Change wireless nodeID, acc sensitivity, clean VM on load, aseba protocole version 5
 11: Fix reset, add SD card function, limit user message size, adapt to c99
 12: SPI fix, update VM description
-13: Store device name and uuid in persistent memory
+13: Store device name and uuid in persistent memory,add LIS2DE12 accelerometer
 */
 #define FW_VERSION 13
 
@@ -122,15 +122,9 @@ History:
    
 static int acc_type;
 static void acc_cb(int x, int y, int z, int tap) {
-	if (acc_type == MMA7660){
-		vmVariables.acc[0] = x;
-		vmVariables.acc[1] = y;
-		vmVariables.acc[2] = z;
-	}else{
-		vmVariables.acc[0] = x;//in FIFO no more division
-		vmVariables.acc[1] = y;
-		vmVariables.acc[2] = z;
-	}
+	vmVariables.acc[0] = x;
+	vmVariables.acc[1] = y;
+	vmVariables.acc[2] = z;	
 	
 	if(tap) {
 		SET_EVENT(EVENT_TAP);
