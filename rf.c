@@ -26,6 +26,7 @@
 #include <clock/clock.h>
 #include "thymio-buffer.h"
 #include "mma7660.h"
+#include "lis2de12.h"
 #include "rf.h"
 
 #define RF_ADDRESS 0x42
@@ -304,12 +305,17 @@ int i2c_cb(int i2c_id, unsigned char ** data, void * user, bool nack) {
 		
 	case I2C_STOP2:
 		i2c_status = I2C_IDLE;
-		if(read_acc) {
-			read_acc = 0;
+		if(read_acc) {		
 			// Read async will immediatly start a transfert.
 			// We must reset the state machine first.
 			i2c_master_reset(i2c_id);
-			mma7660_read_async();
+			if(read_acc==2) {
+				lis2de12_read_async_fifo();
+				read_acc = 0;
+			}else if(read_acc==1){
+				mma7660_read_async();
+				read_acc = 0;
+			}
 			return I2C_MASTER_QUIT;
 		} else
 			return I2C_MASTER_DONE;
@@ -325,9 +331,12 @@ void rf_poll(void) {
 
 	if(!(status & RF_PRESENT) || !(status & RF_LINK_UP)) {
 		// RF not present or activated
-		if(read_acc) {
+		if(read_acc==2) {
+			lis2de12_read_async_fifo();
 			read_acc = 0;
+		}else if(read_acc==1){
 			mma7660_read_async();
+			read_acc = 0;
 		}
 	} else if(!i2c_master_is_busy(i2c_bus)) {
 		// Try to read data from the device
@@ -337,8 +346,8 @@ void rf_poll(void) {
 	IRQ_ENABLE(flags);	
 }	
 
-void rf_schedule_acc_read(void) {
-	read_acc = 1;
+void rf_schedule_acc_read(int acc_type) {
+	read_acc = acc_type+1;
 }
 
 void rf_pairing_start(void) {

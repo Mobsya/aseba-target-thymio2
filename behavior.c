@@ -329,8 +329,10 @@ static void behavior_leds_acc(void) {
 		else if (ha < 14000 && ha >= 10000) 
 			led = 31;
 		
-		intensity = 40 - abs(vmVariables.acc[2])*2;
+		intensity = 42 - abs(vmVariables.acc[2])*2;
 		if(intensity < 0)
+			intensity = 0;
+		if((abs(vmVariables.acc[0])+ abs(vmVariables.acc[1]))<4)
 			intensity = 0;
 		
 		if(led >= 0) {

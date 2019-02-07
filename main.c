@@ -38,7 +38,7 @@ History:
 10: Change wireless nodeID, acc sensitivity, clean VM on load, aseba protocole version 5
 11: Fix reset, add SD card function, limit user message size, adapt to c99
 12: SPI fix, update VM description
-13: Store device name and uuid in persistent memory
+13: Store device name and uuid in persistent memory,add LIS2DE12 accelerometer
 */
 #define FW_VERSION 13
 
@@ -69,6 +69,7 @@ History:
 #include "pwm_motor.h"
 #include "pid_motor.h"
 #include "mma7660.h"
+#include "lis2de12.h"
 #include "ntc.h"
 #include "rc5.h"
 #include "sd/diskio.h"
@@ -116,10 +117,15 @@ History:
 #define TIMER_1KHZ		TIMER_5
 #define TIMER_IR_COMM	TIMER_1 // Timer number hardcoded into prox. processing code.
 
+#define MMA7660 0
+#define LIS2DE12 1
+   
+static int acc_type;
 static void acc_cb(int x, int y, int z, int tap) {
 	vmVariables.acc[0] = x;
 	vmVariables.acc[1] = y;
 	vmVariables.acc[2] = z;	
+	
 	if(tap) {
 		SET_EVENT(EVENT_TAP);
 		vmVariables.acc_tap = tap; // set only variable.
@@ -166,7 +172,7 @@ static void timer_slow(void) {
 	
 	// Yeah .... quite hackish, but the I2C is shared between RF and 
 	// accelerometer. RF has to schedule the acc when the bus is idle.
-	rf_schedule_acc_read();
+	rf_schedule_acc_read(acc_type);
 }
 
 static unsigned int timer[2];
@@ -289,7 +295,10 @@ void switch_off(void) {
 	sound_poweroff();
 	sd_shutdown();
 	leds_poweroff();
-	mma7660_suspend();
+	if(acc_type)
+		lis2de12_suspend();
+	else
+		mma7660_suspend();
 	rf_poweroff();
 	
 	I2C3CONbits.I2CEN = 0; // Disable i2c.
@@ -442,10 +451,15 @@ int main(void)
 	i2c_init_master(I2C_3, 400000, PRIO_I2C);
 	I2C3CON = 0x9000;
 
-	
-	mma7660_init(I2C_3, MMA7660_DEFAULT_ADDRESS, acc_cb, 0);
-	mma7660_set_mode(MMA7660_120HZ, 1);
-	
+	if(lis2de12_init(I2C_3,LIS2DE12_DEFAULT_ADDRESS, acc_cb, 0)){
+		lis2de12_set_mode(LIS2DE12_400HZ,1,1);
+		acc_type=LIS2DE12;
+	}else{
+		mma7660_init(I2C_3, MMA7660_DEFAULT_ADDRESS, acc_cb, 0);
+		mma7660_set_mode(MMA7660_120HZ, 1);
+		acc_type=MMA7660;
+	}
+		
 	rc5_init(TIMER_RC5, rc5_callback, PRIO_RC5);
 	
 	sd_init();
