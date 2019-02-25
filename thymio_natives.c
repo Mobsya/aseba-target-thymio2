@@ -437,7 +437,7 @@ AsebaNativeFunctionDescription AsebaNativeDescription_play_freq = {
 	"Play frequency",
 	{
 		{1,"Hz"},
-		{1,"ds"},
+		{1,"1/60s"},
 		{0,0},
 	}
 };

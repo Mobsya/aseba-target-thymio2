@@ -56,7 +56,7 @@ void tone_setup(unsigned int dHz) {
 	skip_d -= skip*100;
 	
 	if(skip_d)
-		skip_d =  100/skip_d;
+		skip_d =  142/skip_d;
 	
 	counter = 0;
 	
