@@ -192,6 +192,8 @@ void mma7660_set_mode(int hz, int tap_en) {
 void mma7660_suspend(void) {
 	IEC1bits.CNIE = 0;
 	
+	while (i2c_master_is_busy(i2c_bus));
+	
 	// Disable the device
 	write(MODE, MODE_CONFIG_OFF);
 	

@@ -225,6 +225,8 @@ void lis2de12_set_mode(int hz, int tap_en, int fifo) {
 
 void lis2de12_suspend(void) {
 	IEC1bits.CNIE = 0;
+    
+	while (i2c_master_is_busy(i2c_bus));
 
 	// Disable the device
 	write(CTRL_REG1, MODE_CONFIG_OFF);
