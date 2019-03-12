@@ -38,7 +38,7 @@ History:
 10: Change wireless nodeID, acc sensitivity, clean VM on load, aseba protocole version 5
 11: Fix reset, add SD card function, limit user message size, adapt to c99
 12: SPI fix, update VM description
-13: Store device name and uuid in persistent memory,add LIS2DE12 accelerometer
+13: Store device name and uuid in persistent memory, add LIS2DE12 accelerometer, some leds as variables, add function to setup wireless, improve sound generator, aseba protocol 9
 */
 #define FW_VERSION 13
 
