@@ -40,7 +40,7 @@ History:
 12: SPI fix, update VM description
 13: Store device name and uuid in persistent memory, add LIS2DE12 accelerometer, some leds as variables, add function to setup wireless, improve sound generator, aseba protocol 9
 */
-#define FW_VERSION 13
+#define FW_VERSION 14
 
 /* Firmware variant. Each variant of the firmware has it own number */
 

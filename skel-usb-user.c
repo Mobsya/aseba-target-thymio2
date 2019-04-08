@@ -62,6 +62,7 @@ const AsebaVMDescription vmDescription = {
 		{1, "motor.right.speed"},
 		{1, "motor.left.pwm"},
 		{1, "motor.right.pwm"},
+		{2, "_integrator"},		
 		
 		{3, "acc"},
 		
