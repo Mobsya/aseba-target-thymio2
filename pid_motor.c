@@ -44,7 +44,7 @@ static int ilim_enabled[2];
 
 static int integ[2];
 
-#define COUNTER_M 40
+#define COUNTER_M 20
 static int counter[2];
 
 static int prev[2];
@@ -96,15 +96,20 @@ void pid_motor_tick(int *u, int * vbat) {
 			temp =  KP * error;
 			temp += integ[i] / TI;
 		}
-
+		vmVariables.integretor[i] = integ[i];
 		// Lowpass filter on output
 		prev[i] += temp;
 		prev[i] /= 2;	
 		
-		if(prev[i] > PWM_MAX)
+		if(prev[i] > PWM_MAX){
+			integ[i] += (prev[i]-PWM_MAX)/2;//anti-reset windup
 			prev[i] = PWM_MAX;
-		if(prev[i] < - PWM_MAX)
-			prev[i] = -PWM_MAX;
+		}
+			
+		if(prev[i] < - PWM_MAX){
+			integ[i] -= (-PWM_MAX-prev[i])/2;
+			prev[i] = -PWM_MAX;	
+		}
 		
 		if(ilim_enabled[i] >= ILIM_LATENCY) {
 			log_set_flag(LOG_FLAG_MOTOROVERC);
