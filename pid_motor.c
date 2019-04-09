@@ -44,7 +44,7 @@ static int ilim_enabled[2];
 
 static int integ[2];
 
-#define COUNTER_M 20
+#define COUNTER_M 10
 static int counter[2];
 
 static int prev[2];
@@ -96,7 +96,7 @@ void pid_motor_tick(int *u, int * vbat) {
 			temp =  KP * error;
 			temp += integ[i] / TI;
 		}
-		vmVariables.integretor[i] = integ[i];
+		
 		// Lowpass filter on output
 		prev[i] += temp;
 		prev[i] /= 2;	
@@ -116,7 +116,7 @@ void pid_motor_tick(int *u, int * vbat) {
 			ilim_enabled[i] = ILIM_LATENCY;
 			prev[i] /= 2;
 		}
-		
+		vmVariables.integretor[i] = integ[i];
 		vmVariables.pwm[i] = prev[i];
 		
 	}
