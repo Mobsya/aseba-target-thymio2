@@ -126,6 +126,7 @@ void pid_motor_tick(int *u, int * vbat) {
 
 #define SPEED_BOUND 1000
 static int target_apply_calib(int t, int s) {
+	int temp;
 	if (t > SPEED_BOUND)
 		t = SPEED_BOUND;
 	if (t < -SPEED_BOUND)
@@ -133,7 +134,10 @@ static int target_apply_calib(int t, int s) {
 
 	// The rounding is wrong if you have a negative value ...
 	// But it's OK as an error of 1 is completely negligible.
-	return __builtin_mulss(t,s) >> 8;
+	if (t>=0)
+		return __builtin_mulss(t,s) >> 8;
+	else
+		return -((-__builtin_mulss(t,s)) >> 8);
 }
 
 void pid_motor_set_target(int * t) {
