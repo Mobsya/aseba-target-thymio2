@@ -102,12 +102,12 @@ void pid_motor_tick(int *u, int * vbat) {
 		prev[i] /= 2;	
 		
 		if(prev[i] > PWM_MAX){
-			integ[i] += (prev[i]-PWM_MAX)/2;//anti-reset windup
+			integ[i] -= (prev[i]-PWM_MAX)/2;//anti-reset windup
 			prev[i] = PWM_MAX;
 		}
 			
 		if(prev[i] < - PWM_MAX){
-			integ[i] -= (-PWM_MAX-prev[i])/2;
+			integ[i] += (-PWM_MAX-prev[i])/2;
 			prev[i] = -PWM_MAX;	
 		}
 		
