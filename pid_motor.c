@@ -132,9 +132,7 @@ static int target_apply_calib(int t, int s) {
 	if (t < -SPEED_BOUND)
 		t = -SPEED_BOUND;
 
-	// The rounding is wrong if you have a negative value ...
-	// But it's OK as an error of 1 is completely negligible.
-	if (t>=0)
+	if (t>=0) // to avoid problem of rounding with negative value
 		return __builtin_mulss(t,s) >> 8;
 	else
 		return -((-__builtin_mulss(t,s)) >> 8);
