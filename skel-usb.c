@@ -450,7 +450,7 @@ void __attribute((noreturn)) run_aseba_main_loop(void) {
 	{
 		update_aseba_variables_read();
 		
-		AsebaVMRun(&vmState, 1000);
+		AsebaVMRun(&vmState, 0xFFFF);
 		
 		AsebaProcessIncomingEvents(&vmState);
 		
