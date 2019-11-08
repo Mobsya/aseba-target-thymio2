@@ -197,7 +197,7 @@ void lis2de12_set_mode(int hz, int tap_en, int fifo) {
 		//Disable Z axis due to the vibration of motors
 		write(CTRL_REG2, 0xB4); //High pass filter in Normal mode, HPCP 11 and HPCLICK enable 
 		write(CLICK_CFG, 0x05); //Single click on x and y
-		write(CLICK_THS, 100|0x80); //Click treshold and LIR_CLICK is set
+		write(CLICK_THS, 120|0x80); //Click treshold and LIR_CLICK is set
 		write(TIME_LIMIT, 10); //Click time 		
 	}
 	else
