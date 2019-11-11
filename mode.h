@@ -48,5 +48,6 @@ void mode_tick(void);
 
 int body_color_pulse_get(void);
 void init_vm_mode(void);
+void init_acc_tresh(int tresh);
 
 #endif

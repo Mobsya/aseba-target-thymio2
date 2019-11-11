@@ -454,10 +454,12 @@ int main(void)
 	if(lis2de12_init(I2C_3,LIS2DE12_DEFAULT_ADDRESS, acc_cb, 0)){
 		lis2de12_set_mode(LIS2DE12_400HZ,1,1);
 		acc_type=LIS2DE12;
+		init_acc_tresh(8);
 	}else{
 		mma7660_init(I2C_3, MMA7660_DEFAULT_ADDRESS, acc_cb, 0);
 		mma7660_set_mode(MMA7660_120HZ, 1);
 		acc_type=MMA7660;
+		init_acc_tresh(14);
 	}
 		
 	rc5_init(TIMER_RC5, rc5_callback, PRIO_RC5);
