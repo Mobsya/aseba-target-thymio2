@@ -332,7 +332,7 @@ static void behavior_leds_acc(void) {
 		intensity = 42 - abs(vmVariables.acc[2])*2;
 		if(intensity < 0)
 			intensity = 0;
-		if((abs(vmVariables.acc[0])+ abs(vmVariables.acc[1]))<4)
+		if((abs(vmVariables.acc[0])+ abs(vmVariables.acc[1]))<=10)
 			intensity = 0;
 		
 		if(led >= 0) {

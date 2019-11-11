@@ -486,22 +486,27 @@ static void tick_explorer(void) {
 	}
 }
 
+static int acc_free_fall_tresh = 14;
+
+void init_acc_tresh(int tresh){
+	acc_free_fall_tresh= tresh;
+}
+
 static void tick_acc(void) {
 #define ACC_OBSTACLE 1000
-#define ACC_FREE_FALL 14
 	static unsigned int acc = 32;
 	static int counter;
 	int play = 0;
 	acc = acc + acc + acc + abs(vmVariables.acc[0]) + abs(vmVariables.acc[1]) + abs(vmVariables.acc[2]);
 	acc >>= 2;
-	if(acc < ACC_FREE_FALL) {
+	if(acc < acc_free_fall_tresh) {
 		play = 1;
 	}
-	when(acc > ACC_FREE_FALL) {	
+	when(acc > acc_free_fall_tresh) {	
 		leds_set_top(15,0,0);
 	}
 	
-	if(acc < ACC_FREE_FALL) {
+	if(acc < acc_free_fall_tresh) {
 		counter++;
 		if(counter > 5) {
 			if (counter == 10)
