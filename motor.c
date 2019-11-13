@@ -89,7 +89,7 @@ void motor_new_analog(unsigned int l, unsigned int r, unsigned int time) {
 				int i;
 				for( i  = 0; i < 2; i++) {
 					if(motor_sens[i] >= 0) {
-						if(vind2[i] < vbat[i] - 1) {
+						if(vind2[i] < (vbat[i] -10)) {//do not easy take change of sense
 							vind[i] = vind2[i] - vbat[i];
 						} else {
 							vind[i] = vind1[i];
@@ -104,20 +104,18 @@ void motor_new_analog(unsigned int l, unsigned int r, unsigned int time) {
 					
 					vmVariables.vbat[i] = vbat[i];
 					
-					if(vind[i] > 0 && motor_sens[i] > 0) {
-						if(++motor_sens[i] >= SENS_MAX)
+					if(vind[i] > 0) {
+						motor_sens[i]++;
+						if(motor_sens[i] >= SENS_MAX)
 							motor_sens[i] = SENS_MAX;
 					}	
-					if(vind[i] < 0 && motor_sens[i] < 0) {
-						if(--motor_sens[i] <= -SENS_MAX)
+					if(vind[i] < 0) {
+						motor_sens[i]--;
+						if(motor_sens[i] <= -SENS_MAX)
 							motor_sens[i] = -SENS_MAX;
 					}
-					if(vind[i]> 0 && motor_sens[i] <= 0) 
-						motor_sens[i]++;	
-					if(vind[i] < 0 && motor_sens[i] >= 0) 
-						motor_sens[i]--;
-						
-					
+					if(vind_filtered[i] == 0)
+						motor_sens[i]=0;
 				}
 
 				// Now filter the vind ... 

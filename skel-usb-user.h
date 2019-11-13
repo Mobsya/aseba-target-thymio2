@@ -85,6 +85,7 @@ struct _vmVariables {
 	
 	int16_t uind[2];
 	int16_t pwm[2];
+	int16_t integretor[2];
 	
 	int16_t acc[3];
 	

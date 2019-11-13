@@ -44,7 +44,7 @@ static int ilim_enabled[2];
 
 static int integ[2];
 
-#define COUNTER_M 40
+#define COUNTER_M 10
 static int counter[2];
 
 static int prev[2];
@@ -96,22 +96,27 @@ void pid_motor_tick(int *u, int * vbat) {
 			temp =  KP * error;
 			temp += integ[i] / TI;
 		}
-
+		
 		// Lowpass filter on output
 		prev[i] += temp;
 		prev[i] /= 2;	
 		
-		if(prev[i] > PWM_MAX)
+		if(prev[i] > PWM_MAX){
+			integ[i] -= (prev[i]-PWM_MAX)/2;//anti-reset windup
 			prev[i] = PWM_MAX;
-		if(prev[i] < - PWM_MAX)
-			prev[i] = -PWM_MAX;
+		}
+			
+		if(prev[i] < - PWM_MAX){
+			integ[i] += (-PWM_MAX-prev[i])/2;
+			prev[i] = -PWM_MAX;	
+		}
 		
 		if(ilim_enabled[i] >= ILIM_LATENCY) {
 			log_set_flag(LOG_FLAG_MOTOROVERC);
 			ilim_enabled[i] = ILIM_LATENCY;
 			prev[i] /= 2;
 		}
-		
+		vmVariables.integretor[i] = integ[i];
 		vmVariables.pwm[i] = prev[i];
 		
 	}
@@ -121,14 +126,16 @@ void pid_motor_tick(int *u, int * vbat) {
 
 #define SPEED_BOUND 1000
 static int target_apply_calib(int t, int s) {
+	int temp;
 	if (t > SPEED_BOUND)
 		t = SPEED_BOUND;
 	if (t < -SPEED_BOUND)
 		t = -SPEED_BOUND;
 
-	// The rounding is wrong if you have a negative value ...
-	// But it's OK as an error of 1 is completely negligible.
-	return __builtin_mulss(t,s) >> 8;
+	if (t>=0) // to avoid problem of rounding with negative value
+		return __builtin_mulss(t,s) >> 8;
+	else
+		return -((-__builtin_mulss(t,s)) >> 8);
 }
 
 void pid_motor_set_target(int * t) {
