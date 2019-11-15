@@ -39,6 +39,7 @@ History:
 11: Fix reset, add SD card function, limit user message size, adapt to c99
 12: SPI fix, update VM description
 13: Store device name and uuid in persistent memory, add LIS2DE12 accelerometer, some leds as variables, add function to setup wireless, improve sound generator, aseba protocol 9
+14: Fix motor noise on LIS2DE12, improme motor control and speed sensing, increase step limits for VM
 */
 #define FW_VERSION 14
 
