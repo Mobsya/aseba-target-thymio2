@@ -486,18 +486,18 @@ static void setting_tick(void) {
 				break;
 			case SET_VOLUME:
 				when(buttons_state[BUTTON_BACKWARD]) {
-					volume++;
-					set_save_settings();
+					if (volume < 8){
+						volume++;
+						set_save_settings();
+					}
 				}
 
 				when(buttons_state[BUTTON_FORWARD]) {
-					volume--;
-					set_save_settings();
+					if (volume > 0){
+						volume--;
+						set_save_settings();
+					}
 				}
-				if (volume < 0)
-					volume = 0;
-				else if (volume > 8)
-					volume = 8;
 				settings.sound_shift = volume;
 
 				int led_circle[8];
@@ -518,27 +518,27 @@ static void setting_tick(void) {
 				if (vmVariables.target[0] != 0) {
 
 					when(buttons_state[BUTTON_RIGHT]) {
-						correction += 1;
-						set_save_settings();
+						if (correction < 50){ //bound correction
+							correction += 1;
+							set_save_settings();
+						}
 					}
 
 					when(buttons_state[BUTTON_LEFT]) {
-						correction -= 1;
-						set_save_settings();
+						if (correction > -50){ //bound correction
+							correction -= 1;
+							set_save_settings();
+						}
 					}
 					if (correction >= 0) {
 
 						if (correction > 31) {
 							leds_set_circle(0, 31, correction - 31, 0, 0, 0, 0, 0);
-							if (correction > 50) //bound correction
-								correction = 50;
 						} else
 							leds_set_circle(0, correction, 0, 0, 0, 0, 0, 0);
 					} else {
 						if (correction<-31) {
 							leds_set_circle(0, 0, 0, 0, 0, 0, (-correction - 31), 31);
-							if (correction<-50)
-								correction = -50;
 						} else
 							leds_set_circle(0, 0, 0, 0, 0, 0, 0, -correction);
 					}
