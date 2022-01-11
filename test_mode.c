@@ -407,7 +407,7 @@ void test_mode_tick(void) {
 		checked |= C_USB;
 	}
 		
-	if(abs(vmVariables.acc[0]) < 2 && abs(vmVariables.acc[1]) < 2 && vmVariables.acc[2] > 20) {
+	if(abs(vmVariables.acc[0]) < 2 && abs(vmVariables.acc[1]) < 2 && vmVariables.acc[2] > 18) {
 		leds_set(LED_R_BOT_L,0);
 		checked |= C_ACC;
 	}

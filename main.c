@@ -41,7 +41,7 @@ History:
 13: Store device name and uuid in persistent memory, add LIS2DE12 accelerometer, some leds as variables, add function to setup wireless, improve sound generator, aseba protocol 9
 14: Fix motor noise on LIS2DE12, improme motor control and speed sensing, increase step limits for VM
 */
-#define FW_VERSION 14
+#define FW_VERSION 13
 
 /* Firmware variant. Each variant of the firmware has it own number */
 
@@ -50,7 +50,7 @@ History:
 1: Development one
 
 */
-#define FW_VARIANT 1
+#define FW_VARIANT 99
 
 #include <p24Fxxxx.h>
 #include <string.h>
